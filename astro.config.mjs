@@ -17,4 +17,9 @@ export default defineConfig({
       OPENWEATHER_API_KEY: envField.string({ context: 'server', access: 'secret' }),
     },
   },
+  vite: {
+    css: {
+      transformer: 'lightningcss',
+    },
+  },
 });
