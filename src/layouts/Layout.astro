@@ -1,9 +1,11 @@
 ---
 import '../assets/styles/main.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+const theme = Astro.cookies.get('theme')?.value ?? 'light';
 ---
 
 <!doctype html>
-<html lang="fr" data-theme="light">
+<html lang="fr" data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,8 +13,13 @@ import '../assets/styles/main.css';
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>SkyCast</title>
+    <script is:inline>
+      const theme = localStorage.getItem('theme') ?? 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
   </head>
   <body>
+    <ThemeToggle />
     <slot />
   </body>
 </html>
