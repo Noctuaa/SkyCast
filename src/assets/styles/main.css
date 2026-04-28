@@ -4,6 +4,7 @@
 @import './base/typography.css' layer(base);
 @import './base/layout.css' layer(layout);
 @import './utilities.css' layer(utilities);
+@import './components/search-modal.css' layer(components);
 
 :root {
   /* Colors - Light */
@@ -25,9 +26,10 @@
   /* Spacing */
   --radius: 1rem;
   --radius-sm: 0.5rem;
+  --space: 0.25rem;
 
   /* Transitions */
-  --transition: 0.2s ease;
+  --transition: 0.3s ease;
 }
 
 [data-theme='dark'] {

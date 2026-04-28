@@ -1,4 +1,4 @@
-import { $forecast, $forecastLoading, $forecastError } from "./forecastStore";
+import { $forecast, $forecastLoading, $forecastError, $searchOpen } from "./forecastStore";
 import { $location } from "./locationStore";
 import type { GeocodingResult } from "../types/weather";
 
@@ -21,9 +21,11 @@ export const fetchForecast = async () => {
     if (!res.ok) { throw new Error(`Failed to fetch forecast data: ${res.status}`); }
     const data = await res.json();
     $forecast.set(data);
+    $searchOpen.set(false);
   } catch (error) {
     $forecastError.set("Failed to fetch forecast data");
   } finally {
     $forecastLoading.set(false);
   }
 }
+
