@@ -1,6 +1,7 @@
 /* ===== Card ===== */
 
 .weather-card {
+  grid-area: 1/1/2/2;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);

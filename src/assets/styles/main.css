@@ -6,6 +6,7 @@
 @import './utilities.css' layer(utilities);
 @import './components/search-modal.css' layer(components);
 @import './components/weather-card.css' layer(components);
+@import './components/forecast-card.css' layer(components);
 @import './components/weather-icons.css' layer(components);
 
 :root {

@@ -10,3 +10,15 @@
   display: grid;
   grid-template-rows: auto 1fr;
 }
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--space) * 6);
+}
+
+@media (min-width: 768px) {
+  .weather-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}

@@ -2,11 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import SearchModal from '../components/SearchModal.vue';
 import WeatherCard from '../components/WeatherCard.vue';
+import ForecastCard from '../components/ForecastCard.vue';
 ---
 
 <Layout>
   <main class="container">
     <SearchModal client:load />
-    <WeatherCard client:load />
+    <div class="weather-grid grid">
+      <WeatherCard client:load />
+      <ForecastCard client:load />
+    </div>
   </main>
 </Layout>

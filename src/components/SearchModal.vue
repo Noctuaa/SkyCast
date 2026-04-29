@@ -40,6 +40,7 @@ const onInput = () => {
     }
   }, 300);
 };
+
 const selectCity = (city: GeocodingResult) => {
   setLocation(city);
   fetchForecast();
