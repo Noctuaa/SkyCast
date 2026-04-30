@@ -5,12 +5,27 @@ import WeatherCard from '../components/WeatherCard.vue';
 import ForecastCard from '../components/ForecastCard.vue';
 ---
 
+<script>
+  import { loadFromCache, fetchForecast } from '../stores/actions';
+  import { $searchOpen } from '../stores/forecastStore';
+  import { $location } from '../stores/locationStore';
+
+  const cached = loadFromCache();
+  if (!cached) {
+    if ($location.get()) {
+      fetchForecast();
+    } else {
+      $searchOpen.set(true);
+    }
+  }
+</script>
+
 <Layout>
   <main class="container">
-    <SearchModal client:load />
+    <SearchModal client:only="vue" />
     <div class="weather-grid grid">
-      <WeatherCard client:load />
-      <ForecastCard client:load />
+      <WeatherCard client:only="vue" />
+      <ForecastCard client:only="vue" />
     </div>
   </main>
 </Layout>

@@ -17,8 +17,6 @@ const dailyForecasts = computed(() => {
   const list = forecast.value.list;
   const days = new Map<string, (typeof list)[number][]>();
 
-  console.log('Raw forecast data:', days);
-
   forecast.value.list.forEach((item) => {
     const day = item.dt_txt.split(' ')[0];
     if (!days.has(day)) days.set(day, []);
