@@ -79,3 +79,7 @@
 .text-accent {
   color: var(--accent);
 }
+
+.t-capitalize {
+  text-transform: capitalize;
+}

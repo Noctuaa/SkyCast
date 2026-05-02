@@ -1,6 +1,6 @@
-import { $forecast, $forecastLoading, $forecastError, $searchOpen } from "./forecastStore";
+import { $forecast, $forecastLoading, $forecastError, $searchOpen, $forecastDays, $selectedDate } from "./forecastStore";
 import { $location } from "./locationStore";
-import type { ForecastResponse, GeocodingResult } from "../types/weather";
+import type { ForecastResponse, ForecastDays, ForecastItem, GeocodingResult } from "../types/weather";
 
 export const setLocation = (location: GeocodingResult) => {
   $location.set(location)
@@ -14,6 +14,24 @@ const saveToCache = (forecast: ForecastResponse, location: GeocodingResult) => {
   }));
 }
 
+const processForecastDays = (list: ForecastItem[]): ForecastDays => {
+  const allDates = [...new Set(list.map(item => item.dt_txt.split(' ')[0]))];
+
+  return Object.fromEntries(
+    allDates.map((date, index) => {
+      const dayItems = list.filter(item => item.dt_txt.startsWith(date));
+      const nextDate = allDates[index + 1];
+
+      if (nextDate) {
+        const midnight = list.find(item => item.dt_txt === `${nextDate} 00:00:00`);
+        if (midnight) dayItems.push(midnight);
+      }
+
+      return [date, dayItems];
+    })
+  );
+};
+
 export const loadFromCache = () => {
   const raw = localStorage.getItem('skycast_cache');
   if (!raw) return false;
@@ -23,6 +41,7 @@ export const loadFromCache = () => {
 
   if (age < 10 * 60 * 1000) {
     $forecast.set(forecast);
+    $forecastDays.set(processForecastDays(forecast.list));
     $location.set(location);
     $searchOpen.set(false);
 
@@ -52,6 +71,8 @@ export const fetchForecast = async () => {
     const data = await res.json();
 
     $forecast.set(data);
+    $forecastDays.set(processForecastDays(data.list));
+    $selectedDate.set(data.list[0].dt_txt.split(' ')[0]);
     saveToCache(data, location);
 
   } catch (error) {

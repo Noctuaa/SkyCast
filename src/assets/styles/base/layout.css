@@ -19,6 +19,6 @@
 
 @media (min-width: 768px) {
   .weather-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: 360pxnpm ru 1fr;
   }
 }

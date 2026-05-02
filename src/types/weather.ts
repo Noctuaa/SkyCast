@@ -58,3 +58,5 @@ export interface GeocodingResult {
   country: string;
   state?: string;
 }
+
+export type ForecastDays = Record<string, ForecastItem[]>;
