@@ -8,11 +8,11 @@ import WeatherIcon from './WeatherIcon.vue';
 const forecast = useStore($forecast);
 const location = useStore($location);
 
+const current = computed(() => forecast.value?.list[0]);
 const dayName = computed(() => new Date().toLocaleDateString('fr-FR', { weekday: 'long' }));
 const fullDate = computed(() =>
   new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
 );
-const current = computed(() => forecast.value?.list[0]);
 const city = computed(() => forecast.value?.city);
 </script>
 

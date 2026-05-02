@@ -7,18 +7,8 @@ import ChartCard from '../components/ChartCard.vue';
 ---
 
 <script>
-  import { loadFromCache, fetchForecast } from '../stores/actions';
-  import { $searchOpen } from '../stores/forecastStore';
-  import { $location } from '../stores/locationStore';
-
-  const cached = loadFromCache();
-  if (!cached) {
-    if ($location.get()) {
-      fetchForecast();
-    } else {
-      $searchOpen.set(true);
-    }
-  }
+  import { initForecast } from '../stores/actions';
+  initForecast();
 </script>
 
 <Layout>

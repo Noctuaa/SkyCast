@@ -3,8 +3,8 @@ import { $location } from "./locationStore";
 import type { ForecastResponse, ForecastDays, ForecastItem, GeocodingResult } from "../types/weather";
 
 export const setLocation = (location: GeocodingResult) => {
-  $location.set(location)
-}
+  $location.set(location);
+};
 
 const saveToCache = (forecast: ForecastResponse, location: GeocodingResult) => {
   localStorage.setItem('skycast_cache', JSON.stringify({
@@ -12,8 +12,13 @@ const saveToCache = (forecast: ForecastResponse, location: GeocodingResult) => {
     location,
     timestamp: Date.now()
   }));
-}
+};
 
+/**
+ * Groups raw API forecast items by day.
+ * Each day includes the next day's 00:00:00 item to render a full
+ * midnight-to-midnight curve in ChartCard.
+ */
 const processForecastDays = (list: ForecastItem[]): ForecastDays => {
   const allDates = [...new Set(list.map(item => item.dt_txt.split(' ')[0]))];
 
@@ -32,7 +37,17 @@ const processForecastDays = (list: ForecastItem[]): ForecastDays => {
   );
 };
 
-export const loadFromCache = () => {
+const applyForecast = (forecast: ForecastResponse) => {
+  $forecast.set(forecast);
+  $forecastDays.set(processForecastDays(forecast.list));
+  $selectedDate.set(forecast.list[0].dt_txt.split(' ')[0]);
+};
+
+/**
+ * Loads forecast data from localStorage if it exists and is under 10 minutes old.
+ * @returns true if valid cache was found and applied, false otherwise.
+ */
+const loadFromCache = () => {
   const raw = localStorage.getItem('skycast_cache');
   if (!raw) return false;
 
@@ -40,20 +55,21 @@ export const loadFromCache = () => {
   const age = Date.now() - timestamp;
 
   if (age < 10 * 60 * 1000) {
-    $forecast.set(forecast);
-    $forecastDays.set(processForecastDays(forecast.list));
+    applyForecast(forecast);
     $location.set(location);
     $searchOpen.set(false);
-
     saveToCache(forecast, location);
-
     return true;
   }
 
   $location.set(location);
   return false;
-}
+};
 
+/**
+ * Fetches the 5-day forecast from the OpenWeatherMap API
+ * for the location stored in $location.
+ */
 export const fetchForecast = async () => {
   const location = $location.get();
   if (!location) {
@@ -67,12 +83,10 @@ export const fetchForecast = async () => {
 
   try {
     const res = await fetch(`/api/forecast?lat=${location.lat}&lon=${location.lon}`);
-    if (!res.ok) { throw new Error(`Failed to fetch forecast data: ${res.status}`); }
+    if (!res.ok) throw new Error(`Failed to fetch forecast data: ${res.status}`);
     const data = await res.json();
 
-    $forecast.set(data);
-    $forecastDays.set(processForecastDays(data.list));
-    $selectedDate.set(data.list[0].dt_txt.split(' ')[0]);
+    applyForecast(data);
     saveToCache(data, location);
 
   } catch (error) {
@@ -80,4 +94,20 @@ export const fetchForecast = async () => {
   } finally {
     $forecastLoading.set(false);
   }
-}
+};
+
+/**
+ * Entry point to initialize forecast data on page load.
+ * Loads from cache if available and fresh, otherwise fetches from API.
+ * Opens the search modal if no location is set.
+ */
+export const initForecast = async () => {
+  if (loadFromCache()) return;
+
+  if (!$location.get()) {
+    $searchOpen.set(true);
+    return;
+  }
+
+  await fetchForecast();
+};

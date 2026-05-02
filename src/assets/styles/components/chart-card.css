@@ -57,7 +57,7 @@
   }
 }
 
-:global(.apexcharts-marker) {
+.apexcharts-marker {
   animation: markerPop 0.3s ease-out 0.5s both;
 }
 
