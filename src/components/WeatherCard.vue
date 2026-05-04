@@ -55,9 +55,32 @@ const city = computed(() => forecast.value?.city);
         </div>
         <div class="wind-stat">
           <span class="stat-label">Vent</span>
-          <div class="wind-details">
-            <span class="wind-arrow" :style="{ transform: `rotate(${current.wind.deg}deg)` }">↑</span>
-            <span class="stat-value">{{ Math.round(current.wind.speed * 3.6) }} km/h</span>
+          <div class="wind-stats flex jc-around ai-center">
+            <div class="wind-details">
+              <span class="stat-value">{{ Math.round(current.wind.speed * 3.6) }} km/h</span>
+            </div>
+
+            <div class="compass relative">
+              <div class="compass-body absolute w-full h-full">
+                <div class="compass-arrows absolute w-full h-full">
+                  <div class="quad quad-ns"></div>
+                  <div class="quad quad-eo"></div>
+                  <div class="quad quad-neso"></div>
+                  <div class="quad quad-nose"></div>
+                </div>
+                <div class="compass-directions absolute">
+                  <div class="direction n">N</div>
+                  <div class="direction e">E</div>
+                  <div class="direction s">S</div>
+                  <div class="direction o">O</div>
+                </div>
+                <div class="arrow w-full h-full flex jc-center" :style="`transform: rotate(${current.wind.deg}deg)`">
+                  <div class="arrow-up"></div>
+                  <div class="arrow-down"></div>
+                </div>
+                <div class="axis absolute"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="weather-sun">
