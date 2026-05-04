@@ -74,8 +74,9 @@
 /* ===== Footer — Stats ===== */
 
 .weather-footer {
-  padding-top: calc(var(--space) * 4);
+  padding: calc(var(--space) * 4);
   border-top: 1px solid var(--border);
+  gap: calc(var(--space) * 2);
 }
 
 .weather-stat {
@@ -107,4 +108,35 @@
   display: inline-block;
   font-size: 1.25rem;
   transition: transform var(--transition);
+}
+
+/*===SUnrise & Sunset===*/
+
+.sun-arc-container {
+  position: relative;
+}
+
+.sun-arc {
+  width: 100%;
+  height: auto;
+}
+
+.sun-arc path {
+  fill: none;
+  stroke: var(--color-primary, #6c8ebf);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.sun-position {
+  position: absolute;
+  transform: translate(-50%, -58%);
+  pointer-events: none;
+}
+
+.sun-times {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: calc(var(--space) * 2);
+  margin-top: calc(var(--space) * 2);
 }

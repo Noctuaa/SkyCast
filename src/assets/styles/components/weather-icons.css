@@ -35,6 +35,10 @@
   align-items: end;
 }
 
+.weather-icon.size-xs {
+  height: var(--weather-icon-xs);
+}
+
 /* Sun (01d) and Moon (01n)*/
 .sun,
 .moon {
@@ -67,6 +71,12 @@
   width: calc(var(--weather-icon-sm) * 0.83);
 }
 
+.weather-icon.size-xs .sun,
+.weather-icon.size-xs .sun::after,
+.weather-icon.size-xs .moon {
+  width: calc(var(--weather-icon-xs) * 0.83);
+}
+
 .moon {
   background: #f5f5f5;
   animation: moon-glow 4s infinite alternate;
@@ -88,7 +98,8 @@
     10px -5px 0 -2px rgba(224, 224, 224, 0.3);
 }
 
-.weather-icon.size-sm .moon::before {
+.weather-icon.size-sm .moon::before,
+.weather-icon.size-xs .moon::before {
   width: 0;
   height: 0;
 }

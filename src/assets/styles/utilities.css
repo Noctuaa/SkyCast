@@ -30,6 +30,10 @@
   display: flex;
 }
 
+.grid {
+  display: grid;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
@@ -46,6 +50,10 @@
 
 .jc-around {
   justify-content: space-around;
+}
+
+.jc-between {
+  justify-content: space-between;
 }
 
 .fd-column {
