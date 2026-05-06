@@ -20,22 +20,23 @@ const city = computed(() => forecast.value?.city);
 <template>
   <template v-if="current && city">
     <div class="weather-card">
-      <div class="weather-header flex fd-column">
-        <div class="weather-date">
-          <p class="day-name">{{ dayName }}</p>
-          <p class="full-date">{{ fullDate }}</p>
-        </div>
-
+      <div class="weather-header flex">
         <div class="weather-location">
           <p class="location-name">{{ location?.name }}</p>
           <p class="location-detail">{{ location?.state ? location.state + ', ' : '' }}{{ location?.country }}</p>
         </div>
+        <div class="weather-date">
+          <p class="day-name">{{ dayName }}</p>
+          <p class="full-date">{{ fullDate }}</p>
+        </div>
       </div>
 
-      <div class="weather-main flex-center fd-column">
+      <div class="weather-main flex jc-around">
         <WeatherIcon :iconCode="current.weather[0].icon" />
-        <p class="weather-temp">{{ Math.round(current.main.temp) }}°C</p>
-        <p class="weather-desc">{{ current.weather[0].description }}</p>
+        <div class="tt flex-center fd-column">
+          <p class="weather-temp">{{ Math.round(current.main.temp) }}°C</p>
+          <p class="weather-desc">{{ current.weather[0].description }}</p>
+        </div>
       </div>
 
       <div class="weather-footer grid">

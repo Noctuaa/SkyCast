@@ -56,7 +56,7 @@ const sunState = computed(() => {
     </div>
   </div>
   <div class="sun-times">
-    <span>{{ sunTimes.sunrise }}</span>
-    <span>{{ sunTimes.sunset }}</span>
+    <span class="stat-value">{{ sunTimes.sunrise }}</span>
+    <span class="stat-value">{{ sunTimes.sunset }}</span>
   </div>
 </template>
