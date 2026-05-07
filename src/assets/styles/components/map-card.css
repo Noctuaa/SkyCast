@@ -1,0 +1,48 @@
+.map-card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 3);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 4);
+  overflow: hidden;
+  height: 100%;
+}
+
+.map-controls {
+  display: flex;
+  gap: calc(var(--space) * 2);
+  flex-wrap: wrap;
+}
+
+.layer-btn {
+  padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
+  border-radius: calc(var(--radius) / 2);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.layer-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.layer-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.map-container {
+  flex: 1;
+  border-radius: calc(var(--radius) / 2);
+  overflow: hidden;
+}

@@ -4,6 +4,7 @@ import SearchModal from '../components/SearchModal.vue';
 import WeatherCard from '../components/WeatherCard.vue';
 import ForecastCard from '../components/ForecastCard.vue';
 import ChartCard from '../components/ChartCard.vue';
+import MapCard from '../components/MapCard.vue';
 ---
 
 <script>
@@ -20,6 +21,10 @@ import ChartCard from '../components/ChartCard.vue';
       <div class="chart-card">
         <h2 class="chart-title">Prévisions toutes les 3 heures</h2>
         <ChartCard client:only="vue" />
+      </div>
+      <div class="map-card">
+        <h2>Carte</h2>
+        <MapCard client:only="vue" />
       </div>
     </div>
   </main>
