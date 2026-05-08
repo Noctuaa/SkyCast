@@ -10,6 +10,7 @@
 @import './components/weather-icons.css' layer(components);
 @import './components/chart-card.css' layer(components);
 @import './components/map-card.css' layer(components);
+@import './components/toolbar.css' layer(components);
 
 :root {
   /* Colors - Light */

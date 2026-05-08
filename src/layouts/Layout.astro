@@ -1,6 +1,6 @@
 ---
 import '../assets/styles/main.css';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import Toolbar from '../components/Toolbar.astro';
 const theme = Astro.cookies.get('theme')?.value ?? 'light';
 ---
 
@@ -19,7 +19,7 @@ const theme = Astro.cookies.get('theme')?.value ?? 'light';
     </script>
   </head>
   <body>
-    <ThemeToggle />
+    <Toolbar />
     <slot />
   </body>
 </html>
