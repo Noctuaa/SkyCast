@@ -6,7 +6,7 @@ import { OPENWEATHER_API_KEY } from 'astro:env/server';
  * Proxies OpenWeatherMap tile requests to keep the API key server-side.                                                                                    
  * Forwards the tile path (layer/z/x/y.png) to OWM and returns the PNG image.                                                                               
  * Tiles are cached for 10 minutes to reduce redundant API calls.                                                                                           
- * @param params.path - The tile path (e.g. "clouds_new/6/32/22.png").                                                                                      
+ * @param params.path - The tile path (e.g. "clouds_new/6/32/22.png").
  */
 export const GET: APIRoute = async ({ params }) => {
   const path = params.path;

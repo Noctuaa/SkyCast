@@ -30,6 +30,12 @@ const currentPosition = computed(() => ({
   name: location.value?.name ?? 'Position',
 }));
 
+// Leaflet initializes before CSS computes the container size.
+// ResizeObserver triggers invalidateSize() when the container gets its actual dimensions.
+const observer = new ResizeObserver(() => {
+  mapInstance.value?.invalidateSize();
+});
+
 /**
  * Places a location marker on the map at the given coordinates.
  * Removes the previous marker if one already exists.
@@ -95,9 +101,13 @@ const initMap = async (lat: number, lon: number) => {
 
   addMarker(lat, lon);
   toggleLayer('clouds'); // Show clouds layer by default
+
+  observer.observe(mapContainer.value!);
 };
 
 onMounted(async () => {
+  // Ensure the map container is rendered before initializing the map
+  await new Promise((resolve) => setTimeout(resolve, 100));
   const { lat, lon } = currentPosition.value;
   if (lat && lon) {
     await initMap(lat, lon);
