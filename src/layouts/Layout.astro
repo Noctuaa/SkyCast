@@ -19,6 +19,10 @@ const theme = Astro.cookies.get('theme')?.value ?? 'light';
     </script>
   </head>
   <body>
+    <!--<img src="/background.svg" class="bg-svg" alt="" aria-hidden="true" />-->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
     <Toolbar />
     <slot />
   </body>

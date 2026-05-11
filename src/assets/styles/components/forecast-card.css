@@ -23,7 +23,9 @@
   border-left: 3px solid transparent;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .forecast-day:hover {

@@ -1,4 +1,4 @@
-@layer reset, base, layout, components, utilities;
+@layer reset, base, layout, utilities, components;
 
 @import './base/reset.css' layer(reset);
 @import './base/typography.css' layer(base);
@@ -14,7 +14,7 @@
 
 :root {
   /* Colors - Light */
-  --bg: #f0f4ff;
+  --bg: rgb(240, 244, 255);
   --bg-card: #ffffff;
   --text: #1a2234;
   --text-muted: #64748b;
@@ -39,7 +39,7 @@
 }
 
 [data-theme='dark'] {
-  --bg: #0f172a;
+  --bg: rgb(15, 23, 42);
   --bg-card: #1e293b;
   --text: #f1f5f9;
   --text-muted: #94a3b8;

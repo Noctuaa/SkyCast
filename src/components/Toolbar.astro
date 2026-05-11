@@ -2,14 +2,14 @@
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
-<header class="toolbar">
+<header class="toolbar z-1000 flex ai-center">
   <div class="container w-full flex ai-center jc-between">
     <h1 class="toolbar-logo">
       Sky<span>Cast</span>
     </h1>
 
-    <nav class="toolbar-nav" id="toolbar-nav">
-      <button class="toolbar-btn" id="search-btn" aria-label="Rechercher">
+    <nav class="toolbar-nav fixed grid jc-center ac-start gap-3 p-4" id="toolbar-nav">
+      <button class="toolbar-btn flex-center" id="search-btn" aria-label="Rechercher">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
             d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 
@@ -23,10 +23,10 @@ import ThemeToggle from './ThemeToggle.astro';
       <ThemeToggle />
     </nav>
 
-    <button class="hamburger" id="hamburger-btn" aria-label="Menu">
-      <span></span>
-      <span></span>
-      <span></span>
+    <button class="hamburger flex fd-column p-2" id="hamburger-btn" aria-label="Menu">
+      <span class="block"></span>
+      <span class="block"></span>
+      <span class="block"></span>
     </button>
   </div>
 </header>
