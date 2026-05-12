@@ -47,14 +47,11 @@ const selectCity = (city: GeocodingResult) => {
   query.value = '';
   suggestions.value = [];
 };
-
-const canClose = computed(() => forecast.value !== null);
 </script>
 
 <template>
   <div v-if="searchOpen" class="search-overlay fixed z-100 flex ai-start jc-center">
-    <button v-if="canClose" class="search-close" @click="$searchOpen.set(false)">✕</button>
-    <div class="search-box relative w-full">
+    <div class="search-box w-full">
       <input
         id="search-city"
         name="search-city"

@@ -1,0 +1,33 @@
+---
+import Toolbar from './Toolbar.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="toolbar z-1000 flex ai-center">
+  <div class="container w-full flex ai-center jc-between">
+    <h1 class="toolbar-logo">
+      Sky<span>Cast</span>
+    </h1>
+
+    <nav class="toolbar-nav fixed grid jc-center ac-start gap-3 p-4" id="toolbar-nav">
+      <Toolbar />
+      <ThemeToggle />
+    </nav>
+
+    <button class="hamburger flex fd-column p-2" id="hamburger-btn" aria-label="Menu">
+      <span class="block"></span>
+      <span class="block"></span>
+      <span class="block"></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const hamburger = document.getElementById('hamburger-btn');
+  const nav = document.getElementById('toolbar-nav');
+
+  hamburger?.addEventListener('click', () => {
+    nav?.classList.toggle('open');
+    hamburger.classList.toggle('active');
+  });
+</script>

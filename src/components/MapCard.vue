@@ -138,5 +138,5 @@ watch(currentPosition, async (pos) => {
       {{ config.label }}
     </button>
   </div>
-  <div ref="mapContainer" class="map-container"></div>
+  <div ref="mapContainer" class="map-container z-10"></div>
 </template>

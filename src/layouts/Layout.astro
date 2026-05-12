@@ -1,6 +1,6 @@
 ---
 import '../assets/styles/main.css';
-import Toolbar from '../components/Toolbar.astro';
+import Navbar from '../components/Navbar.astro';
 const theme = Astro.cookies.get('theme')?.value ?? 'light';
 ---
 
@@ -23,7 +23,7 @@ const theme = Astro.cookies.get('theme')?.value ?? 'light';
     <div class="bg-blob blob-1"></div>
     <div class="bg-blob blob-2"></div>
     <div class="bg-blob blob-3"></div>
-    <Toolbar />
+    <Navbar />
     <slot />
   </body>
 </html>
