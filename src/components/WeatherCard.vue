@@ -2,12 +2,15 @@
 import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $forecast } from '../stores/forecastStore';
+import { $unit } from '../stores/configStore';
 import { $location } from '../stores/locationStore';
+import { convertTemp } from '../stores/actions';
 import WeatherIcon from './WeatherIcon.vue';
 import SunArc from './SunArc.vue';
 
 const forecast = useStore($forecast);
 const location = useStore($location);
+const unit = useStore($unit);
 
 const current = computed(() => forecast.value?.list[0]);
 const dayName = computed(() => new Date().toLocaleDateString('fr-FR', { weekday: 'long' }));
@@ -34,7 +37,7 @@ const city = computed(() => forecast.value?.city);
       <div class="weather-main flex jc-around">
         <WeatherIcon :iconCode="current.weather[0].icon" />
         <div class="tt flex-center fd-column">
-          <p class="weather-temp">{{ Math.round(current.main.temp) }}°C</p>
+          <p class="weather-temp">{{ convertTemp(current.main.temp, unit) }}°{{ unit }}</p>
           <p class="weather-desc">{{ current.weather[0].description }}</p>
         </div>
       </div>
@@ -43,7 +46,7 @@ const city = computed(() => forecast.value?.city);
         <div class="flex jc-between">
           <div class="weather-stat">
             <span class="stat-label">Ressenti</span>
-            <span class="stat-value">{{ Math.round(current.main.feels_like) }}°C</span>
+            <span class="stat-value">{{ convertTemp(current.main.feels_like, unit) }}°{{ unit }}</span>
           </div>
           <div class="weather-stat">
             <span class="stat-label">Humidité</span>

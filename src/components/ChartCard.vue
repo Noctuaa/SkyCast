@@ -2,11 +2,14 @@
 import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $forecast, $selectedDate, $forecastDays } from '../stores/forecastStore';
+import { $unit } from '../stores/configStore';
+import { convertTemp } from '../stores/actions';
 import VueApexCharts from 'vue3-apexcharts';
 
 const forecast = useStore($forecast);
 const forecastDays = useStore($forecastDays);
 const selectedDate = useStore($selectedDate);
+const unit = useStore($unit);
 
 const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -78,7 +81,7 @@ const options = computed(() => {
         return `
           <p class="tooltip-time">🕐 ${time}</p>
             <div class="tooltip-content">
-            <p>🌡 Température : ${Math.round(item.main.temp)}°C</p>
+            <p>🌡 Température : ${convertTemp(item.main.temp, unit.value)}°${unit.value}</p>
             <p class="t-capitalize">☁ ${item.weather[0].description}</p>
             <p>💧 Humidité : ${item.main.humidity}%</p>
             <p>💨 Vent : ${Math.round(item.wind.speed * 3.6)} km/h</p>

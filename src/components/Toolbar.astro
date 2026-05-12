@@ -15,7 +15,8 @@
 <button class="toolbar-btn lang-toggle" id="lang-toggle">FR</button>
 
 <script>
-  import { $searchOpen, $forecast } from '../stores/forecastStore';
+  import { $forecast, $searchOpen } from '../stores/forecastStore';
+  import { $unit, saveConfig } from '../stores/configStore';
 
   const searchBtn = document.getElementById('search-btn');
   const unitToggle = document.getElementById('unit-toggle');
@@ -25,5 +26,12 @@
     const canClose = $forecast.get() !== null;
     if ($searchOpen.get() && !canClose) return;
     $searchOpen.set(!$searchOpen.get());
+  });
+
+  unitToggle?.addEventListener('click', () => {
+    const next = $unit.get() === 'C' ? 'F' : 'C';
+    $unit.set(next);
+    if (unitToggle) unitToggle.textContent = `°${next}`;
+    saveConfig();
   });
 </script>

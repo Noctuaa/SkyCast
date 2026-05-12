@@ -2,10 +2,13 @@
 import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $forecast, $selectedDate } from '../stores/forecastStore';
+import { $unit } from '../stores/configStore';
+import { convertTemp } from '../stores/actions';
 import WeatherIcon from './WeatherIcon.vue';
 
 const forecast = useStore($forecast);
 const selectedDate = useStore($selectedDate);
+const unit = useStore($unit);
 
 const selectDay = (date: string) => {
   $selectedDate.set(date);
@@ -53,8 +56,8 @@ const dailyForecasts = computed(() => {
       </p>
       <WeatherIcon :iconCode="day.icon" size="sm" />
       <p class="forecast-temps">
-        <span class="temp-min">{{ day.temp_min }}°</span>
-        <span class="temp-max">{{ day.temp_max }}°</span>
+        <span class="temp-min">{{ convertTemp(day.temp_min, unit) }}°{{ unit }}</span>
+        <span class="temp-max">{{ convertTemp(day.temp_max, unit) }}°{{ unit }}</span>
       </p>
     </div>
   </div>
