@@ -6,7 +6,8 @@ type Theme = 'light' | 'dark';
 
 export const $unit = atom<Unit>('C');
 export const $lang = atom<Lang>(document.documentElement.lang as Lang);
-export const $theme = atom<Theme>('light');
+export const $theme = atom<Theme>(document.documentElement.getAttribute('data-theme') as Theme ?? 'light');
+
 
 /**
  * Persists current unit, lang and theme preferences to localStorage.

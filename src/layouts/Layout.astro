@@ -13,10 +13,10 @@ import Navbar from '../components/Navbar.astro';
     <meta name="generator" content={Astro.generator} />
     <title>SkyCast</title>
     <script is:inline>
-      const theme = localStorage.getItem('theme') ?? 'light';
+      const config = JSON.parse(localStorage.getItem('skycast_config') ?? '{}');
+      const theme = config.theme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
 
-      const config = JSON.parse(localStorage.getItem('skycast_config') ?? '{}');
       document.documentElement.lang = config.lang ?? 'fr';
     </script>
   </head>
