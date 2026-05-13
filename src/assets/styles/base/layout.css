@@ -15,7 +15,7 @@ body {
   pointer-events: none;
 }
 main.container {
-  padding-top: calc(var(--space) * 6);
+  padding-block-start: calc(4rem + var(--space) * 6);
 }
 
 .container {

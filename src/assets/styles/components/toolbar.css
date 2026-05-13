@@ -1,6 +1,7 @@
 .toolbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
   height: 4rem;
 }
 
@@ -22,17 +23,20 @@
 }
 
 .toolbar-nav {
+  position: fixed;
   grid-template-columns: repeat(2, max-content);
   gap: calc(var(--space) * 3);
   width: 50svw;
   height: 100svh;
   top: 4rem;
-  right: -50%;
+  right: 0;
+
+  transform: translateX(100%);
   transition: transform var(--transition);
 }
 
 .toolbar-nav.open {
-  transform: translateX(-100%);
+  transform: translateX(0%);
 }
 
 .toolbar-btn {
