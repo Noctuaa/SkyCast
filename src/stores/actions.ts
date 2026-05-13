@@ -1,6 +1,6 @@
 import { $forecast, $forecastLoading, $forecastError, $searchOpen, $forecastDays, $selectedDate } from "./forecastStore";
 import { $location } from "./locationStore";
-import { loadConfig } from "./configStore";
+import { loadConfig, $lang } from "./configStore";
 import type { ForecastResponse, ForecastDays, ForecastItem, GeocodingResult } from "../types/weather";
 
 export const setLocation = (location: GeocodingResult) => {
@@ -11,6 +11,7 @@ const saveToCache = (forecast: ForecastResponse, location: GeocodingResult) => {
   localStorage.setItem('skycast_cache', JSON.stringify({
     forecast,
     location,
+    lang: $lang.get(),
     timestamp: Date.now()
   }));
 };
@@ -46,14 +47,18 @@ const applyForecast = (forecast: ForecastResponse) => {
 
 /**
  * Loads forecast data from localStorage if it exists and is under 10 minutes old.
+ * Invalidates the cache if the stored language differs from the current one.
  * @returns true if valid cache was found and applied, false otherwise.
  */
 const loadFromCache = () => {
   const raw = localStorage.getItem('skycast_cache');
   if (!raw) return false;
 
-  const { forecast, location, timestamp } = JSON.parse(raw);
+  const { forecast, location, lang, timestamp } = JSON.parse(raw);
+
+  if (lang && lang !== $lang.get()) return false;
   const age = Date.now() - timestamp;
+
 
   if (age < 10 * 60 * 1000) {
     applyForecast(forecast);
@@ -83,7 +88,7 @@ export const fetchForecast = async () => {
   $searchOpen.set(false);
 
   try {
-    const res = await fetch(`/api/forecast?lat=${location.lat}&lon=${location.lon}`);
+    const res = await fetch(`/api/forecast?lat=${location.lat}&lon=${location.lon}&lang=${$lang.get()}`);
     if (!res.ok) throw new Error(`Failed to fetch forecast data: ${res.status}`);
     const data = await res.json();
 

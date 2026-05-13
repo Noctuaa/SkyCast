@@ -2,9 +2,12 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $location } from '../stores/locationStore';
+import { useI18n } from '../i18n/useI18n';
 import 'leaflet/dist/leaflet.css';
 
 const location = useStore($location);
+const { t } = useI18n();
+const getLayerLabel = (key: string) => t.value[key as keyof typeof t.value] as string ?? key;
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<any>(null);
 const currentMarker = ref<any>(null);
@@ -135,7 +138,7 @@ watch(currentPosition, async (pos) => {
       :class="{ active: activeLayer === key }"
       @click="toggleLayer(key)"
     >
-      {{ config.label }}
+      {{ getLayerLabel(key) }}
     </button>
   </div>
   <div ref="mapContainer" class="map-container z-10"></div>

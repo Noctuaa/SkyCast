@@ -1,11 +1,10 @@
 ---
 import '../assets/styles/main.css';
 import Navbar from '../components/Navbar.astro';
-const theme = Astro.cookies.get('theme')?.value ?? 'light';
 ---
 
 <!doctype html>
-<html lang="fr" data-theme={theme}>
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,6 +15,9 @@ const theme = Astro.cookies.get('theme')?.value ?? 'light';
     <script is:inline>
       const theme = localStorage.getItem('theme') ?? 'light';
       document.documentElement.setAttribute('data-theme', theme);
+
+      const config = JSON.parse(localStorage.getItem('skycast_config') ?? '{}');
+      document.documentElement.lang = config.lang ?? 'fr';
     </script>
   </head>
   <body>

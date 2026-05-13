@@ -4,12 +4,14 @@ import { useStore } from '@nanostores/vue';
 import { $forecast, $selectedDate, $forecastDays } from '../stores/forecastStore';
 import { $unit } from '../stores/configStore';
 import { convertTemp } from '../stores/actions';
+import { useI18n } from '../i18n/useI18n';
 import VueApexCharts from 'vue3-apexcharts';
 
 const forecast = useStore($forecast);
 const forecastDays = useStore($forecastDays);
 const selectedDate = useStore($selectedDate);
 const unit = useStore($unit);
+const { t } = useI18n();
 
 const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -21,8 +23,8 @@ const items = computed(() => {
 
 const series = computed(() => [
   {
-    name: 'Température',
-    data: items.value.map((item) => Math.round(item.main.temp)),
+    name: t.value.temperature,
+    data: items.value.map((item) => convertTemp(item.main.temp, unit.value)),
   },
 ]);
 
@@ -63,10 +65,10 @@ const options = computed(() => {
       crosshairs: { show: false },
       axisTicks: { show: false },
       axisBorder: { show: false },
-      title: { text: 'Heure', style: { fontSize: '13px', fontWeight: 'bold' } },
+      title: { text: t.value.chartXAxis, style: { fontSize: '13px', fontWeight: 'bold' } },
     },
     yaxis: {
-      title: { text: 'Température (°C)', style: { fontSize: '13px', fontWeight: 'bold' } },
+      title: { text: `${t.value.chartYAxis} (°${unit.value})`, style: { fontSize: '13px', fontWeight: 'bold' } },
     },
     grid: {
       borderColor: dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
@@ -81,11 +83,11 @@ const options = computed(() => {
         return `
           <p class="tooltip-time">🕐 ${time}</p>
             <div class="tooltip-content">
-            <p>🌡 Température : ${convertTemp(item.main.temp, unit.value)}°${unit.value}</p>
+            <p>🌡 ${t.value.temperature} : ${convertTemp(item.main.temp, unit.value)}°${unit.value}</p>
             <p class="t-capitalize">☁ ${item.weather[0].description}</p>
-            <p>💧 Humidité : ${item.main.humidity}%</p>
-            <p>💨 Vent : ${Math.round(item.wind.speed * 3.6)} km/h</p>
-            <p>☔ Précipitation : ${item.rain?.['3h'] ?? 0} mm</p>
+            <p>💧 ${t.value.humidity} : ${item.main.humidity}%</p>
+            <p>💨 ${t.value.wind} : ${Math.round(item.wind.speed * 3.6)} km/h</p>
+            <p>☔ ${t.value.precipitation} : ${item.rain?.['3h'] ?? 0} mm</p>
           </div>
         `;
       },
@@ -96,5 +98,8 @@ const options = computed(() => {
 </script>
 
 <template>
-  <VueApexCharts v-if="forecast && items.length" type="line" :options="options" :series="series" height="400" />
+  <template v-if="forecast && items.length">
+    <h2 class="chart-title">{{ t.chartTitle }}</h2>
+    <VueApexCharts type="line" :options="options" :series="series" height="400" />
+  </template>
 </template>

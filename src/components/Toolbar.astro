@@ -12,26 +12,45 @@
   </svg>
 </button>
 <button class="toolbar-btn unit-toggle" id="unit-toggle">°C</button>
-<button class="toolbar-btn lang-toggle" id="lang-toggle">FR</button>
+<button class="toolbar-btn lang-toggle" id="lang-toggle"></button>
 
 <script>
   import { $forecast, $searchOpen } from '../stores/forecastStore';
-  import { $unit, saveConfig } from '../stores/configStore';
+  import { $unit, $lang, saveConfig } from '../stores/configStore';
+  import { fetchForecast } from '../stores/actions';
 
+  // Buttons
   const searchBtn = document.getElementById('search-btn');
   const unitToggle = document.getElementById('unit-toggle');
   const langToggle = document.getElementById('lang-toggle');
 
+  // Init button labels from saved preferences
+  if (unitToggle) unitToggle.textContent = `°${$unit.get()}`;
+  if (langToggle)
+    langToggle.textContent = document.documentElement.lang === 'en' ? '\u{1F1EC}\u{1F1E7}' : '\u{1F1EB}\u{1F1F7}';
+
+  // Search — prevent closing if no city is selected
   searchBtn?.addEventListener('click', () => {
     const canClose = $forecast.get() !== null;
     if ($searchOpen.get() && !canClose) return;
     $searchOpen.set(!$searchOpen.get());
   });
 
+  // Unit toggle — converts and persists preference
   unitToggle?.addEventListener('click', () => {
     const next = $unit.get() === 'C' ? 'F' : 'C';
     $unit.set(next);
     if (unitToggle) unitToggle.textContent = `°${next}`;
     saveConfig();
+  });
+
+  // Lang toggle — updates html[lang] attribute and persists preference
+  langToggle?.addEventListener('click', async () => {
+    const next = $lang.get() === 'fr' ? 'en' : 'fr';
+    $lang.set(next);
+    document.documentElement.lang = next;
+    if (langToggle) langToggle.textContent = next === 'fr' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}';
+    saveConfig();
+    if ($forecast.get() !== null) await fetchForecast();
   });
 </script>

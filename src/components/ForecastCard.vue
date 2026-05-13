@@ -4,11 +4,14 @@ import { useStore } from '@nanostores/vue';
 import { $forecast, $selectedDate } from '../stores/forecastStore';
 import { $unit } from '../stores/configStore';
 import { convertTemp } from '../stores/actions';
+import { useI18n } from '../i18n/useI18n';
 import WeatherIcon from './WeatherIcon.vue';
 
 const forecast = useStore($forecast);
 const selectedDate = useStore($selectedDate);
 const unit = useStore($unit);
+const { lang } = useI18n();
+const locale = computed(() => lang.value === 'fr' ? 'fr-FR' : 'en-GB');
 
 const selectDay = (date: string) => {
   $selectedDate.set(date);
@@ -50,9 +53,9 @@ const dailyForecasts = computed(() => {
     >
       <p class="forecast-date">
         <span class="forecast-weekday">
-          {{ new Date(day.dt * 1000).toLocaleDateString('fr-FR', { weekday: 'short' }) }}
+          {{ new Date(day.dt * 1000).toLocaleDateString(locale, { weekday: 'short' }) }}
         </span>
-        {{ new Date(day.dt * 1000).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) }}
+        {{ new Date(day.dt * 1000).toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) }}
       </p>
       <WeatherIcon :iconCode="day.icon" size="sm" />
       <p class="forecast-temps">

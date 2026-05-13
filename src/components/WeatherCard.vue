@@ -5,18 +5,29 @@ import { $forecast } from '../stores/forecastStore';
 import { $unit } from '../stores/configStore';
 import { $location } from '../stores/locationStore';
 import { convertTemp } from '../stores/actions';
+import { useI18n } from '../i18n/useI18n';
 import WeatherIcon from './WeatherIcon.vue';
 import SunArc from './SunArc.vue';
 
 const forecast = useStore($forecast);
 const location = useStore($location);
 const unit = useStore($unit);
+const { t, lang } = useI18n();
 
 const current = computed(() => forecast.value?.list[0]);
-const dayName = computed(() => new Date().toLocaleDateString('fr-FR', { weekday: 'long' }));
-const fullDate = computed(() =>
-  new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+
+const dayName = computed(() =>
+  new Date().toLocaleDateString(`${lang.value}-${lang.value.toUpperCase()}`, { weekday: 'long' }),
 );
+
+const fullDate = computed(() =>
+  new Date().toLocaleDateString(`${lang.value}-${lang.value.toUpperCase()}`, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }),
+);
+
 const city = computed(() => forecast.value?.city);
 </script>
 
@@ -45,20 +56,20 @@ const city = computed(() => forecast.value?.city);
       <div class="weather-footer grid">
         <div class="flex jc-between">
           <div class="weather-stat">
-            <span class="stat-label">Ressenti</span>
+            <span class="stat-label">{{ t.feelsLike }}</span>
             <span class="stat-value">{{ convertTemp(current.main.feels_like, unit) }}°{{ unit }}</span>
           </div>
           <div class="weather-stat">
-            <span class="stat-label">Humidité</span>
+            <span class="stat-label">{{ t.humidity }}</span>
             <span class="stat-value">{{ current.main.humidity }}%</span>
           </div>
           <div class="weather-stat">
-            <span class="stat-label">Pression</span>
+            <span class="stat-label">{{ t.pressure }}</span>
             <span class="stat-value">{{ current.main.pressure }} hPa</span>
           </div>
         </div>
         <div class="wind-stat">
-          <span class="stat-label">Vent</span>
+          <span class="stat-label">{{ t.wind }}</span>
           <div class="wind-stats flex jc-around ai-center">
             <div class="wind-details">
               <span class="stat-value">{{ Math.round(current.wind.speed * 3.6) }} km/h</span>
@@ -88,7 +99,7 @@ const city = computed(() => forecast.value?.city);
           </div>
         </div>
         <div class="weather-sun">
-          <span class="stat-label">Lever & coucher</span>
+          <span class="stat-label">{{ t.sunriseSunset }}</span>
           <SunArc :sunrise="city.sunrise" :sunset="city.sunset" />
         </div>
       </div>

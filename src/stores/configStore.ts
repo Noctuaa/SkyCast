@@ -1,11 +1,11 @@
 import { atom } from "nanostores";
 
 type Unit = 'C' | 'F';
-type Lang = 'FR' | 'EN';
+type Lang = 'fr' | 'en';
 type Theme = 'light' | 'dark';
 
 export const $unit = atom<Unit>('C');
-export const $lang = atom<Lang>('FR');
+export const $lang = atom<Lang>(document.documentElement.lang as Lang);
 export const $theme = atom<Theme>('light');
 
 /**
