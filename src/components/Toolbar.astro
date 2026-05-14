@@ -2,7 +2,7 @@
 
 ---
 
-<button class="toolbar-btn flex-center" id="search-btn" aria-label="Rechercher">
+<button class="btn-tools" id="search-btn" aria-label="Rechercher">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <path
       d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 
@@ -11,9 +11,9 @@
     </path>
   </svg>
 </button>
-<button class="toolbar-btn unit-toggle" id="unit-toggle">°C</button>
-<button class="toolbar-btn lang-toggle" id="lang-toggle"></button>
-<button id="theme-toggle" aria-label="Toggle theme">
+<button class="btn-tools unit-toggle" id="unit-toggle">°C</button>
+<button class="btn-tools lang-toggle" id="lang-toggle"></button>
+<button class="btn-tools" id="theme-toggle" aria-label="Toggle theme">
   <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
     <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
     <path
@@ -44,7 +44,7 @@
   // Init button labels from saved preferences
   if (unitToggle) unitToggle.textContent = `°${$unit.get()}`;
   if (langToggle)
-    langToggle.textContent = document.documentElement.lang === 'en' ? '\u{1F1EC}\u{1F1E7}' : '\u{1F1EB}\u{1F1F7}';
+    langToggle.textContent = document.documentElement.lang === 'en' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}';
 
   // Search — prevent closing if no city is selected
   searchBtn?.addEventListener('click', () => {
@@ -66,7 +66,7 @@
     const next = $lang.get() === 'fr' ? 'en' : 'fr';
     $lang.set(next);
     document.documentElement.lang = next;
-    if (langToggle) langToggle.textContent = next === 'fr' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}';
+    if (langToggle) langToggle.textContent = next === 'fr' ? '\u{1F1EC}\u{1F1E7}' : '\u{1F1EB}\u{1F1F7}';
     saveConfig();
     if ($forecast.get() !== null) await fetchForecast();
   });
@@ -74,42 +74,20 @@
   // Theme toggle -- updates html[data-theme] attribute and persists preference
   themeToggle?.addEventListener('click', () => {
     const next = $theme.get() === 'light' ? 'dark' : 'light';
-    $theme.set(next);
-    document.documentElement.setAttribute('data-theme', next);
-    saveConfig();
+    const switchTheme = () => {
+      $theme.set(next);
+      document.documentElement.setAttribute('data-theme', next);
+      saveConfig();
+    };
+    if (!document.startViewTransition) {
+      switchTheme();
+      return;
+    }
+    document.startViewTransition(switchTheme);
   });
 </script>
 
 <style>
-  #theme-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 1.1rem;
-    transition:
-      background-color var(--transition),
-      transform var(--transition);
-  }
-
-  #theme-toggle:hover {
-    background-color: var(--accent);
-    color: #fff;
-    transform: rotate(20deg);
-  }
-
-  #theme-toggle svg {
-    width: 1.2rem;
-    height: 1.2rem;
-    fill: currentColor;
-  }
-
-  /* Affiche soleil en light, lune en dark */
   .icon-moon {
     display: none;
   }

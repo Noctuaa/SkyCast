@@ -25,44 +25,17 @@
 .toolbar-nav {
   position: fixed;
   grid-template-columns: repeat(2, max-content);
-  gap: calc(var(--space) * 3);
+  gap: calc(var(--space) * 4);
   width: 50svw;
   height: 100svh;
   top: 4rem;
   right: 0;
-
   transform: translateX(100%);
   transition: transform var(--transition);
 }
 
 .toolbar-nav.open {
   transform: translateX(0%);
-}
-
-.toolbar-btn {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition:
-    background-color var(--transition),
-    transform var(--transition);
-}
-
-.toolbar-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-.toolbar-btn svg {
-  width: 1rem;
-  height: 1rem;
-  fill: currentColor;
 }
 
 /* Hamburger */
@@ -108,5 +81,6 @@
     border-bottom: none;
     transform: none;
     pointer-events: auto;
+    backdrop-filter: none;
   }
 }

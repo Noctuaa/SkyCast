@@ -11,6 +11,8 @@
 @import './components/chart-card.css' layer(components);
 @import './components/map-card.css' layer(components);
 @import './components/toolbar.css' layer(components);
+@import './components/buttons.css' layer(components);
+@import './base/transitions.css';
 
 :root {
   /* Colors - Light */
@@ -36,6 +38,7 @@
 
   /* Transitions */
   --transition: 0.3s ease;
+  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme='dark'] {
