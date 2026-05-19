@@ -1,0 +1,100 @@
+---
+import type { ForecastResponse } from '../types/weather';
+import { convertTemp } from '../utils/weather';
+import { translations } from '../i18n/translations';
+import WeatherIcon from './WeatherIcon.vue';
+import SunArc from './SunArc.vue';
+
+interface Props {
+  forecast: ForecastResponse;
+  locationName: string;
+  locationCountry: string;
+  unit: 'C' | 'F';
+  lang: 'fr' | 'en';
+}
+
+const { forecast, locationName, locationCountry, unit, lang } = Astro.props;
+const t = translations[lang] ?? translations.fr;
+const current = forecast.list[0];
+const city = forecast.city;
+
+const dayName = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, { weekday: 'long' });
+const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<div class="weather-card">
+  <div class="weather-header flex">
+    <div class="weather-location">
+      <p class="location-name">{locationName}</p>
+      <p class="location-detail">{locationCountry}</p>
+    </div>
+    <div class="weather-date">
+      <p class="day-name">{dayName}</p>
+      <p class="full-date">{fullDate}</p>
+    </div>
+  </div>
+
+  <div class="weather-main flex jc-around">
+    <WeatherIcon iconCode={current.weather[0].icon} />
+    <div class="tt flex-center fd-column">
+      <p class="weather-temp">{convertTemp(current.main.temp, unit)}°{unit}</p>
+      <p class="weather-desc">{current.weather[0].description}</p>
+    </div>
+  </div>
+
+  <div class="weather-footer grid">
+    <div class="flex jc-between">
+      <div class="weather-stat">
+        <span class="stat-label">{t.feelsLike}</span>
+        <span class="stat-value">{convertTemp(current.main.feels_like, unit)}°{unit}</span>
+      </div>
+      <div class="weather-stat">
+        <span class="stat-label">{t.humidity}</span>
+        <span class="stat-value">{current.main.humidity}%</span>
+      </div>
+      <div class="weather-stat">
+        <span class="stat-label">{t.pressure}</span>
+        <span class="stat-value">{current.main.pressure} hPa</span>
+      </div>
+    </div>
+
+    <div class="wind-stat">
+      <span class="stat-label">{t.wind}</span>
+      <div class="wind-stats flex jc-around ai-center">
+        <div class="wind-details">
+          <span class="stat-value">{Math.round(current.wind.speed * 3.6)} km/h</span>
+        </div>
+        <div class="compass relative">
+          <div class="compass-body absolute w-full h-full">
+            <div class="compass-arrows absolute w-full h-full">
+              <div class="quad quad-ns"></div>
+              <div class="quad quad-eo"></div>
+              <div class="quad quad-neso"></div>
+              <div class="quad quad-nose"></div>
+            </div>
+            <div class="compass-directions absolute">
+              <div class="direction n">N</div>
+              <div class="direction e">E</div>
+              <div class="direction s">S</div>
+              <div class="direction o">O</div>
+            </div>
+            <div class="arrow w-full h-full flex jc-center" style={`transform: rotate(${current.wind.deg}deg)`}>
+              <div class="arrow-up"></div>
+              <div class="arrow-down"></div>
+            </div>
+            <div class="axis absolute"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="weather-sun">
+      <span class="stat-label">{t.sunriseSunset}</span>
+      <SunArc sunrise={city.sunrise} sunset={city.sunset} client:load />
+    </div>
+  </div>
+</div>

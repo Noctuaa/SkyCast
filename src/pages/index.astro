@@ -1,29 +1,67 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SearchModal from '../components/SearchModal.vue';
-import WeatherCard from '../components/WeatherCard.vue';
+import WeatherCard from '../components/WeatherCard.astro';
 import ForecastCard from '../components/ForecastCard.vue';
 import ChartCard from '../components/ChartCard.vue';
 import MapCard from '../components/MapCard.vue';
+import type { ForecastResponse } from '../types/weather';
+
+const url = Astro.url;
+const cityParam = url.searchParams.get('city') ?? '';
+const hasValidId = cityParam.length > 0 && !isNaN(Number(cityParam));
+
+const prefsCookie = Astro.cookies.get('skycast_prefs')?.value;
+const prefs = prefsCookie ? JSON.parse(decodeURIComponent(prefsCookie)) : {};
+const langParam = url.searchParams.get('lang');
+const lang = (['fr', 'en'].includes(langParam ?? '') ? langParam : (prefs.lang ?? 'fr')) as 'fr' | 'en';
+const unit = (prefs.unit ?? 'C') as 'C' | 'F';
+
+let forecast: ForecastResponse | null = null;
+
+if (hasValidId) {
+  const apiKey = import.meta.env.OPENWEATHER_API_KEY;
+  const res = await fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?id=${cityParam}&appid=${apiKey}&units=metric&lang=${lang}&cnt=40`,
+  );
+  if (res.ok) forecast = await res.json();
+}
+
+const locationCookie = Astro.cookies.get('skycast_location')?.value;
+const locationData = locationCookie
+  ? JSON.parse(decodeURIComponent(locationCookie))
+  : { name: forecast?.city.name ?? '', country: forecast?.city.country ?? '' };
+
 ---
 
 <script>
-  import { initForecast } from '../stores/actions';
-  initForecast();
+  import { $searchOpen } from '../stores/forecastStore';
+  if (!new URL(window.location.href).searchParams.get('city')) {
+    $searchOpen.set(true);
+  }
 </script>
 
 <Layout>
   <main class="container">
     <SearchModal client:only="vue" />
     <div class="weather-grid grid">
-      <WeatherCard client:only="vue" />
-      <ForecastCard client:only="vue" />
+      {forecast && (
+        <WeatherCard
+          forecast={forecast}
+          locationName={locationData.name}
+          locationCountry={locationData.country}
+          unit={unit}
+          lang={lang as 'fr' | 'en'}
+        />
+      )}
+
+      <!--  <ForecastCard client:only="vue" />
       <div class="chart-card">
         <ChartCard client:only="vue" />
       </div>
       <div class="map-card">
         <MapCard client:only="vue" />
-      </div>
+      </div>-->
     </div>
   </main>
 </Layout>

@@ -21,11 +21,15 @@ import Toolbar from './Toolbar.astro';
 </header>
 
 <script>
-  const hamburger = document.getElementById('hamburger-btn');
-  const nav = document.getElementById('toolbar-nav');
+  function setupNavbar() {
+    const hamburger = document.getElementById('hamburger-btn');
+    const nav = document.getElementById('toolbar-nav');
 
-  hamburger?.addEventListener('click', () => {
-    nav?.classList.toggle('open');
-    hamburger.classList.toggle('active');
-  });
+    hamburger?.addEventListener('click', () => {
+      nav?.classList.toggle('open');
+      hamburger.classList.toggle('active');
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupNavbar);
 </script>

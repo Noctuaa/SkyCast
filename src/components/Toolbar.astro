@@ -31,60 +31,59 @@
 </button>
 
 <script>
-  import { $forecast, $searchOpen } from '../stores/forecastStore';
+  import { $searchOpen } from '../stores/forecastStore';
   import { $unit, $lang, $theme, saveConfig } from '../stores/configStore';
-  import { fetchForecast } from '../stores/actions';
 
-  // Buttons
-  const searchBtn = document.getElementById('search-btn');
-  const unitToggle = document.getElementById('unit-toggle');
-  const langToggle = document.getElementById('lang-toggle');
-  const themeToggle = document.getElementById('theme-toggle');
+  function setupToolbar() {
+    const searchBtn = document.getElementById('search-btn');
+    const unitToggle = document.getElementById('unit-toggle');
+    const langToggle = document.getElementById('lang-toggle');
+    const themeToggle = document.getElementById('theme-toggle');
 
-  // Init button labels from saved preferences
-  if (unitToggle) unitToggle.textContent = `°${$unit.get()}`;
-  if (langToggle)
-    langToggle.textContent = document.documentElement.lang === 'en' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}';
+    if (unitToggle) unitToggle.textContent = `°${$unit.get()}`;
+    const urlLang = new URL(window.location.href).searchParams.get('lang');
+    const currentLang = urlLang === 'en' ? 'en' : 'fr';
+    if (langToggle)
+      langToggle.textContent = currentLang === 'en' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}';
 
-  // Search — prevent closing if no city is selected
-  searchBtn?.addEventListener('click', () => {
-    const canClose = $forecast.get() !== null;
-    if ($searchOpen.get() && !canClose) return;
-    $searchOpen.set(!$searchOpen.get());
-  });
+    searchBtn?.addEventListener('click', () => {
+      const hasCity = new URL(window.location.href).searchParams.get('city') !== null;
+      if ($searchOpen.get() && !hasCity) return;
+      $searchOpen.set(!$searchOpen.get());
+    });
 
-  // Unit toggle — converts and persists preference
-  unitToggle?.addEventListener('click', () => {
-    const next = $unit.get() === 'C' ? 'F' : 'C';
-    $unit.set(next);
-    if (unitToggle) unitToggle.textContent = `°${next}`;
-    saveConfig();
-  });
-
-  // Lang toggle — updates html[lang] attribute and persists preference
-  langToggle?.addEventListener('click', async () => {
-    const next = $lang.get() === 'fr' ? 'en' : 'fr';
-    $lang.set(next);
-    document.documentElement.lang = next;
-    if (langToggle) langToggle.textContent = next === 'fr' ? '\u{1F1EC}\u{1F1E7}' : '\u{1F1EB}\u{1F1F7}';
-    saveConfig();
-    if ($forecast.get() !== null) await fetchForecast();
-  });
-
-  // Theme toggle -- updates html[data-theme] attribute and persists preference
-  themeToggle?.addEventListener('click', () => {
-    const next = $theme.get() === 'light' ? 'dark' : 'light';
-    const switchTheme = () => {
-      $theme.set(next);
-      document.documentElement.setAttribute('data-theme', next);
+    unitToggle?.addEventListener('click', () => {
+      const next = $unit.get() === 'C' ? 'F' : 'C';
+      $unit.set(next);
+      if (unitToggle) unitToggle.textContent = `°${next}`;
       saveConfig();
-    };
-    if (!document.startViewTransition) {
-      switchTheme();
-      return;
-    }
-    document.startViewTransition(switchTheme);
-  });
+      window.location.reload();
+    });
+
+    langToggle?.addEventListener('click', () => {
+      const next = currentLang === 'fr' ? 'en' : 'fr';
+      $lang.set(next);
+      saveConfig();
+      const cityId = new URL(window.location.href).searchParams.get('city');
+      if (cityId) window.location.href = `/?lang=${next}&city=${cityId}`;
+    });
+
+    themeToggle?.addEventListener('click', () => {
+      const next = $theme.get() === 'light' ? 'dark' : 'light';
+      const switchTheme = () => {
+        $theme.set(next);
+        document.documentElement.setAttribute('data-theme', next);
+        saveConfig();
+      };
+      if (!document.startViewTransition) {
+        switchTheme();
+        return;
+      }
+      document.startViewTransition(switchTheme);
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupToolbar);
 </script>
 
 <style>

@@ -2,25 +2,23 @@ import { $forecast, $forecastLoading, $forecastError, $searchOpen, $forecastDays
 import { $location } from "./locationStore";
 import { loadConfig, $lang } from "./configStore";
 import type { ForecastResponse, ForecastDays, ForecastItem, GeocodingResult } from "../types/weather";
+import { convertTemp } from '../utils/weather';
+export { convertTemp }
 
 export const setLocation = (location: GeocodingResult) => {
   $location.set(location);
 };
 
-const saveToCache = (forecast: ForecastResponse, location: GeocodingResult) => {
+const saveToCache = (forecast: ForecastResponse) => {
+  const location = $location.get();
   localStorage.setItem('skycast_cache', JSON.stringify({
     forecast,
-    location,
+    location: location ? { name: location.name, country: location.country, lat: location.lat, lon: location.lon } : null,
     lang: $lang.get(),
     timestamp: Date.now()
   }));
 };
 
-/**
- * Groups raw API forecast items by day.
- * Each day includes the next day's 00:00:00 item to render a full
- * midnight-to-midnight curve in ChartCard.
- */
 const processForecastDays = (list: ForecastItem[]): ForecastDays => {
   const allDates = [...new Set(list.map(item => item.dt_txt.split(' ')[0]))];
 
@@ -39,17 +37,12 @@ const processForecastDays = (list: ForecastItem[]): ForecastDays => {
   );
 };
 
-const applyForecast = (forecast: ForecastResponse) => {
+export const applyForecast = (forecast: ForecastResponse) => {
   $forecast.set(forecast);
   $forecastDays.set(processForecastDays(forecast.list));
   $selectedDate.set(forecast.list[0].dt_txt.split(' ')[0]);
 };
 
-/**
- * Loads forecast data from localStorage if it exists and is under 10 minutes old.
- * Invalidates the cache if the stored language differs from the current one.
- * @returns true if valid cache was found and applied, false otherwise.
- */
 const loadFromCache = () => {
   const raw = localStorage.getItem('skycast_cache');
   if (!raw) return false;
@@ -59,23 +52,19 @@ const loadFromCache = () => {
   if (lang && lang !== $lang.get()) return false;
   const age = Date.now() - timestamp;
 
-
   if (age < 10 * 60 * 1000) {
     applyForecast(forecast);
-    $location.set(location);
+    if (location) $location.set(location);
     $searchOpen.set(false);
-    saveToCache(forecast, location);
+    saveToCache(forecast);
+    history.pushState({}, '', `?city=${forecast.city.id}`);
     return true;
   }
 
-  $location.set(location);
+  if (location) $location.set(location);
   return false;
 };
 
-/**
- * Fetches the 5-day forecast from the OpenWeatherMap API
- * for the location stored in $location.
- */
 export const fetchForecast = async () => {
   const location = $location.get();
   if (!location) {
@@ -93,7 +82,8 @@ export const fetchForecast = async () => {
     const data = await res.json();
 
     applyForecast(data);
-    saveToCache(data, location);
+    saveToCache(data);
+    history.pushState({}, '', `?city=${data.city.id}`);
 
   } catch (error) {
     $forecastError.set("Failed to fetch forecast data");
@@ -102,11 +92,6 @@ export const fetchForecast = async () => {
   }
 };
 
-/**
- * Entry point to initialize forecast data on page load.
- * Loads from cache if available and fresh, otherwise fetches from API.
- * Opens the search modal if no location is set.
- */
 export const initForecast = async () => {
   loadConfig();
   if (loadFromCache()) return;
@@ -118,14 +103,3 @@ export const initForecast = async () => {
 
   await fetchForecast();
 };
-
-/**
- * Converts a Celsius temperature to the target unit.
- * @param temp - Temperature in Celsius.
- * @param unit - Target unit ('C' or 'F').
- * @returns Rounded temperature in the target unit.
- */
-export const convertTemp = (temp: number, unit: 'C' | 'F'): number => {
-  if (unit === 'F') return Math.round(temp * 9 / 5 + 32);
-  return Math.round(temp);
-}; 
