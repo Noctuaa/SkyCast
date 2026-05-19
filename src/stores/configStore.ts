@@ -27,7 +27,7 @@ export const saveConfig = () => {
     theme: $theme.get(),
   };
   localStorage.setItem('skycast_config', JSON.stringify(config));
-  document.cookie = `skycast_prefs=${encodeURIComponent(JSON.stringify({ unit: $unit.get() }))}; path=/; max-age=31536000`;
+  document.cookie = `skycast_prefs=${encodeURIComponent(JSON.stringify({ unit: $unit.get(), lang: $lang.get() }))}; path=/; max-age=31536000`;
 };
 
 /**

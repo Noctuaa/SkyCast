@@ -14,7 +14,13 @@ const hasValidId = cityParam.length > 0 && !isNaN(Number(cityParam));
 const prefsCookie = Astro.cookies.get('skycast_prefs')?.value;
 const prefs = prefsCookie ? JSON.parse(decodeURIComponent(prefsCookie)) : {};
 const langParam = url.searchParams.get('lang');
-const lang = (['fr', 'en'].includes(langParam ?? '') ? langParam : (prefs.lang ?? 'fr')) as 'fr' | 'en';
+const acceptLang = Astro.request.headers.get('accept-language') ?? '';
+const browserLang = acceptLang.toLowerCase().startsWith('en') ? 'en' : 'fr';
+const lang = (
+  langParam !== null && ['fr', 'en'].includes(langParam) ? langParam :
+  langParam === null ? (prefs.lang ?? browserLang) :
+  browserLang
+) as 'fr' | 'en';
 const unit = (prefs.unit ?? 'C') as 'C' | 'F';
 
 let forecast: ForecastResponse | null = null;
