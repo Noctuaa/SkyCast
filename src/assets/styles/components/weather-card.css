@@ -3,101 +3,79 @@
 .weather-card {
   grid-area: 1/1/2/2;
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  padding: calc(var(--space) * 6);
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--space) * 9);
+  padding: calc(var(--space) * 6) calc(var(--space) * 4);
   max-width: 360px;
 }
 
-/* ===== Header — Date & Location ===== */
+/* ===== Header — Location ===== */
 
-.weather-header {
-  gap: calc(var(--space) * 2);
-  align-items: flex-start;
-}
-
-.weather-date {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-}
-
-.day-name,
-.location-name {
-  color: var(--text);
-  font-weight: 700;
-}
-
-.day-name {
-  font-size: 1.15rem;
-  line-height: 1.2;
-  text-transform: capitalize;
-}
-
-.full-date {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-top: calc(var(--space) * 1);
-  text-transform: capitalize;
+.icon-location {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: var(--accent);
+  flex-shrink: 0;
 }
 
 .location-name {
-  font-size: 1.15rem;
-  text-wrap: wrap;
-  line-height: 1.2;
+  display: inline-block;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  color: var(--accent);
 }
 
 .location-detail {
-  font-size: 0.875rem;
   color: var(--text-muted);
-  margin-top: calc(var(--space) * 1);
+  letter-spacing: 0.08em;
+  margin-left: calc(var(--space) * 2);
 }
 
 /* ===== Main — Icon, Temperature & Description ===== */
 
-.weather-main {
-  gap: calc(var(--space) * 2);
+.day-name {
+  color: var(--text-muted);
+  line-height: 1.2;
 }
 
-.tt {
-  gap: calc(var(--space) * 4);
+.full-date {
+  color: var(--text-muted);
 }
 
 .weather-temp {
   font-size: 2.5rem;
-  font-weight: 700;
   line-height: 1;
   color: var(--accent);
 }
 
-.weather-desc {
-  text-align: center;
-  text-transform: capitalize;
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-top: calc(var(--space) * -2);
-}
-
 /* ===== Footer — Stats ===== */
 
-.weather-footer {
-  padding: calc(var(--space) * 4);
+.weather-stats {
   border-top: 1px solid var(--border);
-  gap: calc(var(--space) * 6);
+  padding-top: calc(var(--space) * 4);
+  row-gap: calc(var(--space) * 3);
+  column-gap: calc(var(--space) * 2);
 }
 
-.weather-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: calc(var(--space) * 1);
+.weather-stat,
+.wind-speed,
+.wind-direction,
+.weather-sun {
+  border-radius: var(--radius-sm);
+  background: rgb(from var(--accent) r g b / 0.08);
+  border: 1px solid rgb(from var(--accent) r g b / 0.18);
+  padding: calc(var(--space) * 3);
+}
+
+.weather-stat .stat-value,
+.wind-speed .stat-value {
+  white-space: nowrap;
+  font-size: 0.95rem;
 }
 
 .stat-label {
@@ -112,23 +90,7 @@
   font-weight: 600;
 }
 
-.stat-wind {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--space) * 1);
-}
-
-.wind-arrow {
-  display: inline-block;
-  font-size: 1.25rem;
-  transition: transform var(--transition);
-}
-
-/*===SUnrise & Sunset===*/
-
-.sun-arc-container {
-  position: relative;
-}
+/* ===== Sunrise & Sunset ===== */
 
 .sun-arc {
   width: 100%;
@@ -155,9 +117,7 @@
   margin-top: calc(var(--space) * 2);
 }
 
-/* === COMPASS ROSE === */
-
-/* Compass */
+/* ===== Compass Rose ===== */
 
 .compass {
   width: 80px;
@@ -196,10 +156,13 @@
   transform: translate(-50%, -50%) rotate(135deg);
 }
 
-.quad,
-.quad-neso,
-.quad-nose {
+.quad {
   height: 45px;
+}
+
+.quad-nose,
+.quad-neso {
+  height: 35px;
 }
 
 .compass-directions {

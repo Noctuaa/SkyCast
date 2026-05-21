@@ -26,75 +26,86 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
 });
 ---
 
-<div class="weather-card">
-  <div class="weather-header flex">
-    <div class="weather-location">
-      <p class="location-name">{locationName}</p>
-      <p class="location-detail">{locationCountry}</p>
-    </div>
-    <div class="weather-date">
-      <p class="day-name">{dayName}</p>
-      <p class="full-date">{fullDate}</p>
+<div class="weather-card flex fd-column gap-6">
+  <div class="flex-center gap-1">
+    <svg
+      class="icon-location"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 640 640"
+      width="16"
+      height="16"
+      fill="var(--accent)"
+    >
+      <path
+        d="M128 252.6C128 148.4 214 64 320 64C426 64 512 148.4 512 252.6C512 371.9 391.8 514.9 341.6 569.4C329.8 582.2 310.1 582.2 298.3 569.4C248.1 514.9 127.9 371.9 127.9 252.6zM320 320C355.3 320 384 291.3 384 256C384 220.7 355.3 192 320 192C284.7 192 256 220.7 256 256C256 291.3 284.7 320 320 320z"
+      >
+      </path>
+    </svg>
+    <div class="location-text flex ai-center">
+      <span class="location-name text-lg font-bold">{locationName}</span>
+      <span class="location-detail text-xs font-semibold uppercase">{locationCountry}</span>
     </div>
   </div>
 
-  <div class="weather-main flex jc-around">
-    <WeatherIcon iconCode={current.weather[0].icon} />
-    <div class="tt flex-center fd-column">
-      <p class="weather-temp">{convertTemp(current.main.temp, unit)}°{unit}</p>
-      <p class="weather-desc">{current.weather[0].description}</p>
+  <div class="weather-main grid grid-cols-2 ai-center gap-4">
+    <WeatherIcon iconCode={current.weather[0].icon} client:load />
+    <div class="flex fd-column gap-2 text-center">
+      <div>
+        <p class="day-name text-base font-semibold t-capitalize">{dayName}</p>
+        <p class="full-date text-sm t-capitalize">{fullDate}</p>
+      </div>
+      <p class="weather-temp font-bold">{convertTemp(current.main.temp, unit)}°{unit}</p>
+      <p class="weather-desc t-capitalize text-base font-medium">{current.weather[0].description}</p>
     </div>
   </div>
 
-  <div class="weather-footer grid">
-    <div class="flex jc-between">
-      <div class="weather-stat">
-        <span class="stat-label">{t.feelsLike}</span>
-        <span class="stat-value">{convertTemp(current.main.feels_like, unit)}°{unit}</span>
-      </div>
-      <div class="weather-stat">
-        <span class="stat-label">{t.humidity}</span>
-        <span class="stat-value">{current.main.humidity}%</span>
-      </div>
-      <div class="weather-stat">
-        <span class="stat-label">{t.pressure}</span>
-        <span class="stat-value">{current.main.pressure} hPa</span>
-      </div>
+  <div class="weather-stats grid grid-cols-3">
+    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+      <span class="stat-label">{t.feelsLike}</span>
+      <span class="stat-value">{convertTemp(current.main.feels_like, unit)}°{unit}</span>
+    </div>
+    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+      <span class="stat-label">{t.humidity}</span>
+      <span class="stat-value">{current.main.humidity}%</span>
+    </div>
+    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+      <span class="stat-label">{t.pressure}</span>
+      <span class="stat-value">{current.main.pressure} hPa</span>
     </div>
 
-    <div class="wind-stat">
+    <div class="wind-speed flex fd-column ai-center gap-1">
       <span class="stat-label">{t.wind}</span>
-      <div class="wind-stats flex jc-around ai-center">
-        <div class="wind-details">
-          <span class="stat-value">{Math.round(current.wind.speed * 3.6)} km/h</span>
-        </div>
-        <div class="compass relative">
-          <div class="compass-body absolute w-full h-full">
-            <div class="compass-arrows absolute w-full h-full">
-              <div class="quad quad-ns"></div>
-              <div class="quad quad-eo"></div>
-              <div class="quad quad-neso"></div>
-              <div class="quad quad-nose"></div>
-            </div>
-            <div class="compass-directions absolute">
-              <div class="direction n">N</div>
-              <div class="direction e">E</div>
-              <div class="direction s">S</div>
-              <div class="direction o">O</div>
-            </div>
-            <div class="arrow w-full h-full flex jc-center" style={`transform: rotate(${current.wind.deg}deg)`}>
-              <div class="arrow-up"></div>
-              <div class="arrow-down"></div>
-            </div>
-            <div class="axis absolute"></div>
+      <span class="stat-value">{Math.round(current.wind.speed * 3.6)} km/h</span>
+    </div>
+
+    <div class="wind-direction col-span-2 flex fd-column ai-center gap-2">
+      <span class="stat-label">{t.windDirection}</span>
+      <div class="compass relative">
+        <div class="compass-body absolute w-full h-full">
+          <div class="compass-arrows absolute w-full h-full">
+            <div class="quad quad-ns"></div>
+            <div class="quad quad-eo"></div>
+            <div class="quad quad-neso"></div>
+            <div class="quad quad-nose"></div>
           </div>
+          <div class="compass-directions absolute">
+            <div class="direction n">N</div>
+            <div class="direction e">E</div>
+            <div class="direction s">S</div>
+            <div class="direction o">O</div>
+          </div>
+          <div class="arrow w-full h-full flex jc-center" style={`transform: rotate(${current.wind.deg}deg)`}>
+            <div class="arrow-up"></div>
+            <div class="arrow-down"></div>
+          </div>
+          <div class="axis absolute"></div>
         </div>
       </div>
     </div>
 
-    <div class="weather-sun">
+    <div class="weather-sun col-span-full flex fd-column gap-3">
       <span class="stat-label">{t.sunriseSunset}</span>
-      <SunArc sunrise={city.sunrise} sunset={city.sunset} client:load />
+      <SunArc sunrise={city.sunrise} sunset={city.sunset} timezone={city.timezone} client:load />
     </div>
   </div>
 </div>

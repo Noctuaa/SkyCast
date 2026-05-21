@@ -19,12 +19,12 @@
   --bg: rgb(240, 244, 255);
   --bg-card: #ffffff;
   --text: #1a2234;
-  --text-muted: #64748b;
+  --text-muted: rgb(88, 88, 88);
   --accent: #3b82f6;
   --border: #e2e8f0;
 
   /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.3);
   --glass-border: rgba(255, 255, 255, 0.8);
   --glass-blur: blur(12px);
 

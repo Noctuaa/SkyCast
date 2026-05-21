@@ -5,6 +5,7 @@ export const translations = {
     humidity: 'Humidité',
     pressure: 'Pression',
     wind: 'Vent',
+    windDirection: 'Direction',
     sunriseSunset: 'Lever & coucher',
 
     // MapCard
@@ -27,6 +28,7 @@ export const translations = {
     humidity: 'Humidity',
     pressure: 'Pressure',
     wind: 'Wind',
+    windDirection: 'Direction',
     sunriseSunset: 'Sunrise & sunset',
 
     // MapCard
