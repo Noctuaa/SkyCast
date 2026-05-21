@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $selectedDate } from '../stores/forecastStore';
 import { $unit } from '../stores/configStore';
@@ -12,7 +12,7 @@ const props = defineProps<{ forecast: ForecastResponse }>();
 const selectedDate = useStore($selectedDate);
 const unit = useStore($unit);
 const { lang } = useI18n();
-const locale = computed(() => lang.value === 'fr' ? 'fr-FR' : 'en-GB');
+const locale = computed(() => (lang.value === 'fr' ? 'fr-FR' : 'en-GB'));
 
 const selectDay = (date: string) => {
   $selectedDate.set(date);
@@ -38,6 +38,12 @@ const dailyForecasts = computed(() => {
       temp_max: Math.round(Math.max(...items.map((f) => f.main.temp_max))),
     };
   });
+});
+
+onMounted(() => {
+  if (!selectedDate.value && dailyForecasts.value.length) {
+    $selectedDate.set(dailyForecasts.value[0].date);
+  }
 });
 </script>
 

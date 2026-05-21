@@ -1,6 +1,7 @@
 .map-card {
   display: flex;
   flex-direction: column;
+  flex: 1;
   position: relative;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);

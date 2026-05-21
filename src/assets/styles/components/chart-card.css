@@ -1,8 +1,6 @@
 /* ===== Card ===== */
 .chart-card {
-  grid-area: 3 / 1 / 4 / 1;
   place-content: center;
-  height: 100%;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -51,11 +49,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-@media (min-width: 768px) {
-  .chart-card {
-    grid-area: 2 / 2 / 3 / 3;
-  }
-}
 
 .apexcharts-marker {
   animation: markerPop 0.3s ease-out 0.5s both;
