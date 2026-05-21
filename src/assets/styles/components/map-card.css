@@ -1,7 +1,7 @@
 .map-card {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--space) * 3);
+  position: relative;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -12,37 +12,46 @@
   height: 100%;
 }
 
+.map-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .map-controls {
   display: flex;
+  flex-direction: column;
   gap: calc(var(--space) * 2);
-  flex-wrap: wrap;
-}
-
-.layer-btn {
-  padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
-  border-radius: calc(var(--radius) / 2);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition);
-}
-
-.layer-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  top: calc(var(--space) * 3);
+  right: calc(var(--space) * 3);
 }
 
 .layer-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
+  background-color: var(--accent);
   color: #fff;
+  border-color: var(--accent);
 }
 
 .map-container {
   flex: 1;
   border-radius: calc(var(--radius) / 2);
   overflow: hidden;
+}
+
+/* ===== MapLibre Popup ===== */
+
+.maplibregl-popup-content {
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: calc(var(--space) * 2) calc(var(--space) * 3) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--bg-card) !important;
 }
