@@ -65,10 +65,12 @@ const locationData = locationCookie
       }
 
       {forecast && <ForecastCard forecast={forecast} client:load />}
-      <!--<div class="chart-card">
-        <ChartCard client:only="vue" />
-      </div>
-      <div class="map-card">
+      {forecast && (
+        <div class="chart-card">
+          <ChartCard forecast={forecast} client:load />
+        </div>
+      )}
+      <!--<div class="map-card">
         <MapCard client:only="vue" />
       </div>-->
     </div>
