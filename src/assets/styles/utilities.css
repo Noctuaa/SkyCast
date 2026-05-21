@@ -172,6 +172,15 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+/* ===== Box ===== */
+
+.box {
+  border-radius: var(--radius-sm);
+  background: rgb(from var(--accent) r g b / 0.08);
+  border: 1px solid rgb(from var(--accent) r g b / 0.18);
+  padding: calc(var(--space) * 3);
+}
+
 /* ===== Overflow ===== */
 
 .ow-hidden {

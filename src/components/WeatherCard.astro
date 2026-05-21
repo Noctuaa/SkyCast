@@ -60,25 +60,25 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
   </div>
 
   <div class="weather-stats grid grid-cols-3">
-    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
       <span class="stat-label">{t.feelsLike}</span>
       <span class="stat-value">{convertTemp(current.main.feels_like, unit)}°{unit}</span>
     </div>
-    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
       <span class="stat-label">{t.humidity}</span>
       <span class="stat-value">{current.main.humidity}%</span>
     </div>
-    <div class="weather-stat flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
       <span class="stat-label">{t.pressure}</span>
       <span class="stat-value">{current.main.pressure} hPa</span>
     </div>
 
-    <div class="wind-speed flex fd-column ai-center gap-1">
+    <div class="wind-speed box flex fd-column ai-center gap-1">
       <span class="stat-label">{t.wind}</span>
       <span class="stat-value">{Math.round(current.wind.speed * 3.6)} km/h</span>
     </div>
 
-    <div class="wind-direction col-span-2 flex fd-column ai-center gap-2">
+    <div class="wind-direction box col-span-2 flex fd-column ai-center gap-2">
       <span class="stat-label">{t.windDirection}</span>
       <div class="compass relative">
         <div class="compass-body absolute w-full h-full">
@@ -103,7 +103,7 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
       </div>
     </div>
 
-    <div class="weather-sun col-span-full flex fd-column gap-3">
+    <div class="weather-sun box col-span-full flex fd-column gap-3">
       <span class="stat-label">{t.sunriseSunset}</span>
       <SunArc sunrise={city.sunrise} sunset={city.sunset} timezone={city.timezone} client:load />
     </div>

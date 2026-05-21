@@ -62,15 +62,6 @@
   column-gap: calc(var(--space) * 2);
 }
 
-.weather-stat,
-.wind-speed,
-.wind-direction,
-.weather-sun {
-  border-radius: var(--radius-sm);
-  background: rgb(from var(--accent) r g b / 0.08);
-  border: 1px solid rgb(from var(--accent) r g b / 0.18);
-  padding: calc(var(--space) * 3);
-}
 
 .weather-stat .stat-value,
 .wind-speed .stat-value {

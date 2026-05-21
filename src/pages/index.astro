@@ -17,9 +17,11 @@ const langParam = url.searchParams.get('lang');
 const acceptLang = Astro.request.headers.get('accept-language') ?? '';
 const browserLang = acceptLang.toLowerCase().startsWith('en') ? 'en' : 'fr';
 const lang = (
-  langParam !== null && ['fr', 'en'].includes(langParam) ? langParam :
-  langParam === null ? (prefs.lang ?? browserLang) :
-  browserLang
+  langParam !== null && ['fr', 'en'].includes(langParam)
+    ? langParam
+    : langParam === null
+      ? (prefs.lang ?? browserLang)
+      : browserLang
 ) as 'fr' | 'en';
 const unit = (prefs.unit ?? 'C') as 'C' | 'F';
 
@@ -37,7 +39,6 @@ const locationCookie = Astro.cookies.get('skycast_location')?.value;
 const locationData = locationCookie
   ? JSON.parse(decodeURIComponent(locationCookie))
   : { name: forecast?.city.name ?? '', country: forecast?.city.country ?? '' };
-
 ---
 
 <script>
@@ -51,18 +52,20 @@ const locationData = locationCookie
   <main class="container">
     <SearchModal client:only="vue" />
     <div class="weather-grid grid">
-      {forecast && (
-        <WeatherCard
-          forecast={forecast}
-          locationName={locationData.name}
-          locationCountry={locationData.country}
-          unit={unit}
-          lang={lang as 'fr' | 'en'}
-        />
-      )}
+      {
+        forecast && (
+          <WeatherCard
+            forecast={forecast}
+            locationName={locationData.name}
+            locationCountry={locationData.country}
+            unit={unit}
+            lang={lang as 'fr' | 'en'}
+          />
+        )
+      }
 
-      <!--  <ForecastCard client:only="vue" />
-      <div class="chart-card">
+      {forecast && <ForecastCard forecast={forecast} client:load />}
+      <!--<div class="chart-card">
         <ChartCard client:only="vue" />
       </div>
       <div class="map-card">

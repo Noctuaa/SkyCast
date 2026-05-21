@@ -1,80 +1,68 @@
 /* ===== Card ===== */
 
 .forecast-card {
+  grid-area: 2 / 1 / 3 / 2;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  padding: calc(var(--space) * 4) calc(var(--space) * 6);
+  padding: calc(var(--space) * 4);
   display: flex;
-  flex-direction: column;
+  gap: calc(var(--space) * 3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: calc(var(--space) * 4);
+  scrollbar-width: none;
 }
 
-/* ===== Forecast Day Row ===== */
+.forecast-card::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .forecast-card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: unset;
+    scroll-snap-type: unset;
+    scroll-padding-inline-start: unset;
+  }
+}
+
+/* ===== Forecast Day ===== */
 
 .forecast-day {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-block: calc(var(--space) * 3);
-  padding-inline: calc(var(--space) * 3);
-  border-bottom: 1px solid var(--border);
-  border-left: 3px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition:
-    background var(--transition),
-    border-color var(--transition);
+  scroll-snap-align: start;
+  flex: none;
+  width: 100px;
+  transition: background var(--transition), border-color var(--transition);
 }
 
-.forecast-day:hover {
-  background: rgba(255, 255, 255, 0.04);
+@media (min-width: 640px) {
+  .forecast-day {
+    flex: unset;
+    width: unset;
+  }
 }
 
 .forecast-day.active {
-  background: rgba(59, 130, 246, 0.1);
-  border-left-color: var(--accent);
-}
-
-.forecast-day.active .forecast-weekday,
-.forecast-day.active .temp-max {
-  color: var(--accent);
-}
-
-.forecast-day:last-child {
-  border-bottom: none;
+  background: rgb(from var(--accent) r g b / 0.15);
+  border-color: rgb(from var(--accent) r g b / 0.4);
 }
 
 /* ===== Date ===== */
 
-.forecast-date {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  min-width: 80px;
-}
-
 .forecast-weekday {
-  font-weight: 700;
   color: var(--text);
-  text-transform: capitalize;
 }
 
 /* ===== Temperatures ===== */
-
-.forecast-temps {
-  display: flex;
-  gap: calc(var(--space) * 3);
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 60px;
-  justify-content: flex-end;
-}
 
 .temp-min {
   color: var(--text-muted);
 }
 
 .temp-max {
-  color: var(--text);
+  color: var(--accent);
 }

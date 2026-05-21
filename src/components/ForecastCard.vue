@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
-import { $forecast, $selectedDate } from '../stores/forecastStore';
+import { $selectedDate } from '../stores/forecastStore';
 import { $unit } from '../stores/configStore';
 import { convertTemp } from '../stores/actions';
 import { useI18n } from '../i18n/useI18n';
 import WeatherIcon from './WeatherIcon.vue';
+import type { ForecastResponse } from '../types/weather';
 
-const forecast = useStore($forecast);
+const props = defineProps<{ forecast: ForecastResponse }>();
 const selectedDate = useStore($selectedDate);
 const unit = useStore($unit);
 const { lang } = useI18n();
@@ -18,12 +19,10 @@ const selectDay = (date: string) => {
 };
 
 const dailyForecasts = computed(() => {
-  if (!forecast.value) return [];
-
-  const list = forecast.value.list;
+  const list = props.forecast.list;
   const days = new Map<string, (typeof list)[number][]>();
 
-  forecast.value.list.forEach((item) => {
+  list.forEach((item) => {
     const day = item.dt_txt.split(' ')[0];
     if (!days.has(day)) days.set(day, []);
     days.get(day)!.push(item);
@@ -43,24 +42,26 @@ const dailyForecasts = computed(() => {
 </script>
 
 <template>
-  <div v-if="dailyForecasts.length" class="forecast-card">
+  <div class="forecast-card">
     <div
       v-for="day in dailyForecasts"
       :key="day.dt"
-      class="forecast-day"
+      class="forecast-day box flex fd-column ai-center gap-2 c-pointer"
       :class="{ active: selectedDate === day.date }"
       @click="selectDay(day.date)"
     >
-      <p class="forecast-date">
-        <span class="forecast-weekday">
+      <p class="forecast-date flex fd-column ai-center">
+        <span class="forecast-weekday font-bold t-capitalize">
           {{ new Date(day.dt * 1000).toLocaleDateString(locale, { weekday: 'short' }) }}
         </span>
-        {{ new Date(day.dt * 1000).toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) }}
+        <span class="text-xs text-muted">
+          {{ new Date(day.dt * 1000).toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) }}
+        </span>
       </p>
       <WeatherIcon :iconCode="day.icon" size="sm" />
-      <p class="forecast-temps">
-        <span class="temp-min">{{ convertTemp(day.temp_min, unit) }}°{{ unit }}</span>
-        <span class="temp-max">{{ convertTemp(day.temp_max, unit) }}°{{ unit }}</span>
+      <p class="forecast-temps flex gap-2">
+        <span class="temp-min text-sm">{{ convertTemp(day.temp_min, unit) }}°{{ unit }}</span>
+        <span class="temp-max text-sm font-semibold">{{ convertTemp(day.temp_max, unit) }}°{{ unit }}</span>
       </p>
     </div>
   </div>
