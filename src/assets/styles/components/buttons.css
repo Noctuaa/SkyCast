@@ -1,34 +1,42 @@
+/* Glass partagé */
+
+.btn-tools,
+.seg {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.btn-tools,
+.seg-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
 .btn-tools {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
   color: var(--text);
-  font-size: 1rem;
-  font-weight: 600;
-  transition:
-    background-color var(--transition),
-    border-color var(--transition),
-    color var(--transition),
-    transform var(--transition),
-    box-shadow var(--transition);
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-.btn-tools:hover {
-  background-color: var(--accent);
-  color: #fff;
+.btn-tools:hover,
+.seg:hover {
+  background: rgb(from var(--accent) r g b / 0.12);
   border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgb(from var(--accent) r g b / 0.35);
 }
 
 .btn-tools:active {
-  transform: translateY(0);
-  box-shadow: none;
+  transform: scale(0.96);
 }
 
 .btn-tools svg {
@@ -37,8 +45,41 @@
   fill: currentColor;
 }
 
+/* Segmented control °C/°F */
+
+.seg {
+  display: inline-flex;
+  flex-direction: column;
+  height: auto;
+  gap: 2px;
+}
+
+.seg-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-radius: calc(var(--radius-sm) - 2px);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.seg-btn.active {
+  background: var(--grad-accent);
+  color: #fff;
+}
+
 @media (min-width: 768px) {
-  .btn-tools {
+  .seg {
+    flex-direction: row;
+  }
+
+  .btn-tools,
+  .seg-btn {
     width: 2.5rem;
     height: 2.5rem;
   }

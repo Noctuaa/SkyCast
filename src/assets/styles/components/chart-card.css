@@ -9,6 +9,20 @@
   padding: calc(var(--space) * 4) calc(var(--space) * 6);
 }
 
+/* ===== Scroll wrapper ===== */
+
+.chart-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 639px) {
+  .apexcharts-yaxis {
+    display: none;
+  }
+}
+
 /* ===== Title ===== */
 
 .chart-title {

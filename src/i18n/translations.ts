@@ -19,8 +19,11 @@ export const translations = {
     chartYAxis: 'Température',
     chartXAxis: 'Heure',
 
-    // SearchModal
+    // SearchInput
     searchPlaceholder: 'Rechercher une ville...',
+    searchResult: 'RÉSULTAT',
+    searchNoMatch: 'Aucune ville ne correspond à',
+    searchTryAgain: 'Essayez un autre nom',
   },
   en: {
     // WeatherCard
@@ -42,8 +45,11 @@ export const translations = {
     chartYAxis: 'Temperature',
     chartXAxis: 'Time',
 
-    // SearchModal
+    // SearchInput
     searchPlaceholder: 'Search for a city...',
+    searchResult: 'RESULT',
+    searchNoMatch: 'No cities match',
+    searchTryAgain: 'Try a different name',
   },
 } as const;
 

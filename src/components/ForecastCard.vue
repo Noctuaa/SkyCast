@@ -75,7 +75,16 @@ onMounted(() => {
 
 <style>
 .forecast-card {
-  max-width: 360px;
   grid-area: 2 / 1 / 3 / 2;
+  max-width: 360px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .forecast-card {
+    max-width: unset;
+    margin-inline: unset;
+  }
 }
 </style>

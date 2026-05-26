@@ -1,16 +1,22 @@
 .map-card {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  position: relative;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: calc(var(--space) * 4);
-  overflow: hidden;
-  height: 100%;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .map-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: calc(var(--space) * 4);
+    overflow: hidden;
+    height: 100%;
+  }
 }
 
 .map-wrapper {

@@ -4,7 +4,7 @@
 @import './base/typography.css' layer(base);
 @import './base/layout.css' layer(layout);
 @import './utilities.css' layer(utilities);
-@import './components/search-modal.css' layer(components);
+@import './components/search-input.css' layer(components);
 @import './components/weather-card.css' layer(components);
 @import './components/forecast-card.css' layer(components);
 @import './components/weather-icons.css' layer(components);
@@ -20,13 +20,22 @@
   --bg-card: #ffffff;
   --text: #1a2234;
   --text-muted: rgb(88, 88, 88);
-  --accent: #3b82f6;
+  --accent: #60a5fa;
+  --accent-2: #c084fc;
+  --grad-accent: linear-gradient(135deg, #60a5fa, #c084fc);
   --border: #e2e8f0;
+
+  --ink-1: oklch(0.22 0.04 270);
+  --ink-2: oklch(0.4 0.04 270);
+  --ink-3: oklch(0.55 0.03 270);
+  --ink-4: oklch(0.7 0.02 270);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.3);
   --glass-border: rgba(255, 255, 255, 0.8);
-  --glass-blur: blur(12px);
+  --glass-bg-strong: oklch(1 0 0 / 0.72);
+  --glass-edge: oklch(0.3 0.05 270 / 0.08);
+  --glass-blur: blur(28px);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -44,11 +53,21 @@
 [data-theme='dark'] {
   --bg: rgb(15, 23, 42);
   --bg-card: #1e293b;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
+  --text: rgb(242, 245, 252);
+  --text-muted: rgb(148, 163, 184);
+  --ink-2: oklch(0.82 0.02 270);
   --accent: #60a5fa;
+  --accent-secondary: rgb(192, 132, 252);
+  --grad-accent: linear-gradient(135deg, rgb(96, 165, 250), rgb(192, 132, 252));
   --border: #334155;
 
-  --glass-bg: rgba(15, 23, 42, 0.7);
+  --ink-1: rgb(242, 245, 252);
+  --ink-2: rgb(191, 196, 209);
+  --ink-3: rgb(145, 152, 171);
+  --ink-4: rgb(104, 113, 138);
+
+  --glass-bg: rgba(35, 39, 61, 0.45);
+  --glass-bg-strong: oklch(0.3 0.05 275 / 0.85);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-edge: oklch(1 0 0 / 0.04);
 }

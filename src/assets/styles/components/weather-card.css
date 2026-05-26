@@ -2,13 +2,22 @@
 
 .weather-card {
   grid-area: 1/1/2/2;
+  max-width: 360px;
+  width: 100%;
+  margin-inline: auto;
   background: var(--glass-bg);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
   padding: calc(var(--space) * 6) calc(var(--space) * 4);
-  max-width: 360px;
+}
+
+@media (min-width: 768px) {
+  .weather-card {
+    max-width: unset;
+    margin-inline: unset;
+  }
 }
 
 /* ===== Header — Location ===== */

@@ -1,15 +1,34 @@
 ---
-import Toolbar from './Toolbar.astro';
+import Toolbar from './Toolbar.vue';
+const prefs = Astro.cookies.get('skycast_prefs')?.json();
+const initialUnit = prefs?.unit ?? 'C';
+const url = new URL(Astro.request.url);
+const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr' | 'en';
 ---
 
 <header class="toolbar z-1000 flex ai-center">
   <div class="container w-full flex ai-center jc-between">
-    <h1 class="toolbar-logo">
-      Sky<span>Cast</span>
-    </h1>
+    <a href="/" class="brand flex ai-center gap-2">
+      <div class="brand-mark flex ai-center jc-center">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M17 18a4 4 0 0 0 .5-7.95 6 6 0 0 0-11.7-.55A4.5 4.5 0 0 0 6.5 18z"></path>
+          <circle cx="18" cy="6" r="2.4" fill="white" stroke="none"></circle>
+        </svg>
+      </div>
+      <h1 class="brand">Sky<span>Cast</span></h1>
+    </a>
 
-    <nav class="toolbar-nav grid jc-center ac-start gap-3 p-4" id="toolbar-nav">
-      <Toolbar />
+    <nav class="toolbar-nav header-actions grid jc-center ac-start gap-3 p-4" id="toolbar-nav">
+      <Toolbar client:load initialUnit={initialUnit} initialLang={initialLang} />
     </nav>
 
     <button class="hamburger flex fd-column p-2" id="hamburger-btn" aria-label="Menu">
@@ -21,7 +40,26 @@ import Toolbar from './Toolbar.astro';
 </header>
 
 <script>
-  function setupNavbar() {
+  import { $navOpen } from '../stores/uiStore';
+  import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+  /**
+   * Restores the open drawer state on the incoming DOM before the page swap.
+   * Called on astro:before-swap so classes are applied without any visible transition.
+   * $navOpen is set to true by Toolbar before any navigate() call.
+   */
+  const renoveNavState = (event: TransitionBeforeSwapEvent) => {
+    if ($navOpen.get()) {
+      const nav = event.newDocument.getElementById('toolbar-nav');
+      const hamburger = event.newDocument.getElementById('hamburger-btn');
+      nav?.classList.add('open');
+      hamburger?.classList.add('active');
+      $navOpen.set(false);
+    }
+  };
+
+  /** Binds the hamburger click to toggle the mobile drawer. Re-run on each page load. */
+  const setupHamburger = () => {
     const hamburger = document.getElementById('hamburger-btn');
     const nav = document.getElementById('toolbar-nav');
 
@@ -29,7 +67,8 @@ import Toolbar from './Toolbar.astro';
       nav?.classList.toggle('open');
       hamburger.classList.toggle('active');
     });
-  }
+  };
 
-  document.addEventListener('astro:page-load', setupNavbar);
+  document.addEventListener('astro:before-swap', renoveNavState);
+  document.addEventListener('astro:page-load', setupHamburger);
 </script>

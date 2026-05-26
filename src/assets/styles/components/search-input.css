@@ -1,0 +1,205 @@
+/* ── Shared : items (mobile + desktop) ── */
+.sd-header {
+  padding: 12px 16px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sd-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.sd-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px 16px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.sd-item:hover {
+  background: rgb(from var(--accent) r g b / 0.18);
+}
+
+.sd-flag,
+.sd-info {
+  transition: transform var(--transition);
+}
+
+.sd-item:hover .sd-flag,
+.sd-item:hover .sd-info {
+  transform: translate(2px);
+}
+
+.sd-flag {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--glass-edge);
+  border: 1px solid var(--glass-border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+
+.sd-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sd-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-1);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sd-region {
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sd-empty {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px 28px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.sd-empty span:first-child {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.sd-empty span:last-child {
+  margin-top: 4px;
+  color: var(--ink-2);
+}
+
+/* ── Mobile : modal overlay ── */
+.search-overlay {
+  padding-top: 20vh;
+  inset: 0;
+  background: rgb(from var(--bg) r g b / 0.8);
+  backdrop-filter: var(--glass-blur);
+}
+
+.search-box {
+  position: relative;
+  max-width: 480px;
+  margin: 0 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.15);
+  overflow: visible;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink-1);
+  font-size: 1rem;
+}
+
+.search-box input::placeholder {
+  color: var(--ink-3);
+}
+
+.search-box .sd-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* ── Desktop : barre inline ── */
+@media (min-width: 768px) {
+  .search-wrap {
+    position: relative;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space) * 2);
+    padding-inline: calc(var(--space) * 4);
+    height: 2.5rem;
+    width: 20rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .search-bar:focus-within {
+    border-color: var(--accent);
+  }
+
+  .search-bar svg {
+    flex-shrink: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.8125rem;
+    color: var(--ink-1);
+    min-width: 0;
+  }
+
+  .search-bar input::placeholder {
+    color: var(--ink-3);
+  }
+
+  .search-drop {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow:
+      0 20px 50px -10px oklch(0.2 0.04 275 / 0.35),
+      0 2px 8px oklch(0.2 0.04 275 / 0.08);
+    overflow: hidden;
+    z-index: 200;
+  }
+}
