@@ -65,7 +65,13 @@ const locationData = locationCookie
         )
       }
 
-      <section class="weather-map glass"></section>
+      <section class="cell-map glass">
+        {
+          forecast && (
+            <MapCard client:load lat={forecast.city.coord.lat} lon={forecast.city.coord.lon} name={locationData.name} />
+          )
+        }
+      </section>
       <section class="weather-wind glass"></section>
       <section class="weather-sun glass"></section>
       <section class="weather-air glass"></section>
@@ -109,7 +115,6 @@ const locationData = locationCookie
 </Layout>
 
 <style>
-  .weather-map,
   .weather-wind,
   .weather-sun,
   .weather-air,
@@ -117,6 +122,13 @@ const locationData = locationCookie
   .weather-chart {
     grid-column: span 12;
     grid-row: auto;
+  }
+
+  .cell-map {
+    grid-column: span 12;
+    grid-row: auto;
+    padding: 0;
+    min-height: 340px;
   }
 
   .weather-wind,
@@ -129,9 +141,10 @@ const locationData = locationCookie
   }
 
   @media (min-width: 768px) {
-    .weather-map {
+    .cell-map {
       grid-column: span 8;
       grid-row: span 2;
+      min-height: unset;
     }
 
     .weather-wind {
