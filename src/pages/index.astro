@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SearchModal from '../components/SearchModal.vue';
+import WeatherMain from '../components/WeatherMain.vue';
 import WeatherCard from '../components/WeatherCard.astro';
 import ForecastCard from '../components/ForecastCard.vue';
 import ChartCard from '../components/ChartCard.vue';
@@ -38,7 +39,7 @@ if (hasValidId) {
 const locationCookie = Astro.cookies.get('skycast_location')?.value;
 const locationData = locationCookie
   ? JSON.parse(decodeURIComponent(locationCookie))
-  : { name: forecast?.city.name ?? '', country: forecast?.city.country ?? '' };
+  : { name: forecast?.city.name ?? '', country: forecast?.city.country ?? '', state: '' };
 ---
 
 <script>
@@ -50,8 +51,29 @@ const locationData = locationCookie
 
 <Layout>
   <main class="container">
+    <div class="bento">
+      {
+        forecast && (
+          <WeatherMain
+            client:load
+            forecast={forecast}
+            initialLang={lang}
+            initialUnit={unit}
+            locationName={locationData.name}
+            locationState={locationData.state ?? ''}
+          />
+        )
+      }
+
+      <section class="weather-map glass"></section>
+      <section class="weather-wind glass"></section>
+      <section class="weather-sun glass"></section>
+      <section class="weather-air glass"></section>
+      <section class="weather-forecast glass"></section>
+      <section class="weather-chart glass"></section>
+    </div>
     <SearchModal client:only="vue" />
-    <div class="weather-grid grid">
+    <!-- <div class="weather-grid grid">
       {
         forecast && (
           <WeatherCard
@@ -65,21 +87,81 @@ const locationData = locationCookie
       }
 
       {forecast && <ForecastCard forecast={forecast} client:load />}
-      {forecast && (
-        <div class="right-col">
-          <div class="map-card">
-            <MapCard
-              lat={forecast.city.coord.lat}
-              lon={forecast.city.coord.lon}
-              name={locationData.name}
-              client:load
-            />
+      {
+        forecast && (
+          <div class="right-col">
+            <div class="map-card">
+              <MapCard
+                lat={forecast.city.coord.lat}
+                lon={forecast.city.coord.lon}
+                name={locationData.name}
+                client:load
+              />
+            </div>
+            <div class="chart-card">
+              <ChartCard forecast={forecast} client:load />
+            </div>
           </div>
-          <div class="chart-card">
-            <ChartCard forecast={forecast} client:load />
-          </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div>-->
   </main>
 </Layout>
+
+<style>
+  .weather-map,
+  .weather-wind,
+  .weather-sun,
+  .weather-air,
+  .weather-forecast,
+  .weather-chart {
+    grid-column: span 12;
+    grid-row: auto;
+  }
+
+  .weather-wind,
+  .weather-sun,
+  .weather-air,
+  .weather-forecast,
+  .weather-chart {
+    min-height: 200px;
+    padding: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .weather-map {
+      grid-column: span 8;
+      grid-row: span 2;
+    }
+
+    .weather-wind {
+      grid-column: span 4;
+      min-height: 230px;
+      padding: 22px;
+    }
+
+    .weather-sun {
+      grid-column: span 4;
+      min-height: 230px;
+      padding: 22px;
+    }
+
+    .weather-air {
+      grid-column: span 4;
+      min-height: 230px;
+      padding: 22px;
+    }
+
+    .weather-forecast {
+      grid-column: span 6;
+      min-height: 230px;
+      padding: 22px;
+    }
+
+    .weather-chart {
+      grid-column: span 6;
+      min-height: 230px;
+      padding: 22px;
+    }
+  }
+</style>

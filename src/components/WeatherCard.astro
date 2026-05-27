@@ -26,7 +26,7 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
 });
 ---
 
-<div class="weather-card flex fd-column gap-6">
+<div class="weather-card flex flex-col gap-6">
   <div class="flex-center gap-1">
     <svg
       class="icon-location"
@@ -49,7 +49,7 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
 
   <div class="weather-main grid grid-cols-2 ai-center gap-4">
     <WeatherIcon iconCode={current.weather[0].icon} client:load />
-    <div class="flex fd-column gap-2 text-center">
+    <div class="flex flex-col gap-2 text-center">
       <div>
         <p class="day-name text-base font-semibold t-capitalize">{dayName}</p>
         <p class="full-date text-sm t-capitalize">{fullDate}</p>
@@ -60,25 +60,25 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
   </div>
 
   <div class="weather-stats grid grid-cols-3">
-    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex flex-col ai-center jc-center gap-1">
       <span class="stat-label">{t.feelsLike}</span>
       <span class="stat-value">{convertTemp(current.main.feels_like, unit)}°{unit}</span>
     </div>
-    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex flex-col ai-center jc-center gap-1">
       <span class="stat-label">{t.humidity}</span>
       <span class="stat-value">{current.main.humidity}%</span>
     </div>
-    <div class="weather-stat box flex fd-column ai-center jc-center gap-1">
+    <div class="weather-stat box flex flex-col ai-center jc-center gap-1">
       <span class="stat-label">{t.pressure}</span>
       <span class="stat-value">{current.main.pressure} hPa</span>
     </div>
 
-    <div class="wind-speed box flex fd-column ai-center gap-1">
+    <div class="wind-speed box flex flex-col ai-center gap-1">
       <span class="stat-label">{t.wind}</span>
       <span class="stat-value">{Math.round(current.wind.speed * 3.6)} km/h</span>
     </div>
 
-    <div class="wind-direction box col-span-2 flex fd-column ai-center gap-2">
+    <div class="wind-direction box col-span-2 flex flex-col ai-center gap-2">
       <span class="stat-label">{t.windDirection}</span>
       <div class="compass relative">
         <div class="compass-body absolute w-full h-full">
@@ -103,7 +103,7 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
       </div>
     </div>
 
-    <div class="weather-sun box col-span-full flex fd-column gap-3">
+    <div class="weather-sun box col-span-full flex flex-col gap-3">
       <span class="stat-label">{t.sunriseSunset}</span>
       <SunArc sunrise={city.sunrise} sunset={city.sunset} timezone={city.timezone} client:load />
     </div>

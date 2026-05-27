@@ -31,7 +31,7 @@ const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr
       <Toolbar client:load initialUnit={initialUnit} initialLang={initialLang} />
     </nav>
 
-    <button class="hamburger flex fd-column p-2" id="hamburger-btn" aria-label="Menu">
+    <button class="hamburger flex flex-col p-2" id="hamburger-btn" aria-label="Menu">
       <span class="block"></span>
       <span class="block"></span>
       <span class="block"></span>

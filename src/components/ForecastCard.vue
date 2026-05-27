@@ -52,11 +52,11 @@ onMounted(() => {
     <div
       v-for="day in dailyForecasts"
       :key="day.dt"
-      class="forecast-day box flex fd-column ai-center gap-2 c-pointer"
+      class="forecast-day box flex flex-col ai-center gap-2 c-pointer"
       :class="{ active: selectedDate === day.date }"
       @click="selectDay(day.date)"
     >
-      <p class="forecast-date flex fd-column ai-center">
+      <p class="forecast-date flex flex-col ai-center">
         <span class="forecast-weekday font-bold t-capitalize">
           {{ new Date(day.dt * 1000).toLocaleDateString(locale, { weekday: 'short' }) }}
         </span>

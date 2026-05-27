@@ -76,7 +76,7 @@ const selectCity = async (city: GeocodingResult) => {
         <li
           v-for="city in suggestions"
           :key="`${city.lat}-${city.lon}`"
-          class="flex fd-column c-pointer"
+          class="flex flex-col c-pointer"
           @click="selectCity(city)"
         >
           <span class="suggestion-name">{{ city.name }}</span>

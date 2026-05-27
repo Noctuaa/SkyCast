@@ -5,14 +5,63 @@
 @import './base/layout.css' layer(layout);
 @import './utilities.css' layer(utilities);
 @import './components/search-input.css' layer(components);
-@import './components/weather-card.css' layer(components);
+@import './components/weather-main.css' layer(components);
 @import './components/forecast-card.css' layer(components);
 @import './components/weather-icons.css' layer(components);
 @import './components/chart-card.css' layer(components);
 @import './components/map-card.css' layer(components);
 @import './components/toolbar.css' layer(components);
 @import './components/buttons.css' layer(components);
+@import './components/search-modal.css' layer(components);
 @import './base/transitions.css';
+
+/*Fichiers composants :
+  WeatherMain.vue     → la card principale
+  WindCard.vue        → vent
+  SunCard.vue         → lever/coucher (pas SunriseCard, trop long)
+  AirCard.vue         → qualité de l'air
+  ForecastCard.vue    → prévisions 
+  ChartCard.vue       → graphique
+  MapCard.vue         → carte
+  
+  Classes CSS des cellules bento dans index.astro — je quitterais le préfixe
+  weather- qui est redondant, et j'utiliserais cell- pour bien distinguer les
+  cellules de grille des composants :
+  .cell-main
+  .cell-map
+  .cell-wind
+  .cell-sun
+  .cell-air
+  .cell-forecast
+  .cell-chart
+
+  Fichiers CSS :
+  styles/
+    tokens.css      → variables CSS (couleurs, spacing, radii...)
+    base.css        → reset + body + typographie globale
+    utilities.css   → classes utilitaires (.glass, .tile, .eyebrow...)
+    layout.css      → bento grid + breakpoints
+    main.css        → importe tout dans l'ordre
+
+
+  ┌──────────────┬─────────┐
+  │  Composant   │ Préfixe │
+  ├──────────────┼─────────┤
+  │ WeatherMain  │ .wm-    │
+  ├──────────────┼─────────┤
+  │ WindCard     │ .wind-  │
+  ├──────────────┼─────────┤
+  │ SunCard      │ .sun-   │
+  ├──────────────┼─────────┤
+  │ AirCard      │ .air-   │
+  ├──────────────┼─────────┤
+  │ ForecastCard │ .fc-    │
+  ├──────────────┼─────────┤
+  │ ChartCard    │ .chart- │
+  ├──────────────┼─────────┤
+  │ MapCard      │ .map-   │
+  └──────────────┴─────────┘
+*/
 
 :root {
   /* Colors - Light */
@@ -20,8 +69,9 @@
   --bg-card: #ffffff;
   --text: #1a2234;
   --text-muted: rgb(88, 88, 88);
-  --accent: #60a5fa;
-  --accent-2: #c084fc;
+  --accent: rgb(96, 165, 250);
+  --accent-2: rgb(192, 132, 252);
+  --accent-soft: rgba(62, 111, 239, 0.1);
   --grad-accent: linear-gradient(135deg, #60a5fa, #c084fc);
   --border: #e2e8f0;
 
@@ -38,7 +88,7 @@
   --glass-blur: blur(28px);
 
   /* Typography */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Manrope Variable', system-ui, sans-serif;
 
   /* Spacing */
   --radius: 1rem;
@@ -48,6 +98,10 @@
   /* Transitions */
   --transition: 0.3s ease;
   --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --r-card: 24px;
+  --r-tile: 16px;
+  --r-pill: 999px;
 }
 
 [data-theme='dark'] {

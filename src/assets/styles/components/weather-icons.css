@@ -3,9 +3,9 @@
   --weather-icon-sm: 30px;
   --weather-icon-xs: 24px;
 
-  --weather-cloud-width: 85px;
+  --weather-cloud-width: calc(var(--weather-icon-lg) + 15px);
   --weather-cloud-width-sm: 35px;
-  --weather-bolt-width: 35px;
+  --weather-bolt-width: calc(var(--weather-icon-lg) - 35px);
   --weather-bolt-width-sm: 20px;
 
   --weather-icon-ratio: 1;
