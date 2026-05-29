@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import WeatherIcon from './WeatherIcon.vue';
 
 const props = defineProps<{
   sunrise: number;
@@ -7,52 +8,74 @@ const props = defineProps<{
   timezone: number;
 }>();
 
-const ARC_CENTER_Y = 85;
-const ARC_RY = 50;
-const ARC_RX = 80;
-const VB_MIN_Y = 25;
-const VB_HEIGHT = 65;
+const PATH_LENGTH = 600;
 
-const sunTimes = computed(() => {
-  const fmt = (ts: number) => {
-    const d = new Date((ts + props.timezone) * 1000);
-    return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
-  };
-  return { sunrise: fmt(props.sunrise), sunset: fmt(props.sunset) };
-});
-
-const sunState = ref<{ isVisible: boolean; isDay: boolean; left: string; top: string } | null>(null);
+const progress = ref(0);
+const isDay = ref(false);
+const mounted = ref(false);
 
 onMounted(() => {
-  const progress = (Date.now() / 1000 - props.sunrise) / (props.sunset - props.sunrise);
-  const clamped = progress < 0 ? 1 : Math.min(1, progress);
-  const angle = Math.PI * (1 - clamped);
-  const x = 100 + ARC_RX * Math.cos(angle);
-  const y = ARC_CENTER_Y - ARC_RY * Math.sin(angle);
-  sunState.value = {
-    isVisible: true,
-    isDay: progress >= 0 && progress < 1,
-    left: `${(x / 200) * 100}%`,
-    top: `${((y - VB_MIN_Y) / VB_HEIGHT) * 100}%`,
+  const raw = (Date.now() / 1000 - props.sunrise) / (props.sunset - props.sunrise);
+  progress.value = Math.max(0, Math.min(1, raw));
+  isDay.value = raw >= 0 && raw < 1;
+  mounted.value = true;
+});
+
+// Position sur la courbe de Bézier quadratique M 20 102 Q 130 -13 240 102
+const sunPos = computed(() => {
+  const t = progress.value;
+  const x = (1 - t) ** 2 * 20 + 2 * (1 - t) * t * 130 + t ** 2 * 240;
+  const y = (1 - t) ** 2 * 102 + 2 * (1 - t) * t * -13 + t ** 2 * 102;
+  return {
+    left: `${(x / 260) * 100}%`,
+    top: `${(y / 110) * 100}%`,
   };
 });
+
+const dashOffset = computed(() => PATH_LENGTH * (1 - progress.value));
 </script>
 
 <template>
-  <div class="relative">
-    <svg viewBox="0 25 200 65" class="sun-arc">
-      <path d="M 20,85 A 80,50 0 0,1 180,85" />
+  <div class="sun-arc-wrap relative">
+    <!-- prettier-ignore -->
+    <svg class="sun-arc-svg" viewBox="0 0 260 110" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="arc-g" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="var(--accent-2)"       stop-opacity="0.2" />
+          <stop offset="50%"  stop-color="oklch(0.85 0.15 85)"   stop-opacity="0.9" />
+          <stop offset="100%" stop-color="var(--accent)"         stop-opacity="0.2" />
+        </linearGradient>
+        <linearGradient id="arc-bg-g" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%"   stop-color="oklch(0.85 0.15 85)" stop-opacity="0" />
+          <stop offset="100%" stop-color="oklch(0.85 0.15 85)" stop-opacity="0.15" />
+        </linearGradient>
+      </defs>
+      <!-- Remplissage sous la courbe -->
+      <path d="M 20 102 Q 130 -13 240 102 L 240 102 L 20 102 Z" fill="url(#arc-bg-g)" />
+      <!-- Arc complet en pointillés (dim) -->
+      <path d="M 20 102 Q 130 -13 240 102" fill="none" stroke="var(--glass-edge)" stroke-width="2" stroke-dasharray="3 5" />
+      <!-- Arc progressif (accent) -->
+      <path d="M 20 102 Q 130 -13 240 102" fill="none" stroke="url(#arc-g)" stroke-width="3" stroke-linecap="round" :pathLength="PATH_LENGTH" :stroke-dasharray="PATH_LENGTH" :stroke-dashoffset="dashOffset" />
+      <!-- Ligne d'horizon -->
+      <line x1="0" y1="102" x2="260" y2="102" stroke="var(--ink-3)" stroke-opacity="0.2" stroke-dasharray="2 4" />
     </svg>
-    <div
-      v-if="sunState?.isVisible"
-      class="weather-icon size-xs sun-position"
-      :style="{ left: sunState?.left, top: sunState?.top }"
-    >
-      <div :class="sunState?.isDay ? 'sun' : 'moon'"></div>
+
+    <!-- Soleil / Lune -->
+    <div v-if="mounted" class="sun-icon-wrap absolute" :style="{ left: sunPos.left, top: sunPos.top }">
+      <WeatherIcon :iconCode="isDay ? '01d' : '01n'" size="xs" />
     </div>
   </div>
-  <div class="sun-times">
-    <span class="stat-value">{{ sunTimes.sunrise }}</span>
-    <span class="stat-value">{{ sunTimes.sunset }}</span>
-  </div>
 </template>
+
+<style>
+.sun-arc-svg {
+  width: 100%;
+  height: 110px;
+  display: block;
+}
+
+.sun-icon-wrap {
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+</style>

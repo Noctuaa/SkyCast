@@ -15,6 +15,12 @@ export const translations = {
 
     // SunCard
     sunriseSunset: 'Lever & coucher',
+    sunrise: 'Lever',
+    sunset: 'Coucher',
+    civilDawn: 'Aube civile',
+    civilDusk: 'Crépuscule civil',
+    solarNoon: 'Midi solaire',
+    dayLength: 'Durée du jour',
 
     // AirCard
     airQuality: 'Qualité de l\'air',
@@ -52,6 +58,12 @@ export const translations = {
 
     // SunCard
     sunriseSunset: 'Sunrise & sunset',
+    sunrise: 'Sunrise',
+    sunset: 'Sunset',
+    civilDawn: 'Civil dawn',
+    civilDusk: 'Civil dusk',
+    solarNoon: 'Solar noon',
+    dayLength: 'Day length',
 
     // AirCard
     airQuality: 'Air quality',
