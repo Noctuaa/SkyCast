@@ -113,7 +113,8 @@ const locationData = locationCookie
         }
       </section>
       <section class="cell-air glass">
-        {forecast && <AirCard client:load forecast={forecast} initialLang={lang as 'fr' | 'en'} />}
+        <h3 class="panel-title">{t.airQuality}</h3>
+        {forecast && <AirCard client:load locationName={locationData.name} initialLang={lang as 'fr' | 'en'} />}
       </section>
       <section class="cell-forecast glass"></section>
       <section class="cell-chart glass"></section>
