@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import WeatherIcon from './WeatherIcon.vue';
+import WeatherIcon from './../ui/WeatherIcon.vue';
 
 const props = defineProps<{
   sunrise: number;

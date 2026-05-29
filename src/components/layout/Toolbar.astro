@@ -1,5 +1,5 @@
 ---
-import SearchInput from './SearchInput.vue';
+import SearchInput from './../search/SearchInput.vue';
 ---
 
 <SearchInput client:load />
@@ -27,8 +27,8 @@ import SearchInput from './SearchInput.vue';
 
 <script>
   import { navigate } from 'astro:transitions/client';
-  import { $unit, $lang, $theme, saveConfig } from '../stores/configStore';
-  import { $navOpen } from '../stores/uiStore';
+  import { $unit, $lang, $theme, saveConfig } from '../../stores/configStore';
+  import { $navOpen } from '../../stores/uiStore';
 
   function setupToolbar() {
     const unitC = document.getElementById('unit-c');

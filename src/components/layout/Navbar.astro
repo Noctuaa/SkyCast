@@ -40,7 +40,7 @@ const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr
 </header>
 
 <script>
-  import { $navOpen } from '../stores/uiStore';
+  import { $navOpen } from '../../stores/uiStore';
   import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
   /**

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useStore } from '@nanostores/vue';
-import { $selectedDate } from '../stores/forecastStore';
-import { $unit } from '../stores/configStore';
-import { convertTemp } from '../stores/actions';
-import { useI18n } from '../i18n/useI18n';
-import WeatherIcon from './WeatherIcon.vue';
-import type { ForecastResponse } from '../types/weather';
+import { $selectedDate } from '../../stores/forecastStore';
+import { $unit } from '../../stores/configStore';
+import { convertTemp } from '../../stores/actions';
+import { useI18n } from '../../i18n/useI18n';
+import WeatherIcon from '../ui/WeatherIcon.vue';
+import type { ForecastResponse } from '../../types/weather';
 
 const props = defineProps<{ forecast: ForecastResponse }>();
 const selectedDate = useStore($selectedDate);

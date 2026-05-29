@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { navigate } from 'astro:transitions/client';
-import { $unit, $lang, $theme, saveConfig } from '../stores/configStore';
-import { $navOpen } from '../stores/uiStore';
-import SearchInput from './SearchInput.vue';
+import { $unit, $lang, $theme, saveConfig } from '../../stores/configStore.ts';
+import { $navOpen } from '../../stores/uiStore.ts';
+import SearchInput from './../search/SearchInput.vue';
 
 const props = defineProps<{
   initialUnit: 'C' | 'F';

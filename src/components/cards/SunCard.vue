@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from '../i18n/useI18n';
-import { $lang } from '../stores/configStore';
+import { useI18n } from '../../i18n/useI18n.ts';
+import { $lang } from '../../stores/configStore.ts';
 import SunArc from './SunArc.vue';
+import StatTile from '../ui/StatTile.vue';
 
 const props = defineProps<{
   sunrise: number;
@@ -55,7 +56,11 @@ const dayLength = computed(() => {
     </div>
 
     <div class="extras grid grid-cols-2 gap-2">
-      <div class="tile p-3">
+      <StatTile :label="t.civilDawn" :value="civilDawn" stacked />
+      <StatTile :label="t.civilDusk" :value="civilDusk" stacked />
+      <StatTile :label="t.solarNoon" :value="solarNoon" stacked />
+      <StatTile :label="t.dayLength" :value="dayLength" stacked />
+      <!--<div class="tile p-3">
         <p class="eyebrow">{{ t.civilDawn }}</p>
         <output class="sun-tile-val num">{{ civilDawn }}</output>
       </div>
@@ -70,7 +75,7 @@ const dayLength = computed(() => {
       <div class="tile p-3">
         <p class="eyebrow">{{ t.dayLength }}</p>
         <output class="sun-tile-val num">{{ dayLength }}</output>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>

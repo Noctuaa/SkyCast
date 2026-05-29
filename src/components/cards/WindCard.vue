@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from '../i18n/useI18n';
-import { $lang } from '../stores/configStore';
+import { useI18n } from '../../i18n/useI18n';
+import { $lang } from '../../stores/configStore';
+import StatTile from '../ui/StatTile.vue';
 const props = defineProps<{
   windSpeed: number;
   windDeg: number;
@@ -108,14 +109,8 @@ const visibilityKm = computed(() => Math.round(props.visibility / 1000));
     </div>
 
     <div class="extras grid grid-cols-2 gap-2">
-      <div class="tile p-3">
-        <p class="eyebrow">{{ t.cloudCover }}</p>
-        <output class="wind-val num">{{ cloudCover }}<small> %</small></output>
-      </div>
-      <div class="tile p-3">
-        <p class="eyebrow">{{ t.visibility }}</p>
-        <output class="wind-val num">{{ visibilityKm }}<small> km</small></output>
-      </div>
+      <StatTile :label="t.cloudCover" :value="cloudCover" unit="%" />
+      <StatTile :label="t.visibility" :value="visibilityKm" unit="km" />
     </div>
   </div>
 </template>

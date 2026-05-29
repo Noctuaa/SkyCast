@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from '../i18n/useI18n';
-import { $lang } from '../stores/configStore';
-import type { OMAirQualityResponse } from '../types/weather';
+import { useI18n } from '../../i18n/useI18n';
+import { $lang } from '../../stores/configStore';
+import StatTile from '../ui/StatTile.vue';
+import type { OMAirQualityResponse } from '../../types/weather';
 
 const props = defineProps<{
   airQuality: OMAirQualityResponse['current'];
@@ -77,46 +78,10 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
     </div>
 
     <div class="extras grid grid-cols-2 gap-2">
-      <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">
-          PM
-          <sub>2.5</sub>
-        </span>
-        <output class="air-val num">
-          {{ airQuality.pm2_5.toFixed(1) }}
-          <small>µg/m³</small>
-        </output>
-      </div>
-      <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">
-          PM
-          <sub>10</sub>
-        </span>
-        <output class="air-val num">
-          {{ airQuality.pm10.toFixed(1) }}
-          <small>µg/m³</small>
-        </output>
-      </div>
-      <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">
-          NO
-          <sub>2</sub>
-        </span>
-        <output class="air-val num">
-          {{ airQuality.nitrogen_dioxide.toFixed(1) }}
-          <small>µg/m³</small>
-        </output>
-      </div>
-      <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">
-          O
-          <sub>3</sub>
-        </span>
-        <output class="air-val num">
-          {{ airQuality.ozone.toFixed(1) }}
-          <small>µg/m³</small>
-        </output>
-      </div>
+      <StatTile label="PM" sub="2.5" :value="airQuality.pm2_5" :decimals="1" unit="µg/m³" />
+      <StatTile label="PM" sub="10" :value="airQuality.pm10" :decimals="1" unit="µg/m³" />
+      <StatTile label="NO" sub="2" :value="airQuality.nitrogen_dioxide" :decimals="1" unit="µg/m³" />
+      <StatTile label="O" sub="3" :value="airQuality.ozone" :decimals="1" unit="µg/m³" />
     </div>
   </div>
 </template>

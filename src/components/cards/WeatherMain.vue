@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { OMCurrentWeather } from '../types/weather';
-import { useI18n } from '../i18n/useI18n';
-import { $lang, $unit } from '../stores/configStore';
-import { convertTemp } from '../utils/weather';
+import type { OMCurrentWeather } from '../../types/weather';
+import { useI18n } from '../../i18n/useI18n';
+import { $lang, $unit } from '../../stores/configStore';
+import { convertTemp } from '../../utils/weather';
 import { useStore } from '@nanostores/vue';
-import { getWmoInfo } from '../i18n/wmo';
-import WeatherIcon from './WeatherIcon.vue';
+import { getWmoInfo } from '../../i18n/wmo';
+import WeatherIcon from '../ui/WeatherIcon.vue';
+import StatTile from '../ui/StatTile.vue';
 
 const props = defineProps<{
   current: OMCurrentWeather;
@@ -45,7 +46,6 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
         <!-- prettier-ignore -->
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
         <h2 class="text-sm ink-1 font-semibold">{{ locationName }}</h2>
-        <span class="wm-badge">{{ country }}</span>
       </div>
       <time class="wm-date text-center text-sm ink-3 font-medium" :datetime="isoDate">
         <b class="block t-capitalize text-base ink-1 font-semibold">{{ dayName }}</b>
@@ -73,28 +73,10 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
       </div>
     </div>
 
-    <div class="wm-stats grid text-center">
-      <div class="stat tile">
-        <div class="eyebrow">{{ t.feelsLike }}</div>
-        <output class="stat-val num">
-          {{ convertTemp(current.apparent_temperature, unit) }}
-          <small>°{{ unit }}</small>
-        </output>
-      </div>
-      <div class="stat tile">
-        <div class="eyebrow">{{ t.humidity }}</div>
-        <output class="stat-val num">
-          {{ current.relative_humidity_2m }}
-          <small>%</small>
-        </output>
-      </div>
-      <div class="stat tile">
-        <div class="eyebrow">{{ t.pressure }}</div>
-        <output class="stat-val num">
-          {{ Math.round(current.pressure_msl) }}
-          <small><abbr title="hectopascals">hPa</abbr></small>
-        </output>
-      </div>
+    <div class="extras grid grid-cols-3 gap-2 text-center">
+      <StatTile :label="t.feelsLike" :value="convertTemp(current.apparent_temperature, unit)" unit="km/h" stacked />
+      <StatTile :label="t.humidity" :value="current.relative_humidity_2m" unit="%" stacked />
+      <StatTile :label="t.pressure" :value="Math.round(current.pressure_msl)" unit="hPa" stacked />
     </div>
   </section>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { useI18n } from '../i18n/useI18n';
+import { useI18n } from '../../i18n/useI18n';
 
 // Démarre le chargement WASM dès que le module est évalué par le browser
 const omPromise = import('@openmeteo/weather-map-layer');
@@ -71,7 +71,7 @@ const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
     container: mapContainer.value!,
     style: 'https://tiles.openfreemap.org/styles/liberty',
     center: [lon, lat],
-    zoom: 6,
+    zoom: 5.25,
   });
 
   const el = document.createElement('div');

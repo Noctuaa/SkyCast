@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { navigate } from 'astro:transitions/client';
-import { useI18n } from '../i18n/useI18n';
-import type { GeocodingResult } from '../types/weather';
+import { useI18n } from '../../i18n/useI18n';
+import type { GeocodingResult } from '../../types/weather';
 
 const query = ref('');
 const inputRef = ref<HTMLInputElement | null>(null);
@@ -16,7 +16,11 @@ let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 const { t } = useI18n();
 
 const toFlag = (code: string) =>
-  code.toUpperCase().split('').map((c) => String.fromCodePoint(c.charCodeAt(0) + 0x1f1a5)).join('');
+  code
+    .toUpperCase()
+    .split('')
+    .map((c) => String.fromCodePoint(c.charCodeAt(0) + 0x1f1a5))
+    .join('');
 
 /** Fetches city suggestions from the geocoding API. Deduplicates results by name/country/state. */
 const fetchSuggestions = async () => {
