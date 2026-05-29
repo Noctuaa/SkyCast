@@ -16,34 +16,34 @@ const { lang } = useI18n();
 
 const AQI_DATA = [
   {
-    fr: { label: 'Bon',          desc: 'Qualité de l\'air excellente' },
-    en: { label: 'Good',         desc: 'Air quality is satisfactory' },
+    fr: { label: 'Bon', desc: "Qualité de l'air excellente" },
+    en: { label: 'Good', desc: 'Air quality is satisfactory' },
     color: 'oklch(0.74 0.22 142)',
-    grad:  'linear-gradient(to top, oklch(0.55 0.22 142), oklch(0.78 0.22 128))',
+    grad: 'linear-gradient(to top, oklch(0.55 0.22 142), oklch(0.78 0.22 128))',
   },
   {
-    fr: { label: 'Acceptable',   desc: 'Acceptable, risque mineur pour les groupes sensibles' },
-    en: { label: 'Fair',         desc: 'Acceptable; minor concern for sensitive groups' },
+    fr: { label: 'Acceptable', desc: 'Acceptable, risque mineur pour les groupes sensibles' },
+    en: { label: 'Fair', desc: 'Acceptable; minor concern for sensitive groups' },
     color: 'oklch(0.80 0.20 120)',
-    grad:  'linear-gradient(to top, oklch(0.62 0.22 128), oklch(0.84 0.20 112))',
+    grad: 'linear-gradient(to top, oklch(0.62 0.22 128), oklch(0.84 0.20 112))',
   },
   {
-    fr: { label: 'Modéré',       desc: 'Risque pour les groupes sensibles' },
-    en: { label: 'Moderate',     desc: 'Unhealthy for sensitive groups' },
+    fr: { label: 'Modéré', desc: 'Risque pour les groupes sensibles' },
+    en: { label: 'Moderate', desc: 'Unhealthy for sensitive groups' },
     color: 'oklch(0.85 0.18 85)',
-    grad:  'linear-gradient(to top, oklch(0.68 0.20 75), oklch(0.88 0.18 90))',
+    grad: 'linear-gradient(to top, oklch(0.68 0.20 75), oklch(0.88 0.18 90))',
   },
   {
-    fr: { label: 'Mauvais',      desc: 'Nocif pour tout le monde' },
-    en: { label: 'Poor',         desc: 'Unhealthy for everyone' },
+    fr: { label: 'Mauvais', desc: 'Nocif pour tout le monde' },
+    en: { label: 'Poor', desc: 'Unhealthy for everyone' },
     color: 'oklch(0.74 0.18 50)',
-    grad:  'linear-gradient(to top, oklch(0.58 0.20 40), oklch(0.78 0.18 55))',
+    grad: 'linear-gradient(to top, oklch(0.58 0.20 40), oklch(0.78 0.18 55))',
   },
   {
     fr: { label: 'Très mauvais', desc: 'Très nocif, urgence sanitaire' },
-    en: { label: 'Very Poor',    desc: 'Very unhealthy, health emergency' },
+    en: { label: 'Very Poor', desc: 'Very unhealthy, health emergency' },
     color: 'oklch(0.63 0.22 25)',
-    grad:  'linear-gradient(to top, oklch(0.48 0.22 20), oklch(0.68 0.22 30))',
+    grad: 'linear-gradient(to top, oklch(0.48 0.22 20), oklch(0.68 0.22 30))',
   },
 ] as const;
 
@@ -65,9 +65,6 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
 
 <template>
   <div class="flex flex-col gap-3">
-
-    <p class="air-location eyebrow text-right">{{ locationName }}</p>
-
     <div class="air-main flex ai-center gap-3">
       <div class="aqi-badge num" :style="{ background: level.color }">{{ aqi }}</div>
       <div class="flex flex-col gap-1">
@@ -81,20 +78,44 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
 
     <div class="extras grid grid-cols-2 gap-2">
       <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">PM<sub>2.5</sub></span>
-        <output class="air-val num">{{ airQuality.pm2_5.toFixed(1) }}<small> µg/m³</small></output>
+        <span class="eyebrow">
+          PM
+          <sub>2.5</sub>
+        </span>
+        <output class="air-val num">
+          {{ airQuality.pm2_5.toFixed(1) }}
+          <small>µg/m³</small>
+        </output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">PM<sub>10</sub></span>
-        <output class="air-val num">{{ airQuality.pm10.toFixed(1) }}<small> µg/m³</small></output>
+        <span class="eyebrow">
+          PM
+          <sub>10</sub>
+        </span>
+        <output class="air-val num">
+          {{ airQuality.pm10.toFixed(1) }}
+          <small>µg/m³</small>
+        </output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">NO<sub>2</sub></span>
-        <output class="air-val num">{{ airQuality.nitrogen_dioxide.toFixed(1) }}<small> µg/m³</small></output>
+        <span class="eyebrow">
+          NO
+          <sub>2</sub>
+        </span>
+        <output class="air-val num">
+          {{ airQuality.nitrogen_dioxide.toFixed(1) }}
+          <small>µg/m³</small>
+        </output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
-        <span class="eyebrow">O<sub>3</sub></span>
-        <output class="air-val num">{{ airQuality.ozone.toFixed(1) }}<small> µg/m³</small></output>
+        <span class="eyebrow">
+          O
+          <sub>3</sub>
+        </span>
+        <output class="air-val num">
+          {{ airQuality.ozone.toFixed(1) }}
+          <small>µg/m³</small>
+        </output>
       </div>
     </div>
   </div>
