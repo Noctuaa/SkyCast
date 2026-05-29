@@ -11,6 +11,25 @@
 .sd-list {
   max-height: 360px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-border) transparent;
+}
+
+.sd-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sd-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sd-list::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 99px;
+}
+
+.sd-list::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-4);
 }
 
 .sd-item {

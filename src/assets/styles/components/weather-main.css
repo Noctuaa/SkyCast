@@ -60,8 +60,7 @@
   position: relative;
 }
 
-.wm-condi,
-.wm-sub {
+.wm-info {
   margin-left: calc(var(--space) * 2);
 }
 

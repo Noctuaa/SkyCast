@@ -1,45 +1,80 @@
-import type { APIRoute } from "astro";
-import type { ForecastResponse } from "../../types/weather";
-import { OPENWEATHER_API_KEY } from 'astro:env/server'
+import type { APIRoute } from 'astro';
+import type { OMResponse } from '../../types/weather';
 
-/**
- * Get the weather forecast from OpenWeatherMap for 5 days with 3 hours interval.
- * @param lat - The latitude of the location.
- * @param lon - The longitude of the location.
- * @returns The weather forecast data from OpenWeatherMap API.
- * @throws {Error} if the API return an error.
- */
-const fetchForecast = async (lat: string, lon: string, lang: string): Promise<ForecastResponse> => {
-  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=${lang}&cnt=40`
-  const res = await fetch(apiUrl);
-  if (!res.ok) { throw new Error(`Failed to fetch forecast data: ${res.status}`); }
+const CURRENT = [
+  'temperature_2m',
+  'apparent_temperature',
+  'relative_humidity_2m',
+  'pressure_msl',
+  'weather_code',
+  'cloud_cover',
+  'wind_speed_10m',
+  'wind_direction_10m',
+  'wind_gusts_10m',
+  'visibility',
+  'is_day',
+].join(',');
+
+const HOURLY = [
+  'temperature_2m',
+  'apparent_temperature',
+  'relative_humidity_2m',
+  'precipitation_probability',
+  'weather_code',
+  'wind_speed_10m',
+  'wind_direction_10m',
+  'wind_gusts_10m',
+  'visibility',
+  'cloud_cover',
+  'uv_index',
+].join(',');
+
+const DAILY = [
+  'weather_code',
+  'temperature_2m_max',
+  'temperature_2m_min',
+  'sunrise',
+  'sunset',
+  'uv_index_max',
+  'precipitation_probability_max',
+].join(',');
+
+const fetchForecast = async (lat: string, lon: string): Promise<OMResponse> => {
+  const url = new URL('https://api.open-meteo.com/v1/forecast');
+  url.searchParams.set('latitude', lat);
+  url.searchParams.set('longitude', lon);
+  url.searchParams.set('current', CURRENT);
+  url.searchParams.set('hourly', HOURLY);
+  url.searchParams.set('daily', DAILY);
+  url.searchParams.set('timezone', 'auto');
+  url.searchParams.set('forecast_days', '7');
+
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`Open-Meteo error: ${res.status}`);
   return res.json();
-}
+};
 
-
-/**
- * GET /api/forecast?lat={lat}&lon={lon}
- * Returns the weather forecast from coordinates (latitude and longitude) using the OpenWeatherMap API.
- * @queryParam url lat - The latitude of the location.
- * @queryParam url lon - The longitude of the location. 
- * @queryParam url lang - The language for weather descriptions (default: 'fr').
- */
 export const GET: APIRoute = async ({ url }) => {
-  const lat = url.searchParams.get("lat");
-  const lon = url.searchParams.get("lon");
-  const lang = url.searchParams.get("lang") || "fr";
+  const lat = url.searchParams.get('lat');
+  const lon = url.searchParams.get('lon');
 
   if (!lat || !lon) {
-    return new Response(JSON.stringify({ error: "Missing lat or lon parameters" }), {
+    return new Response(JSON.stringify({ error: 'Missing lat or lon' }), {
       status: 400,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
   try {
-    const data = await fetchForecast(lat, lon, lang);
-    return new Response(JSON.stringify(data), { status: 200, headers: { 'Content-Type': 'application/json' } });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    const data = await fetchForecast(lat, lon);
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-}
+};

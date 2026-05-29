@@ -2,8 +2,8 @@
 import { defineConfig, envField } from 'astro/config';
 
 import node from '@astrojs/node';
-
 import vue from '@astrojs/vue';
+import wasm from 'vite-plugin-wasm';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +18,7 @@ export default defineConfig({
     },
   },
   vite: {
+    plugins: [wasm()],
     css: {
       transformer: 'lightningcss',
     },
@@ -26,6 +27,9 @@ export default defineConfig({
         usePolling: true,
         interval: 300,
       },
+    },
+    optimizeDeps: {
+      exclude: ['@openmeteo/weather-map-layer'],
     },
   },
 });

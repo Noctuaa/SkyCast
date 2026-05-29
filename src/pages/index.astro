@@ -2,19 +2,21 @@
 import Layout from '../layouts/Layout.astro';
 import SearchModal from '../components/SearchModal.vue';
 import WeatherMain from '../components/WeatherMain.vue';
-import WeatherCard from '../components/WeatherCard.astro';
-import ForecastCard from '../components/ForecastCard.vue';
-import ChartCard from '../components/ChartCard.vue';
 import MapCard from '../components/MapCard.vue';
-import type { ForecastResponse } from '../types/weather';
 import WindCard from '../components/WindCard.vue';
 import SunCard from '../components/SunCard.vue';
 import AirCard from '../components/AirCard.vue';
+import type { OMResponse, OMAirQualityResponse } from '../types/weather';
 import { translations } from '../i18n/translations';
 
 const url = Astro.url;
-const cityParam = url.searchParams.get('city') ?? '';
-const hasValidId = cityParam.length > 0 && !isNaN(Number(cityParam));
+const latParam = url.searchParams.get('lat');
+const lonParam = url.searchParams.get('lon');
+const hasValidCoords =
+  latParam !== null &&
+  lonParam !== null &&
+  !isNaN(Number(latParam)) &&
+  !isNaN(Number(lonParam));
 
 const prefsCookie = Astro.cookies.get('skycast_prefs')?.value;
 const prefs = prefsCookie ? JSON.parse(decodeURIComponent(prefsCookie)) : {};
@@ -31,25 +33,34 @@ const lang = (
 const t = translations[lang];
 const unit = (prefs.unit ?? 'C') as 'C' | 'F';
 
-let forecast: ForecastResponse | null = null;
+let forecast: OMResponse | null = null;
+let airQuality: OMAirQualityResponse | null = null;
 
-if (hasValidId) {
-  const apiKey = import.meta.env.OPENWEATHER_API_KEY;
-  const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?id=${cityParam}&appid=${apiKey}&units=metric&lang=${lang}&cnt=40`,
-  );
-  if (res.ok) forecast = await res.json();
+if (hasValidCoords) {
+  const [forecastRes, airRes] = await Promise.all([
+    fetch(`${url.origin}/api/forecast?lat=${latParam}&lon=${lonParam}`),
+    fetch(`${url.origin}/api/air-quality?lat=${latParam}&lon=${lonParam}`),
+  ]);
+  if (forecastRes.ok) forecast = await forecastRes.json();
+  if (airRes.ok) airQuality = await airRes.json();
 }
 
 const locationCookie = Astro.cookies.get('skycast_location')?.value;
 const locationData = locationCookie
   ? JSON.parse(decodeURIComponent(locationCookie))
-  : { name: forecast?.city.name ?? '', country: forecast?.city.country ?? '', state: '' };
+  : { name: '', country: '', state: '' };
+
+// Convertit une ISO string locale Open-Meteo en Unix timestamp UTC
+const isoToUnix = (iso: string, utcOffset: number) =>
+  Math.floor(new Date(iso + 'Z').getTime() / 1000) - utcOffset;
+
+const sunriseUnix = forecast ? isoToUnix(forecast.daily.sunrise[0], forecast.utc_offset_seconds) : 0;
+const sunsetUnix  = forecast ? isoToUnix(forecast.daily.sunset[0],  forecast.utc_offset_seconds) : 0;
 ---
 
 <script>
   import { $searchOpen } from '../stores/forecastStore';
-  if (!new URL(window.location.href).searchParams.get('city')) {
+  if (!new URL(window.location.href).searchParams.get('lat')) {
     $searchOpen.set(true);
   }
 </script>
@@ -61,65 +72,64 @@ const locationData = locationCookie
         forecast && (
           <WeatherMain
             client:load
-            forecast={forecast}
-            initialLang={lang}
-            initialUnit={unit}
+            current={forecast.current}
+            uvIndex={forecast.daily.uv_index_max[0]}
+            country={locationData.country}
             locationName={locationData.name}
             locationState={locationData.state ?? ''}
+            initialLang={lang}
+            initialUnit={unit}
           />
         )
       }
 
       <section class="cell-map glass">
-        {
-          forecast && (
-            <MapCard client:load lat={forecast.city.coord.lat} lon={forecast.city.coord.lon} name={locationData.name} />
-          )
-        }
+        {forecast && <MapCard client:load lat={forecast.latitude} lon={forecast.longitude} name={locationData.name} />}
       </section>
 
       <section class="cell-wind glass">
-        <div class="panel-head">
-          <h3 class="panel-title">{t.wind}</h3>
-        </div>
-
-        {
-          forecast && (
-            <WindCard
-              client:load
-              wind={forecast.list[0].wind}
-              clouds={forecast.list[0].clouds}
-              visibility={forecast.list[0].visibility}
-              initialLang={lang as 'fr' | 'en'}
-            />
-          )
-        }
+        <div class="panel-head"><h3 class="panel-title">{t.wind}</h3></div>
+        {forecast && (
+          <WindCard
+            client:load
+            windSpeed={forecast.current.wind_speed_10m}
+            windDeg={forecast.current.wind_direction_10m}
+            windGust={forecast.current.wind_gusts_10m}
+            cloudCover={forecast.current.cloud_cover}
+            visibility={forecast.current.visibility}
+            initialLang={lang as 'fr' | 'en'}
+          />
+        )}
       </section>
 
       <section class="cell-sun glass">
-        <div class="panel-head">
-          <h3 class="panel-title">{t.sunriseSunset}</h3>
-        </div>
-        {
-          forecast && (
-            <SunCard
-              client:load
-              sunrise={forecast.city.sunrise}
-              sunset={forecast.city.sunset}
-              timezone={forecast.city.timezone}
-              initialLang={lang as 'fr' | 'en'}
-            />
-          )
-        }
+        <div class="panel-head"><h3 class="panel-title">{t.sunriseSunset}</h3></div>
+        {forecast && (
+          <SunCard
+            client:load
+            sunrise={sunriseUnix}
+            sunset={sunsetUnix}
+            timezone={forecast.utc_offset_seconds}
+            initialLang={lang as 'fr' | 'en'}
+          />
+        )}
       </section>
+
       <section class="cell-air glass">
         <h3 class="panel-title">{t.airQuality}</h3>
-        {forecast && <AirCard client:load locationName={locationData.name} initialLang={lang as 'fr' | 'en'} />}
+        {airQuality && (
+          <AirCard
+            client:load
+            airQuality={airQuality.current}
+            locationName={locationData.name}
+            initialLang={lang as 'fr' | 'en'}
+          />
+        )}
       </section>
       <section class="cell-forecast glass"></section>
       <section class="cell-chart glass"></section>
     </div>
-    <SearchModal client:only="vue" />
+    <!--<SearchModal client:only="vue" />-->
     <!-- <div class="weather-grid grid">
       {
         forecast && (

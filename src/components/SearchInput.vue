@@ -15,6 +15,9 @@ const hasFetched = ref(false);
 let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 const { t } = useI18n();
 
+const toFlag = (code: string) =>
+  code.toUpperCase().split('').map((c) => String.fromCodePoint(c.charCodeAt(0) + 0x1f1a5)).join('');
+
 /** Fetches city suggestions from the geocoding API. Deduplicates results by name/country/state. */
 const fetchSuggestions = async () => {
   if (query.value.length < 2) {
@@ -61,20 +64,13 @@ const openSearch = () => {
  * Resolves a geocoding result to an OWM city ID, saves the location cookie,
  * then navigates to the forecast page.
  */
-const selectCity = async (city: GeocodingResult) => {
-  try {
-    const res = await fetch(`/api/resolve-city?lat=${city.lat}&lon=${city.lon}`);
-    const { cityId } = await res.json();
-    document.cookie = `skycast_location=${encodeURIComponent(JSON.stringify({ name: city.name, country: city.country, state: city.state ?? '' }))}; path=/; max-age=31536000`;
-    const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
-    suggestions.value = [];
-    showDrop.value = false;
-    mobileOpen.value = false;
-    navigate(`/?lang=${lang}&city=${cityId}`);
-  } catch {
-    showDrop.value = false;
-    mobileOpen.value = false;
-  }
+const selectCity = (city: GeocodingResult) => {
+  document.cookie = `skycast_location=${encodeURIComponent(JSON.stringify({ name: city.name, country: city.country, state: city.state ?? '' }))}; path=/; max-age=31536000`;
+  const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
+  suggestions.value = [];
+  showDrop.value = false;
+  mobileOpen.value = false;
+  navigate(`/?lang=${lang}&lat=${city.lat}&lon=${city.lon}`);
 };
 
 onMounted(() => {
@@ -131,7 +127,7 @@ onMounted(() => {
           class="sd-item"
           @mousedown.prevent="selectCity(city)"
         >
-          <span class="sd-flag">{{ city.country }}</span>
+          <span class="sd-flag">{{ toFlag(city.country_code) }}</span>
           <div class="sd-info">
             <span class="sd-name">{{ city.name }}</span>
             <span class="sd-region">{{ city.state ? city.state + ' · ' : '' }}{{ city.country }}</span>
@@ -172,7 +168,7 @@ onMounted(() => {
           <input v-model="query" type="text" :placeholder="t.searchPlaceholder" @input="onInput" />
           <ul v-if="suggestions.length" class="sd-list absolute w-full">
             <li v-for="city in suggestions" :key="`${city.lat}-${city.lon}`" class="sd-item" @click="selectCity(city)">
-              <span class="sd-flag">{{ city.country }}</span>
+              <span class="sd-flag">{{ toFlag(city.country_code) }}</span>
               <div class="sd-info">
                 <span class="sd-name">{{ city.name }}</span>
                 <span class="sd-region">{{ city.state ? city.state + ' · ' : '' }}{{ city.country }}</span>

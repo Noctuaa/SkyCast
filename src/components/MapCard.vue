@@ -2,6 +2,9 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useI18n } from '../i18n/useI18n';
 
+// Démarre le chargement WASM dès que le module est évalué par le browser
+const omPromise = import('@openmeteo/weather-map-layer');
+
 const props = defineProps<{ lat: number; lon: number; name: string }>();
 
 const { t } = useI18n();
@@ -9,11 +12,14 @@ const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<any>(null);
 const activeLayer = ref<string>('clouds');
 
-const weatherLayers: Record<string, { name: string; key: string }> = {
-  clouds: { name: 'clouds_new', key: 'clouds' },
-  precipitation: { name: 'precipitation_new', key: 'precipitation' },
-  temperature: { name: 'temp_new', key: 'temperature' },
-  wind: { name: 'wind_new', key: 'wind' },
+const OM_MODEL = 'dwd_icon';
+const OM_BASE = `https://map-tiles.open-meteo.com/data_spatial/${OM_MODEL}/latest.json?time_step=current_time_1H`;
+
+const weatherLayers: Record<string, { variable: string; key: string; opacity: number }> = {
+  clouds: { variable: 'cloud_cover', key: 'clouds', opacity: 0.55 },
+  precipitation: { variable: 'precipitation', key: 'precipitation', opacity: 0.65 },
+  temperature: { variable: 'temperature_2m', key: 'temperature', opacity: 0.25 },
+  wind: { variable: 'wind_u_component_10m', key: 'wind', opacity: 0.6 },
 };
 
 const getLayerLabel = (key: string) => (t.value[key as keyof typeof t.value] as string) ?? key;
@@ -26,15 +32,15 @@ const addWeatherLayer = (map: any, key: string) => {
   if (!map.getSource(sourceId)) {
     map.addSource(sourceId, {
       type: 'raster',
-      tiles: [`/api/tiles/${config.name}/{z}/{x}/{y}.png`],
-      tileSize: 256,
-      attribution: '© OpenWeatherMap',
+      url: `om://${OM_BASE}&variable=${config.variable}`,
+      maxzoom: 12,
+      attribution: '© Open-Meteo',
     });
     map.addLayer({
       id: layerId,
       type: 'raster',
       source: sourceId,
-      paint: { 'raster-opacity': key === 'temperature' ? 0.8 : 1 },
+      paint: { 'raster-opacity': config.opacity },
     });
   }
 
@@ -53,9 +59,13 @@ const toggleLayer = (key: string) => {
   addWeatherLayer(mapInstance.value, key);
 };
 
-const initMap = async (lat: number, lon: number) => {
-  const maplibregl = (await import('maplibre-gl')).default;
-  await import('maplibre-gl/dist/maplibre-gl.css');
+const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
+  const [maplibregl] = await Promise.all([
+    import('maplibre-gl').then((m) => m.default),
+    import('maplibre-gl/dist/maplibre-gl.css'),
+  ]);
+  const { omProtocol } = await omPromise;
+  maplibregl.addProtocol('om', omProtocol);
 
   const map = new maplibregl.Map({
     container: mapContainer.value!,
@@ -82,7 +92,7 @@ const initMap = async (lat: number, lon: number) => {
 
 onMounted(async () => {
   if (props.lat && props.lon) {
-    await initMap(props.lat, props.lon);
+    await initMap(props.lat, props.lon, omPromise);
   }
 });
 

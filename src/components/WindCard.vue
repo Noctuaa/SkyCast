@@ -2,12 +2,12 @@
 import { computed } from 'vue';
 import { useI18n } from '../i18n/useI18n';
 import { $lang } from '../stores/configStore';
-import type { ForecastResponse } from '../types/weather';
-
 const props = defineProps<{
-  wind: ForecastResponse['list'][0]['wind'];
-  clouds: ForecastResponse['list'][0]['clouds'];
-  visibility?: number;
+  windSpeed: number;
+  windDeg: number;
+  windGust?: number;
+  cloudCover: number;
+  visibility: number;
   initialLang: 'fr' | 'en';
 }>();
 
@@ -38,17 +38,17 @@ const toKmh = (mps: number) => Math.round(mps * 3.6);
 const degToDir = computed(() => {
   const dirs =
     lang.value === 'fr' ? ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'] : ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  return dirs[Math.round(props.wind.deg / 45) % 8];
+  return dirs[Math.round(props.windDeg / 45) % 8];
 });
 
 const beaufort = computed(() => {
-  const force = BFT_LIMITS.filter((v) => props.wind.speed >= v).length;
+  const force = BFT_LIMITS.filter((v) => props.windSpeed >= v).length;
   return { force, label: BEAUFORT[force][lang.value] };
 });
 
-const windFrom = computed(() => `${degToDir.value} · ${props.wind.deg}°`);
+const windFrom = computed(() => `${degToDir.value} · ${props.windDeg}°`);
 
-const visibilityKm = computed(() => (props.visibility ? Math.round(props.visibility / 1000) : null));
+const visibilityKm = computed(() => Math.round(props.visibility / 1000));
 </script>
 
 <template>
@@ -79,7 +79,7 @@ const visibilityKm = computed(() => (props.visibility ? Math.round(props.visibil
         <text x="97" y="62"  text-anchor="middle" font-family="var(--font-sans)" font-weight="700" font-size="12" fill="var(--ink-2)">E</text>
         <text x="58"  y="100" text-anchor="middle" font-family="var(--font-sans)" font-weight="700" font-size="12" fill="var(--ink-2)">S</text>
         <text x="20"  y="62"  text-anchor="middle" font-family="var(--font-sans)" font-weight="700" font-size="12" fill="var(--ink-2)">{{ lang === 'fr' ? 'O' : 'W' }}</text>
-        <g :transform="`rotate(${wind.deg} 58 58)`" style="transition: transform 0.8s cubic-bezier(0.4, 1.6, 0.5, 1);">
+        <g :transform="`rotate(${windDeg} 58 58)`" style="transition: transform 0.8s cubic-bezier(0.4, 1.6, 0.5, 1);">
           <polygon points="58,13 53,58 63,58" fill="url(#needle-g)" />
           <polygon points="58,103 54,58 62,58" fill="var(--ink-4)" opacity="0.5" />
           <circle cx="58" cy="58" r="4" fill="var(--accent)" stroke="white" stroke-width="1.5" />
@@ -88,13 +88,13 @@ const visibilityKm = computed(() => (props.visibility ? Math.round(props.visibil
 
       <div class="wind-stats flex flex-col gap-2">
         <output class="wind-speed num">
-          {{ toKmh(wind.speed) }}
+          {{ toKmh(windSpeed) }}
           <small>km/h</small>
         </output>
         <output class="wind-from text-sm ink-2 font-medium">{{ windFrom }}</output>
-        <span v-if="wind.gust" class="wind-gust text-sm ink-3">
+        <span v-if="windGust" class="wind-gust text-sm ink-3">
           {{ t.windGust }}
-          <strong class="ink-2">{{ toKmh(wind.gust) }} km/h</strong>
+          <strong class="ink-2">{{ toKmh(windGust) }} km/h</strong>
         </span>
 
         <div class="beaufort flex ai-center gap-3">
@@ -110,17 +110,11 @@ const visibilityKm = computed(() => (props.visibility ? Math.round(props.visibil
     <div class="extras grid grid-cols-2 gap-2">
       <div class="tile p-3">
         <p class="eyebrow">{{ t.cloudCover }}</p>
-        <output class="wind-val num">
-          {{ clouds.all }}
-          <small>%</small>
-        </output>
+        <output class="wind-val num">{{ cloudCover }}<small> %</small></output>
       </div>
-      <div v-if="visibilityKm !== null" class="tile p-3">
+      <div class="tile p-3">
         <p class="eyebrow">{{ t.visibility }}</p>
-        <output class="wind-val num">
-          {{ visibilityKm }}
-          <small>km</small>
-        </output>
+        <output class="wind-val num">{{ visibilityKm }}<small> km</small></output>
       </div>
     </div>
   </div>

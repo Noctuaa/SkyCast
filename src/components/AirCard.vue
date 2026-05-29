@@ -2,8 +2,10 @@
 import { computed } from 'vue';
 import { useI18n } from '../i18n/useI18n';
 import { $lang } from '../stores/configStore';
+import type { OMAirQualityResponse } from '../types/weather';
 
 const props = defineProps<{
+  airQuality: OMAirQualityResponse['current'];
   locationName: string;
   initialLang: 'fr' | 'en';
 }>();
@@ -11,16 +13,6 @@ const props = defineProps<{
 $lang.set(props.initialLang);
 
 const { lang } = useI18n();
-
-// --- Placeholder — à remplacer avec Open-Meteo ---
-const aqi = 2;
-const pollutants = {
-  pm25: 8.4,
-  pm10: 14.2,
-  no2: 18.6,
-  o3: 62.1,
-};
-// --------------------------------------------------
 
 const AQI_DATA = [
   {
@@ -55,10 +47,20 @@ const AQI_DATA = [
   },
 ] as const;
 
-const level = computed(() => AQI_DATA[aqi - 1]);
+// European AQI continu (0-100+) → niveau 1-5
+const toLevel = (eaqi: number): number => {
+  if (eaqi <= 20) return 1;
+  if (eaqi <= 40) return 2;
+  if (eaqi <= 60) return 3;
+  if (eaqi <= 80) return 4;
+  return 5;
+};
+
+const aqi = computed(() => toLevel(props.airQuality.european_aqi));
+const level = computed(() => AQI_DATA[aqi.value - 1]);
 const label = computed(() => level.value[lang.value].label);
 const desc = computed(() => level.value[lang.value].desc);
-const barWidth = computed(() => `${(aqi / 5) * 100}%`);
+const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
 </script>
 
 <template>
@@ -80,19 +82,19 @@ const barWidth = computed(() => `${(aqi / 5) * 100}%`);
     <div class="extras grid grid-cols-2 gap-2">
       <div class="tile p-3 flex jc-between ai-center">
         <span class="eyebrow">PM<sub>2.5</sub></span>
-        <output class="air-val num">{{ pollutants.pm25 }}<small> µg/m³</small></output>
+        <output class="air-val num">{{ airQuality.pm2_5.toFixed(1) }}<small> µg/m³</small></output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
         <span class="eyebrow">PM<sub>10</sub></span>
-        <output class="air-val num">{{ pollutants.pm10 }}<small> µg/m³</small></output>
+        <output class="air-val num">{{ airQuality.pm10.toFixed(1) }}<small> µg/m³</small></output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
         <span class="eyebrow">NO<sub>2</sub></span>
-        <output class="air-val num">{{ pollutants.no2 }}<small> µg/m³</small></output>
+        <output class="air-val num">{{ airQuality.nitrogen_dioxide.toFixed(1) }}<small> µg/m³</small></output>
       </div>
       <div class="tile p-3 flex jc-between ai-center">
         <span class="eyebrow">O<sub>3</sub></span>
-        <output class="air-val num">{{ pollutants.o3 }}<small> µg/m³</small></output>
+        <output class="air-val num">{{ airQuality.ozone.toFixed(1) }}<small> µg/m³</small></output>
       </div>
     </div>
   </div>
