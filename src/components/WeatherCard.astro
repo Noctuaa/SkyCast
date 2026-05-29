@@ -103,7 +103,7 @@ const fullDate = new Date().toLocaleDateString(`${lang}-${lang.toUpperCase()}`, 
       </div>
     </div>
 
-    <div class="weather-sun box col-span-full flex flex-col gap-3">
+    <div class="cell-sun box col-span-full flex flex-col gap-3">
       <span class="stat-label">{t.sunriseSunset}</span>
       <SunArc sunrise={city.sunrise} sunset={city.sunset} timezone={city.timezone} client:load />
     </div>

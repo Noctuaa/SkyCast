@@ -7,6 +7,10 @@ import ForecastCard from '../components/ForecastCard.vue';
 import ChartCard from '../components/ChartCard.vue';
 import MapCard from '../components/MapCard.vue';
 import type { ForecastResponse } from '../types/weather';
+import WindCard from '../components/WindCard.vue';
+import SunCard from '../components/SunCard.vue';
+import AirCard from '../components/AirCard.vue';
+import { translations } from '../i18n/translations';
 
 const url = Astro.url;
 const cityParam = url.searchParams.get('city') ?? '';
@@ -24,6 +28,7 @@ const lang = (
       ? (prefs.lang ?? browserLang)
       : browserLang
 ) as 'fr' | 'en';
+const t = translations[lang];
 const unit = (prefs.unit ?? 'C') as 'C' | 'F';
 
 let forecast: ForecastResponse | null = null;
@@ -72,11 +77,43 @@ const locationData = locationCookie
           )
         }
       </section>
-      <section class="weather-wind glass"></section>
-      <section class="weather-sun glass"></section>
-      <section class="weather-air glass"></section>
-      <section class="weather-forecast glass"></section>
-      <section class="weather-chart glass"></section>
+
+      <section class="cell-wind glass">
+        <div class="panel-head">
+          <h3 class="panel-title">{t.wind}</h3>
+        </div>
+
+        {
+          forecast && (
+            <WindCard
+              client:load
+              wind={forecast.list[0].wind}
+              clouds={forecast.list[0].clouds}
+              visibility={forecast.list[0].visibility}
+              initialLang={lang as 'fr' | 'en'}
+            />
+          )
+        }
+      </section>
+
+      <section class="cell-sun glass">
+        {
+          forecast && (
+            <SunCard
+              client:load
+              sunrise={forecast.city.sunrise}
+              sunset={forecast.city.sunset}
+              timezone={forecast.city.timezone}
+              initialLang={lang as 'fr' | 'en'}
+            />
+          )
+        }
+      </section>
+      <section class="cell-air glass">
+        {forecast && <AirCard client:load forecast={forecast} initialLang={lang as 'fr' | 'en'} />}
+      </section>
+      <section class="cell-forecast glass"></section>
+      <section class="cell-chart glass"></section>
     </div>
     <SearchModal client:only="vue" />
     <!-- <div class="weather-grid grid">
@@ -115,11 +152,11 @@ const locationData = locationCookie
 </Layout>
 
 <style>
-  .weather-wind,
-  .weather-sun,
-  .weather-air,
-  .weather-forecast,
-  .weather-chart {
+  .cell-wind,
+  .cell-sun,
+  .cell-air,
+  .cell-forecast,
+  .cell-chart {
     grid-column: span 12;
     grid-row: auto;
   }
@@ -131,11 +168,11 @@ const locationData = locationCookie
     min-height: 340px;
   }
 
-  .weather-wind,
-  .weather-sun,
-  .weather-air,
-  .weather-forecast,
-  .weather-chart {
+  .cell-wind,
+  .cell-sun,
+  .cell-air,
+  .cell-forecast,
+  .cell-chart {
     min-height: 200px;
     padding: 16px;
   }
@@ -147,31 +184,31 @@ const locationData = locationCookie
       min-height: unset;
     }
 
-    .weather-wind {
+    .cell-wind {
       grid-column: span 4;
       min-height: 230px;
       padding: 22px;
     }
 
-    .weather-sun {
+    .cell-sun {
       grid-column: span 4;
       min-height: 230px;
       padding: 22px;
     }
 
-    .weather-air {
+    .cell-air {
       grid-column: span 4;
       min-height: 230px;
       padding: 22px;
     }
 
-    .weather-forecast {
+    .cell-forecast {
       grid-column: span 6;
       min-height: 230px;
       padding: 22px;
     }
 
-    .weather-chart {
+    .cell-chart {
       grid-column: span 6;
       min-height: 230px;
       padding: 22px;

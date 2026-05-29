@@ -53,7 +53,7 @@ const isoDate = computed(() => new Date().toISOString().split('T')[0]);
           <path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12z"></path>
           <circle cx="12" cy="9" r="2.5"></circle>
         </svg>
-        <span>{{ locationName }}</span>
+        <h2 class="text-sm ink-1 font-semibold">{{ locationName }}</h2>
         <span class="wm-badge">{{ forecast.city.country }}</span>
       </div>
       <time class="wm-date text-center text-sm ink-3 font-medium" :datetime="isoDate">

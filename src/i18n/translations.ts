@@ -4,9 +4,20 @@ export const translations = {
     feelsLike: 'Ressenti',
     humidity: 'Humidité',
     pressure: 'Pression',
+
+    // WindCard
     wind: 'Vent',
+    windSpeed: 'Vitesse',
     windDirection: 'Direction',
+    windGust: 'Rafales',
+    cloudCover: 'Nuages',
+    visibility: 'Visibilité',
+
+    // SunCard
     sunriseSunset: 'Lever & coucher',
+
+    // AirCard
+    airQuality: 'Qualité de l\'air',
 
     // MapCard
     map: 'Carte',
@@ -30,9 +41,20 @@ export const translations = {
     feelsLike: 'Feels like',
     humidity: 'Humidity',
     pressure: 'Pressure',
+
+    // WindCard
     wind: 'Wind',
+    windSpeed: 'Speed',
     windDirection: 'Direction',
+    windGust: 'Gusts',
+    cloudCover: 'Cloud cover',
+    visibility: 'Visibility',
+
+    // SunCard
     sunriseSunset: 'Sunrise & sunset',
+
+    // AirCard
+    airQuality: 'Air quality',
 
     // MapCard
     map: 'Map',

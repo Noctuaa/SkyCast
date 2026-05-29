@@ -21,5 +21,11 @@ export default defineConfig({
     css: {
       transformer: 'lightningcss',
     },
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 300,
+      },
+    },
   },
 });
