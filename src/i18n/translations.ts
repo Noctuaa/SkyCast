@@ -1,9 +1,22 @@
 export const translations = {
   fr: {
+    // SearchInput
+    searchPlaceholder: 'Rechercher une ville...',
+    searchResult: 'RÉSULTAT',
+    searchNoMatch: 'Aucune ville ne correspond à',
+    searchTryAgain: 'Essayez un autre nom',
+
     // WeatherCard
     feelsLike: 'Ressenti',
     humidity: 'Humidité',
     pressure: 'Pression',
+
+    // MapCard
+    map: 'Carte',
+    clouds: 'Nuages',
+    precipitation: 'Précipitations',
+    temperature: 'Température',
+
 
     // WindCard
     wind: 'Vent',
@@ -22,34 +35,39 @@ export const translations = {
     solarNoon: 'Midi solaire',
     dayLength: 'Durée du jour',
 
-    // ForecastCard
-    forecast: 'Prévisions',
-
     // AirCard
     airQuality: 'Qualité de l\'air',
 
-    // MapCard
-    map: 'Carte',
-    clouds: 'Nuages',
-    precipitation: 'Précipitations',
-    temperature: 'Température',
+    // ForecastCard
+    forecast: 'Prévisions',
+    forecastPrev: 'Cliquer sur une journée pour prévisualiser',
 
     // ChartCard
     chartTitle: 'Prévisions toutes les 3 heures',
+    chartInterval: 'Intervalles de 3 heures',
     chartYAxis: 'Température',
     chartXAxis: 'Heure',
 
-    // SearchInput
-    searchPlaceholder: 'Rechercher une ville...',
-    searchResult: 'RÉSULTAT',
-    searchNoMatch: 'Aucune ville ne correspond à',
-    searchTryAgain: 'Essayez un autre nom',
+
   },
   en: {
+    // SearchInput
+    searchPlaceholder: 'Search for a city...',
+    searchResult: 'RESULT',
+    searchNoMatch: 'No cities match',
+    searchTryAgain: 'Try a different name',
+
     // WeatherCard
     feelsLike: 'Feels like',
     humidity: 'Humidity',
     pressure: 'Pressure',
+
+    // MapCard
+    map: 'Map',
+    clouds: 'Clouds',
+    precipitation: 'Precipitation',
+    temperature: 'Temperature',
+
 
     // WindCard
     wind: 'Wind',
@@ -68,28 +86,18 @@ export const translations = {
     solarNoon: 'Solar noon',
     dayLength: 'Day length',
 
-    // ForecastCard
-    forecast: 'Forecast',
-
     // AirCard
     airQuality: 'Air quality',
 
-    // MapCard
-    map: 'Map',
-    clouds: 'Clouds',
-    precipitation: 'Precipitation',
-    temperature: 'Temperature',
+    // ForecastCard
+    forecast: 'Forecast',
+    forecastPrev: 'Tap a day to preview',
 
     // ChartCard
     chartTitle: 'Forecast every 3 hours',
+    chartInterval: '3-hour intervals',
     chartYAxis: 'Temperature',
     chartXAxis: 'Time',
-
-    // SearchInput
-    searchPlaceholder: 'Search for a city...',
-    searchResult: 'RESULT',
-    searchNoMatch: 'No cities match',
-    searchTryAgain: 'Try a different name',
   },
 } as const;
 
