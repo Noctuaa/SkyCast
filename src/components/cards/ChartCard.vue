@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $unit, $theme } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
 import { convertTemp } from '../../utils/weather';
-import VueApexCharts from 'vue3-apexcharts';
 import type { OMHourlyWeather } from '../../types/weather';
+
+const VueApexCharts = defineAsyncComponent(() => import('vue3-apexcharts'));
 
 const props = defineProps<{ hourly: OMHourlyWeather }>();
 const unit = useStore($unit);
