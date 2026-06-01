@@ -1,0 +1,197 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { translations } from '../i18n/translations';
+
+const prefsCookie = Astro.cookies.get('skycast_prefs')?.value;
+const prefs = prefsCookie ? JSON.parse(decodeURIComponent(prefsCookie)) : {};
+const langParam = Astro.url.searchParams.get('lang');
+const acceptLang = Astro.request.headers.get('accept-language') ?? '';
+const browserLang = acceptLang.toLowerCase().startsWith('en') ? 'en' : 'fr';
+const lang = (
+  langParam !== null && ['fr', 'en'].includes(langParam)
+    ? langParam
+    : prefs.lang ?? browserLang
+) as 'fr' | 'en';
+
+const t = translations[lang];
+---
+
+<Layout>
+  <main class="not-found">
+    <div class="nf-scene">
+      <div class="nf-clouds">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+      </div>
+      <div class="nf-code">404</div>
+    </div>
+
+    <div class="nf-content">
+      <img src="/logo.svg" alt="Nocdev" class="nf-logo" />
+      <h1 class="nf-title">{t.notFoundTitle}</h1>
+      <p class="nf-desc">{t.notFoundDesc}</p>
+      <a href="/" class="nf-btn">{t.notFoundBtn}</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .not-found {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  /* ── Scène nuages ── */
+  .nf-scene {
+    position: relative;
+    width: 320px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nf-code {
+    font-size: 7rem;
+    font-weight: 900;
+    line-height: 1;
+    background: var(--grad-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -4px;
+  }
+
+  .nf-clouds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cloud {
+    position: absolute;
+    border-radius: 50px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-edge);
+    animation: drift linear infinite;
+  }
+
+  .cloud::before {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: inherit;
+    border: inherit;
+  }
+
+  .cloud-1 {
+    width: 120px;
+    height: 36px;
+    top: 18px;
+    left: -10px;
+    opacity: 0.7;
+    animation-duration: 8s;
+    animation-delay: 0s;
+  }
+  .cloud-1::before {
+    width: 52px;
+    height: 52px;
+    top: -26px;
+    left: 20px;
+  }
+
+  .cloud-2 {
+    width: 90px;
+    height: 28px;
+    bottom: 20px;
+    right: -5px;
+    opacity: 0.5;
+    animation-duration: 11s;
+    animation-delay: -3s;
+    animation-direction: reverse;
+  }
+  .cloud-2::before {
+    width: 40px;
+    height: 40px;
+    top: -20px;
+    left: 16px;
+  }
+
+  .cloud-3 {
+    width: 70px;
+    height: 22px;
+    top: 50%;
+    right: 20px;
+    opacity: 0.35;
+    animation-duration: 14s;
+    animation-delay: -6s;
+  }
+  .cloud-3::before {
+    width: 30px;
+    height: 30px;
+    top: -16px;
+    left: 12px;
+  }
+
+  @keyframes drift {
+    0%   { transform: translateX(0px); }
+    50%  { transform: translateX(14px); }
+    100% { transform: translateX(0px); }
+  }
+
+  /* ── Contenu ── */
+  .nf-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nf-logo {
+    height: 28px;
+    width: auto;
+    opacity: 0.6;
+  }
+
+  .nf-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .nf-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .nf-btn {
+    margin-block-start: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: var(--r-pill);
+    background: var(--grad-accent);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nf-btn:hover {
+    opacity: 0.88;
+    transform: translateY(-2px);
+  }
+</style>

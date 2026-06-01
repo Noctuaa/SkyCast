@@ -48,6 +48,10 @@ export const translations = {
     chartYAxis: 'Température',
     chartXAxis: 'Heure',
 
+    // 404
+    notFoundTitle: 'Page perdue dans le brouillard',
+    notFoundDesc: 'Cette page n\'existe pas ou a été déplacée.',
+    notFoundBtn: 'Retour à l\'accueil',
 
   },
   en: {
@@ -98,6 +102,11 @@ export const translations = {
     chartInterval: '3-hour intervals',
     chartYAxis: 'Temperature',
     chartXAxis: 'Time',
+
+    // 404
+    notFoundTitle: 'Page lost in the fog',
+    notFoundDesc: 'This page doesn\'t exist or has been moved.',
+    notFoundBtn: 'Back to home',
   },
 } as const;
 
