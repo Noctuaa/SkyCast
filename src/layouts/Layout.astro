@@ -3,6 +3,7 @@
 import '@fontsource-variable/manrope';
 import '../assets/styles/main.css';
 import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 ---
 
@@ -34,5 +35,6 @@ import { ClientRouter } from 'astro:transitions';
     <div class="bg-blob blob-3"></div>
     <Navbar />
     <slot />
+    <Footer />
   </body>
 </html>

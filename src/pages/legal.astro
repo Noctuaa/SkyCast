@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <main class="container legal-page">
+    <h1 class="legal-title">Mentions légales</h1>
+
+    <section class="legal-section">
+      <h2>Éditeur du site</h2>
+      <p>SkyCast est édité par <strong>Nocdev</strong>.</p>
+      <p>Contact : <a href="mailto:contact@nocdev.fr">contact@nocdev.fr</a></p>
+    </section>
+
+    <section class="legal-section">
+      <h2>Hébergement</h2>
+      <p>Ce site est hébergé par <strong>PlanetHoster</strong> — <a href="https://www.planethoster.com" target="_blank" rel="noopener noreferrer">www.planethoster.com</a></p>
+    </section>
+
+    <section class="legal-section">
+      <h2>Données collectées</h2>
+      <p>SkyCast collecte uniquement les données strictement nécessaires à son fonctionnement :</p>
+      <ul>
+        <li><strong>Préférences utilisateur</strong> (unité de température, langue) — stockées dans un cookie <code>skycast_prefs</code> sur votre appareil.</li>
+        <li><strong>Dernière localisation recherchée</strong> (nom de la ville, latitude, longitude) — stockée dans un cookie <code>skycast_location</code> sur votre appareil.</li>
+      </ul>
+      <p>Ces données ne quittent pas votre appareil, à l'exception des coordonnées géographiques transmises à l'API <strong>Open-Météo</strong> pour récupérer les prévisions météorologiques.</p>
+    </section>
+
+    <section class="legal-section">
+      <h2>Cookies</h2>
+      <p>SkyCast utilise uniquement des cookies <strong>fonctionnels et strictement nécessaires</strong> au bon fonctionnement du service. Ces cookies ne servent pas au suivi publicitaire ni à l'analyse comportementale.</p>
+      <p>Conformément au RGPD, ces cookies ne nécessitent pas votre consentement explicite.</p>
+      <p>Vous pouvez les supprimer à tout moment depuis les paramètres de votre navigateur (<em>Paramètres → Confidentialité → Cookies</em>).</p>
+    </section>
+
+    <section class="legal-section">
+      <h2>Services tiers</h2>
+      <ul>
+        <li><strong>Open-Météo</strong> — API météorologique gratuite et open source. Vos coordonnées lui sont transmises pour obtenir les prévisions. <a href="https://open-meteo.com/en/terms" target="_blank" rel="noopener noreferrer">Conditions d'utilisation</a></li>
+        <li><strong>OpenFreeMap</strong> — Tuiles cartographiques open source, chargées directement depuis leurs serveurs.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section">
+      <h2>Vos droits</h2>
+      <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous à <a href="mailto:contact@nocdev.fr">contact@nocdev.fr</a>.</p>
+    </section>
+
+    <section class="legal-section">
+      <h2>Propriété intellectuelle</h2>
+      <p>L'ensemble des éléments constituant ce site (design, code, icônes météo) sont la propriété de Nocdev et sont protégés par le droit d'auteur. Toute reproduction sans autorisation est interdite.</p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .legal-page {
+    padding-block: 6rem 4rem;
+    max-width: 780px;
+  }
+
+  .legal-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-block-end: 2.5rem;
+  }
+
+  .legal-section {
+    margin-block-end: 2rem;
+    padding-block-end: 2rem;
+    border-bottom: 1px solid var(--glass-edge);
+  }
+
+  .legal-section:last-child {
+    border-bottom: none;
+  }
+
+  .legal-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-block-end: 0.75rem;
+    color: var(--accent);
+  }
+
+  .legal-section p,
+  .legal-section li {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .legal-section ul {
+    padding-inline-start: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .legal-section a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .legal-section a:hover {
+    text-decoration: underline;
+  }
+
+  code {
+    font-size: 0.8rem;
+    background: var(--glass);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+</style>
