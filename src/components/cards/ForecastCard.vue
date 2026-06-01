@@ -1,90 +1,87 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
-import { $selectedDate } from '../../stores/forecastStore';
 import { $unit } from '../../stores/configStore';
+import { $selectedIndex } from '../../stores/forecastStore';
 import { convertTemp } from '../../stores/actions';
 import { useI18n } from '../../i18n/useI18n';
+import { getWmoInfo } from '../../i18n/wmo';
 import WeatherIcon from '../ui/WeatherIcon.vue';
-import type { ForecastResponse } from '../../types/weather';
+import type { OMDailyWeather } from '../../types/weather';
 
-const props = defineProps<{ forecast: ForecastResponse }>();
-const selectedDate = useStore($selectedDate);
+const props = defineProps<{ daily: OMDailyWeather }>();
 const unit = useStore($unit);
+const selectedIndex = useStore($selectedIndex);
 const { lang } = useI18n();
 const locale = computed(() => (lang.value === 'fr' ? 'fr-FR' : 'en-GB'));
 
-const selectDay = (date: string) => {
-  $selectedDate.set(date);
-};
-
-const dailyForecasts = computed(() => {
-  const list = props.forecast.list;
-  const days = new Map<string, (typeof list)[number][]>();
-
-  list.forEach((item) => {
-    const day = item.dt_txt.split(' ')[0];
-    if (!days.has(day)) days.set(day, []);
-    days.get(day)!.push(item);
-  });
-
-  return [...days.entries()].map(([date, items]) => {
-    const midday = items.find((f) => f.dt_txt.includes('12:00:00')) ?? items[0];
+const days = computed(() =>
+  props.daily.time.map((dateStr, i) => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    const { icon } = getWmoInfo(props.daily.weather_code[i], true, lang.value);
     return {
-      dt: midday.dt,
       date,
-      icon: midday.weather[0].icon,
-      temp_min: Math.round(Math.min(...items.map((f) => f.main.temp_min))),
-      temp_max: Math.round(Math.max(...items.map((f) => f.main.temp_max))),
+      icon,
+      tempMin: Math.round(props.daily.temperature_2m_min[i]),
+      tempMax: Math.round(props.daily.temperature_2m_max[i]),
+      precip: props.daily.precipitation_probability_max[i],
     };
-  });
-});
-
-onMounted(() => {
-  if (!selectedDate.value && dailyForecasts.value.length) {
-    $selectedDate.set(dailyForecasts.value[0].date);
-  }
-});
+  }),
+);
 </script>
 
 <template>
-  <div class="forecast-card">
+  <div class="forecast-grid">
     <div
-      v-for="day in dailyForecasts"
-      :key="day.dt"
+      v-for="(day, i) in days"
+      :key="i"
       class="forecast-day box flex flex-col ai-center gap-2 c-pointer"
-      :class="{ active: selectedDate === day.date }"
-      @click="selectDay(day.date)"
+      :class="{ active: selectedIndex === i }"
+      @click="$selectedIndex.set(i)"
     >
-      <p class="forecast-date flex flex-col ai-center">
-        <span class="forecast-weekday font-bold t-capitalize">
-          {{ new Date(day.dt * 1000).toLocaleDateString(locale, { weekday: 'short' }) }}
+      <p class="flex flex-col ai-center">
+        <span class="font-bold t-capitalize text-sm">
+          {{ day.date.toLocaleDateString(locale, { weekday: 'short' }) }}
         </span>
         <span class="text-xs text-muted">
-          {{ new Date(day.dt * 1000).toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) }}
+          {{ day.date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) }}
         </span>
       </p>
       <WeatherIcon :iconCode="day.icon" size="sm" />
-      <p class="forecast-temps flex gap-2">
-        <span class="temp-min text-sm">{{ convertTemp(day.temp_min, unit) }}°{{ unit }}</span>
-        <span class="temp-max text-sm font-semibold">{{ convertTemp(day.temp_max, unit) }}°{{ unit }}</span>
+      <p v-if="day.precip > 0" class="precip flex ai-center gap-1 text-xs text-muted">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0C19 10.5 12 2 12 2z"/>
+        </svg>
+        {{ day.precip }}%
+      </p>
+      <p class="flex gap-2">
+        <span class="text-sm text-muted">{{ convertTemp(day.tempMin, unit) }}°</span>
+        <span class="text-sm font-semibold">{{ convertTemp(day.tempMax, unit) }}°{{ unit }}</span>
       </p>
     </div>
   </div>
 </template>
 
-<style>
-.forecast-card {
-  grid-area: 2 / 1 / 3 / 2;
-  max-width: 360px;
-  width: 100%;
-  margin-inline: auto;
+<style scoped>
+.forecast-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
 }
 
-@media (min-width: 768px) {
-  .forecast-card {
-    max-width: unset;
-    margin-inline: unset;
-  }
+.forecast-day {
+  flex: 1;
+  min-width: 72px;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.forecast-day:not(.active) {
+  opacity: 0.6;
+}
+
+.forecast-day.active {
+  border-color: var(--accent);
 }
 </style>

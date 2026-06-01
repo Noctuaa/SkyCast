@@ -1,127 +1,170 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from '@nanostores/vue';
-import { $selectedDate } from '../../stores/forecastStore';
-import { $unit } from '../../stores/configStore';
+import { $unit, $theme } from '../../stores/configStore';
+import { $selectedIndex } from '../../stores/forecastStore';
 import { convertTemp } from '../../stores/actions';
-import { useI18n } from '../../i18n/useI18n';
 import VueApexCharts from 'vue3-apexcharts';
-import type { ForecastResponse } from '../../types/weather';
+import type { OMHourlyWeather } from '../../types/weather';
 
-const props = defineProps<{ forecast: ForecastResponse }>();
-const selectedDate = useStore($selectedDate);
+const props = defineProps<{ hourly: OMHourlyWeather }>();
 const unit = useStore($unit);
-const { t } = useI18n();
+const theme = useStore($theme);
+const selectedIndex = useStore($selectedIndex);
 
-const forecastDays = computed(() => {
-  const days: Record<string, typeof props.forecast.list> = {};
-  props.forecast.list.forEach((item) => {
-    const day = item.dt_txt.split(' ')[0];
-    if (!days[day]) days[day] = [];
-    days[day].push(item);
-  });
-  return days;
+type Tab = 'temp' | 'feels' | 'humidity' | 'wind' | 'precip';
+const activeTab = ref<Tab>('temp');
+
+const tabs: { key: Tab; label: string }[] = [
+  { key: 'temp',     label: 'TEMP' },
+  { key: 'feels',    label: 'FEELS' },
+  { key: 'humidity', label: 'HUMIDITY' },
+  { key: 'wind',     label: 'WIND' },
+  { key: 'precip',   label: 'PRECIP' },
+];
+
+// 00h → 00h J+1, toutes les 3h (9 points) selon le jour sélectionné
+const indices = computed(() => {
+  const base = selectedIndex.value * 24;
+  return [0, 3, 6, 9, 12, 15, 18, 21, 24].map((h) => base + h);
 });
 
-const items = computed(() => {
-  const date = selectedDate.value ?? props.forecast.list[0]?.dt_txt.split(' ')[0];
-  if (!date) return [];
-  const dayItems = forecastDays.value[date] ?? [];
+const labels = computed(() => indices.value.map((i) => props.hourly.time[i].slice(-5)));
 
-  const dates = Object.keys(forecastDays.value).sort();
-  const nextDate = dates[dates.indexOf(date) + 1];
-  if (nextDate) {
-    const midnight = forecastDays.value[nextDate]?.find((i) => i.dt_txt.includes('00:00:00'));
-    if (midnight) return [...dayItems, midnight];
+const rawData = computed((): number[] => {
+  switch (activeTab.value) {
+    case 'temp':
+      return indices.value.map((i) => convertTemp(Math.round(props.hourly.temperature_2m[i]), unit.value));
+    case 'feels':
+      return indices.value.map((i) => convertTemp(Math.round(props.hourly.apparent_temperature[i]), unit.value));
+    case 'humidity':
+      return indices.value.map((i) => props.hourly.relative_humidity_2m[i]);
+    case 'wind':
+      return indices.value.map((i) => Math.round(props.hourly.wind_speed_10m[i]));
+    case 'precip':
+      return indices.value.map((i) => props.hourly.precipitation_probability[i]);
   }
-
-  return dayItems;
 });
 
-const series = computed(() => [
-  {
-    name: t.value.temperature,
-    data: items.value.map((item) => convertTemp(item.main.temp, unit.value)),
-  },
-]);
+const yLabel = computed(() => {
+  if (activeTab.value === 'temp' || activeTab.value === 'feels') return `°${unit.value}`;
+  if (activeTab.value === 'wind') return 'km/h';
+  return '%';
+});
+
+const dataLabelFmt = computed(() => {
+  if (activeTab.value === 'temp' || activeTab.value === 'feels')
+    return (val: number) => `${val}°`;
+  if (activeTab.value === 'wind')
+    return (val: number) => `${val}`;
+  return (val: number) => `${val}%`;
+});
+
+const series = computed(() => [{ name: activeTab.value, data: rawData.value }]);
 
 const options = computed(() => ({
   chart: {
-    type: 'area' as const,
+    type: 'line' as const,
     background: 'transparent',
-    foreColor: '#64748b',
+    foreColor: theme.value === 'dark' ? '#94a3b8' : '#64748b',
     toolbar: { show: false },
     zoom: { enabled: false },
-    animations: { enabled: true, easing: 'easeinout' as const, dynamicAnimation: { enabled: true, speed: 400 } },
+    animations: {
+      enabled: true,
+      easing: 'easeinout' as const,
+      dynamicAnimation: { enabled: true, speed: 350 },
+    },
     fontFamily: 'Inter, system-ui, sans-serif',
   },
   dataLabels: {
     enabled: true,
-    formatter: (val: number) => `${val}°`,
-    style: { colors: ['#fff'], fontSize: '11px', fontWeight: 700 },
-    background: { enabled: false },
-    offsetY: -6,
-  },
-  stroke: { curve: 'smooth' as const, width: 3 },
-  fill: {
-    type: 'gradient',
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.45,
-      opacityTo: 0.05,
-      colorStops: [
-        { offset: 0, color: 'rgb(102, 126, 234)', opacity: 0.45 },
-        { offset: 100, color: 'rgb(118, 75, 162)', opacity: 0.05 },
-      ],
+    formatter: dataLabelFmt.value,
+    style: {
+      colors: [theme.value === 'dark' ? '#e2e8f0' : '#1e293b'],
+      fontSize: '11px',
+      fontWeight: 700,
     },
+    background: { enabled: false },
+    offsetY: -8,
   },
-  markers: { size: 5, strokeWidth: 0 },
+  stroke: { curve: 'smooth' as const, width: 2.5 },
+  markers: { size: 4, strokeWidth: 0, fillOpacity: 1 },
   colors: ['rgb(102, 126, 234)'],
   xaxis: {
-    categories: items.value.map((item) => item.dt_txt.split(' ')[1].slice(0, 5)),
+    categories: labels.value,
     type: 'category' as const,
     tooltip: { enabled: false },
     crosshairs: { show: false },
     axisTicks: { show: false },
     axisBorder: { show: false },
-    title: { text: t.value.chartXAxis, style: { fontSize: '13px', fontWeight: 'bold' } },
+    labels: { style: { fontSize: '11px' } },
   },
   yaxis: {
-    title: { text: `${t.value.chartYAxis} (°${unit.value})`, style: { fontSize: '13px', fontWeight: 'bold' } },
+    labels: { style: { fontSize: '11px' } },
   },
   grid: {
-    borderColor: 'rgba(0,0,0,0.08)',
+    borderColor: theme.value === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)',
     strokeDashArray: 4,
-    padding: { top: 20 },
+    padding: { top: 20, right: 16 },
   },
-  tooltip: {
-    enabled: true,
-    marker: { show: false },
-    custom: ({ dataPointIndex }: { dataPointIndex: number }) => {
-      const item = items.value[dataPointIndex];
-      const time = item.dt_txt.split(' ')[1].slice(0, 5);
-      return `
-        <p class="tooltip-time">🕐 ${time}</p>
-        <div class="tooltip-content">
-          <p>🌡 ${t.value.temperature} : ${convertTemp(item.main.temp, unit.value)}°${unit.value}</p>
-          <p class="t-capitalize">☁ ${item.weather[0].description}</p>
-          <p>💧 ${t.value.humidity} : ${item.main.humidity}%</p>
-          <p>💨 ${t.value.wind} : ${Math.round(item.wind.speed * 3.6)} km/h</p>
-          <p>☔ ${t.value.precipitation} : ${item.rain?.['3h'] ?? 0} mm</p>
-        </div>
-      `;
-    },
-  },
-  responsive: [{ breakpoint: 640, options: { chart: { height: 220 } } }],
-  theme: { mode: 'light' as const },
+  tooltip: { enabled: false },
+  responsive: [{ breakpoint: 640, options: { chart: { height: 200 } } }],
+  theme: { mode: theme.value === 'dark' ? ('dark' as const) : ('light' as const) },
 }));
 </script>
 
 <template>
-  <template v-if="items.length">
-    <h2 class="chart-title">{{ t.chartTitle }}</h2>
-    <div class="chart-scroll">
-      <VueApexCharts type="area" :options="options" :series="series" height="350" width="100%" />
-    </div>
-  </template>
+  <div class="chart-tabs flex gap-2">
+    <button
+      v-for="tab in tabs"
+      :key="tab.key"
+      class="chart-tab"
+      :class="{ active: activeTab === tab.key }"
+      @click="activeTab = tab.key"
+    >
+      {{ tab.label }}
+    </button>
+  </div>
+  <div class="chart-wrap relative">
+    <span class="chart-unit text-xs text-muted">{{ yLabel }}</span>
+    <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
+  </div>
 </template>
+
+<style scoped>
+.chart-tabs {
+  flex-wrap: wrap;
+  margin-block-end: 4px;
+}
+
+.chart-wrap {
+  position: relative;
+}
+
+.chart-unit {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.chart-tab {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-edge);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.chart-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+</style>

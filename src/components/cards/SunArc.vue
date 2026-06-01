@@ -21,9 +21,12 @@ onMounted(() => {
   mounted.value = true;
 });
 
+// La lune reste toujours à droite (coucher), le soleil suit l'arc pendant la journée
+const displayProgress = computed(() => (isDay.value ? progress.value : 1));
+
 // Position sur la courbe de Bézier quadratique M 20 102 Q 130 -13 240 102
 const sunPos = computed(() => {
-  const t = progress.value;
+  const t = displayProgress.value;
   const x = (1 - t) ** 2 * 20 + 2 * (1 - t) * t * 130 + t ** 2 * 240;
   const y = (1 - t) ** 2 * 102 + 2 * (1 - t) * t * -13 + t ** 2 * 102;
   return {

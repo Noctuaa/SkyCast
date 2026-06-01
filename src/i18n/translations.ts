@@ -17,10 +17,13 @@ export const translations = {
     sunriseSunset: 'Lever & coucher',
     sunrise: 'Lever',
     sunset: 'Coucher',
-    civilDawn: 'Aube civile',
-    civilDusk: 'Crépuscule civil',
+    civilDawn: 'Aube',
+    civilDusk: 'Crépuscule',
     solarNoon: 'Midi solaire',
     dayLength: 'Durée du jour',
+
+    // ForecastCard
+    forecast: 'Prévisions',
 
     // AirCard
     airQuality: 'Qualité de l\'air',
@@ -64,6 +67,9 @@ export const translations = {
     civilDusk: 'Civil dusk',
     solarNoon: 'Solar noon',
     dayLength: 'Day length',
+
+    // ForecastCard
+    forecast: 'Forecast',
 
     // AirCard
     airQuality: 'Air quality',

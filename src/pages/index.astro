@@ -6,6 +6,8 @@ import MapCard from '../components/cards/MapCard.vue';
 import WindCard from '../components/cards/WindCard.vue';
 import SunCard from '../components/cards/SunCard.vue';
 import AirCard from '../components/cards/AirCard.vue';
+import ForecastCard from '../components/cards/ForecastCard.vue';
+import ChartCard from '../components/cards/ChartCard.vue';
 import type { OMResponse, OMAirQualityResponse } from '../types/weather';
 import { translations } from '../i18n/translations';
 
@@ -129,8 +131,14 @@ const sunsetUnix = forecast ? isoToUnix(forecast.daily.sunset[0], forecast.utc_o
           )
         }
       </section>
-      <section class="cell-forecast glass"></section>
-      <section class="cell-chart glass"></section>
+      <section class="cell-forecast glass">
+        <div class="panel-head"><h3 class="panel-title">{t.forecast}</h3></div>
+        {forecast && <ForecastCard client:load daily={forecast.daily} />}
+      </section>
+      <section class="cell-chart glass">
+        <div class="panel-head"><h3 class="panel-title">{t.chartTitle}</h3></div>
+        {forecast && <ChartCard client:load hourly={forecast.hourly} />}
+      </section>
     </div>
     <!--<SearchModal client:only="vue" />-->
     <!-- <div class="weather-grid grid">
@@ -221,8 +229,9 @@ const sunsetUnix = forecast ? isoToUnix(forecast.daily.sunset[0], forecast.utc_o
 
     .cell-forecast {
       grid-column: span 6;
-      min-height: 230px;
+      min-height: unset;
       padding: 22px;
+      align-self: start;
     }
 
     .cell-chart {
