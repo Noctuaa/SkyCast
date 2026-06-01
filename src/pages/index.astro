@@ -132,11 +132,17 @@ const sunsetUnix = forecast ? isoToUnix(forecast.daily.sunset[0], forecast.utc_o
         }
       </section>
       <section class="cell-forecast glass">
-        <div class="panel-head"><h3 class="panel-title">{t.forecast}</h3></div>
+        <div class="panel-head">
+          <h3 class="panel-title">{t.forecast}</h3>
+          <span class="eyebrow">Tap a day to preview</span>
+        </div>
         {forecast && <ForecastCard client:load daily={forecast.daily} />}
       </section>
       <section class="cell-chart glass">
-        <div class="panel-head"><h3 class="panel-title">{t.chartTitle}</h3></div>
+        <div class="panel-head">
+          <h3 class="panel-title">{t.chartTitle}</h3>
+          <span class="eyebrow">3-hour intervals</span>
+        </div>
         {forecast && <ChartCard client:load hourly={forecast.hourly} />}
       </section>
     </div>

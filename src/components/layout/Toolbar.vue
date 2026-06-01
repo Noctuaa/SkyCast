@@ -40,8 +40,10 @@ const toggleLang = () => {
   lang.value = next;
   saveConfig();
   $navOpen.set(true);
-  const cityId = new URL(window.location.href).searchParams.get('city');
-  if (cityId) navigate(`/?lang=${next}&city=${cityId}`);
+  const params = new URL(window.location.href).searchParams;
+  const lat = params.get('lat');
+  const lon = params.get('lon');
+  if (lat && lon) navigate(`/?lang=${next}&lat=${lat}&lon=${lon}`);
 };
 
 /**

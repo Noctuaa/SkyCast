@@ -16,7 +16,7 @@ const { lang } = useI18n();
 const locale = computed(() => (lang.value === 'fr' ? 'fr-FR' : 'en-GB'));
 
 const days = computed(() =>
-  props.daily.time.map((dateStr, i) => {
+  props.daily.time.slice(0, 7).map((dateStr, i) => {
     const [y, m, d] = dateStr.split('-').map(Number);
     const date = new Date(y, m - 1, d);
     const { icon } = getWmoInfo(props.daily.weather_code[i], true, lang.value);

@@ -47,7 +47,7 @@ const fetchForecast = async (lat: string, lon: string): Promise<OMResponse> => {
   url.searchParams.set('hourly', HOURLY);
   url.searchParams.set('daily', DAILY);
   url.searchParams.set('timezone', 'auto');
-  url.searchParams.set('forecast_days', '7');
+  url.searchParams.set('forecast_days', '8');
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`Open-Meteo error: ${res.status}`);
