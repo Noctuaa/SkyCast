@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 import node from '@astrojs/node';
 import vue from '@astrojs/vue';
@@ -12,12 +12,7 @@ export default defineConfig({
     mode: 'standalone',
   }),
   integrations: [vue()],
-  env: {
-    schema: {
-      OPENWEATHER_API_KEY: envField.string({ context: 'server', access: 'secret' }),
-    },
-  },
-  vite: {
+vite: {
     plugins: [wasm()],
     css: {
       transformer: 'lightningcss',

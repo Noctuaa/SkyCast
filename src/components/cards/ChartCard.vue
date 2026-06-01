@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { $unit, $theme } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
-import { convertTemp } from '../../stores/actions';
+import { convertTemp } from '../../utils/weather';
 import VueApexCharts from 'vue3-apexcharts';
 import type { OMHourlyWeather } from '../../types/weather';
 
@@ -114,20 +114,22 @@ const options = computed(() => ({
 </script>
 
 <template>
-  <div class="chart-tabs flex gap-2">
-    <button
-      v-for="tab in tabs"
-      :key="tab.key"
-      class="chart-tab"
-      :class="{ active: activeTab === tab.key }"
-      @click="activeTab = tab.key"
-    >
-      {{ tab.label }}
-    </button>
-  </div>
-  <div class="chart-wrap relative">
-    <span class="chart-unit text-xs text-muted">{{ yLabel }}</span>
-    <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
+  <div class="chart-card-inner">
+    <div class="chart-tabs flex gap-2">
+      <button
+        v-for="tab in tabs"
+        :key="tab.key"
+        class="chart-tab"
+        :class="{ active: activeTab === tab.key }"
+        @click="activeTab = tab.key"
+      >
+        {{ tab.label }}
+      </button>
+    </div>
+    <div class="chart-wrap relative">
+      <span class="chart-unit text-xs text-muted">{{ yLabel }}</span>
+      <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
+    </div>
   </div>
 </template>
 

@@ -69,7 +69,7 @@ const openSearch = () => {
  * then navigates to the forecast page.
  */
 const selectCity = (city: GeocodingResult) => {
-  document.cookie = `skycast_location=${encodeURIComponent(JSON.stringify({ name: city.name, country: city.country, state: city.state ?? '' }))}; path=/; max-age=31536000`;
+  document.cookie = `skycast_location=${encodeURIComponent(JSON.stringify({ name: city.name, country: city.country, state: city.state ?? '', lat: city.lat, lon: city.lon }))}; path=/; max-age=31536000`;
   const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
   suggestions.value = [];
   showDrop.value = false;
