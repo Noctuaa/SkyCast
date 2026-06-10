@@ -1,0 +1,101 @@
+/* === UI Components === */
+@import '../components/ui/weather-icons.css' layer(components);
+
+/* === Cards Components === */
+@import '../components/cards/weather-main.css' layer(components);
+@import '../components/cards/map-card.css' layer(components);
+@import '../components/cards/wind-card.css' layer(components);
+@import '../components/cards/sun-card.css' layer(components);
+@import '../components/cards/air-card.css' layer(components);
+@import '../components/cards/forecast-card.css' layer(components);
+
+/* === Grid === */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(0, auto);
+  gap: 20px;
+}
+
+/* ===== Cells ===== */
+
+.cell-main,
+.cell-wind,
+.cell-sun,
+.cell-air,
+.cell-forecast,
+.cell-chart {
+  grid-area: auto / span 12;
+  grid-row: auto;
+  min-height: 230px;
+}
+
+.cell-map {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .cell-map {
+    display: block;
+    grid-area: auto / span 12;
+  }
+
+  .cell-wind,
+  .cell-sun {
+    grid-area: auto / span 6;
+  }
+
+  .cell-air {
+    grid-area: auto / span 12;
+  }
+  .cell-forecast {
+    grid-area: auto / span 12;
+  }
+  .cell-chart {
+    grid-area: auto / span 12;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cell-main {
+    grid-area: span 2 / span 6;
+  }
+  .cell-map {
+    grid-area: span 2 / span 6;
+  }
+  .cell-wind,
+  .cell-sun {
+    grid-area: auto / span 6;
+  }
+  .cell-air {
+    grid-area: 4 / 7 / 5 / 13;
+  }
+  .cell-forecast {
+    grid-area: auto / span 6;
+  }
+  .cell-chart {
+    grid-area: auto / span 12;
+  }
+}
+
+@media (min-width: 1280px) {
+  .cell-main {
+    grid-area: span 2 / span 4;
+  }
+
+  .cell-map {
+    grid-area: span 2 / span 8;
+  }
+
+  .cell-wind,
+  .cell-sun,
+  .cell-air {
+    grid-area: auto / span 4;
+  }
+
+  .cell-forecast,
+  .cell-chart {
+    grid-area: auto / span 6;
+  }
+}

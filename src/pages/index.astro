@@ -10,6 +10,8 @@ import ChartCard from '../components/cards/ChartCard.vue';
 import type { OMResponse, OMAirQualityResponse } from '../types/weather';
 import { translations } from '../i18n/translations';
 
+import '../assets/styles/pages/index.css';
+
 const url = Astro.url;
 const latParam = url.searchParams.get('lat');
 const lonParam = url.searchParams.get('lon');

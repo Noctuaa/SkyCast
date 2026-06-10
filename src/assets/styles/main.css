@@ -18,17 +18,8 @@
 /* === UI Components === */
 @import './components/ui/buttons.css' layer(components);
 @import './components/ui/search-input.css' layer(components);
-@import './components/ui/weather-icons.css' layer(components);
 @import './components/ui/tooltip.css' layer(components);
 @import './components/ui/spinner.css' layer(components);
-
-/* === Cards Components === */
-@import './components/cards/weather-main.css' layer(components);
-@import './components/cards/map-card.css' layer(components);
-@import './components/cards/wind-card.css' layer(components);
-@import './components/cards/sun-card.css' layer(components);
-@import './components/cards/air-card.css' layer(components);
-@import './components/cards/forecast-card.css' layer(components);
 
 :root {
   /* Colors - Light */
