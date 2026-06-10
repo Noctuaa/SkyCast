@@ -1,0 +1,39 @@
+.spinner-overlay {
+  background: rgb(from var(--bg) r g b / 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.spinner {
+  border-radius: 50%;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner-sm {
+  width: 24px;
+  height: 24px;
+}
+.spinner-md {
+  width: 36px;
+  height: 36px;
+}
+.spinner-lg {
+  width: 48px;
+  height: 48px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--transition);
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

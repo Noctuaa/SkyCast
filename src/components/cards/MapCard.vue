@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useI18n } from '../../i18n/useI18n';
+import LoadingSpinner from '../ui/LoadingSpinner.vue';
 
 // Démarre le chargement WASM dès que le module est évalué par le browser
 const omPromise = import('@openmeteo/weather-map-layer');
@@ -11,6 +12,7 @@ const { t } = useI18n();
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<any>(null);
 const activeLayer = ref<string>('clouds');
+const isLoading = ref(true);
 
 const OM_MODEL = 'dwd_icon';
 const OM_BASE = `https://map-tiles.open-meteo.com/data_spatial/${OM_MODEL}/latest.json?time_step=current_time_1H`;
@@ -56,7 +58,11 @@ const addWeatherLayer = (map: any, key: string) => {
 
 const toggleLayer = (key: string) => {
   if (!mapInstance.value || activeLayer.value === key) return;
+  isLoading.value = true;
   addWeatherLayer(mapInstance.value, key);
+  mapInstance.value.once('idle', () => {
+    isLoading.value = false;
+  });
 };
 
 const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
@@ -85,6 +91,10 @@ const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
 
   map.on('load', () => {
     addWeatherLayer(map, 'clouds');
+  });
+
+  map.once('idle', () => {
+    isLoading.value = false;
   });
 
   mapInstance.value = map;
@@ -131,5 +141,6 @@ watch(
       </button>
     </div>
     <div ref="mapContainer" class="map-container w-full h-full z-10"></div>
+    <LoadingSpinner v-if="isLoading" overlay size="lg" />
   </div>
 </template>

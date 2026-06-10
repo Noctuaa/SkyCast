@@ -20,6 +20,7 @@
 @import './components/ui/search-input.css' layer(components);
 @import './components/ui/weather-icons.css' layer(components);
 @import './components/ui/tooltip.css' layer(components);
+@import './components/ui/spinner.css' layer(components);
 
 /* === Cards Components === */
 @import './components/cards/weather-main.css' layer(components);

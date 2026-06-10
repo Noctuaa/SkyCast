@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent } from 'vue';
+import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
 import { useStore } from '@nanostores/vue';
+import LoadingSpinner from '../ui/LoadingSpinner.vue';
 import { $unit, $theme } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
 import { convertTemp } from '../../utils/weather';
@@ -9,6 +10,12 @@ import { useI18n } from '../../i18n/useI18n';
 import type { OMHourlyWeather } from '../../types/weather';
 
 const VueApexCharts = defineAsyncComponent(() => import('vue3-apexcharts'));
+
+const isChartLoaded = ref(false);
+onMounted(async () => {
+  await import('vue3-apexcharts');
+  isChartLoaded.value = true;
+});
 
 const props = defineProps<{ hourly: OMHourlyWeather }>();
 const unit = useStore($unit);
@@ -128,8 +135,7 @@ const options = computed(() => ({
       </button>
       <span class="w-full text-xs ink-2 font-semibold">{{ chartLabel }}</span>
     </div>
-    <div class="relative grid ai-center" style="height: 70%">
-      <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
-    </div>
+    <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
+    <LoadingSpinner v-if="!isChartLoaded" overlay size="md" />
   </div>
 </template>
