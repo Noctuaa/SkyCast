@@ -1,5 +1,4 @@
 .footer {
-  margin-block-start: calc(var(--space) * 12);
   padding-block: calc(var(--space) * 6);
   background: var(--bg);
   border-top: 1px solid var(--glass-edge);

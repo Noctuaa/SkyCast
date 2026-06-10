@@ -25,7 +25,8 @@ body {
 
 main {
   flex: 1;
-  padding-block-start: calc(4rem + var(--space) * 6);
+  padding-block-start: calc(4rem + var(--space) * 12);
+  padding-block-end: calc(var(--space) * 12);
 }
 
 .container {
@@ -42,10 +43,8 @@ main {
   gap: 20px;
 }
 
-.weather-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: calc(var(--space) * 6);
+section {
+  padding: clamp(calc(var(--space) * 4), 3vw, calc(var(--space) * 6));
 }
 
 /* ===== Background blobs ===== */
@@ -98,7 +97,6 @@ main {
   grid-area: auto / span 12;
   grid-row: auto;
   min-height: 230px;
-  padding: clamp(calc(var(--space) * 4), 3vw, calc(var(--space) * 6));
 }
 
 .cell-map {
@@ -150,10 +148,6 @@ main {
 }
 
 @media (min-width: 1280px) {
-  .weather-grid {
-    grid-template-columns: 360px 1fr;
-  }
-
   .cell-main {
     grid-area: span 2 / span 4;
   }

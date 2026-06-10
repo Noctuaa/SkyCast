@@ -12,10 +12,6 @@ import type { OMHourlyWeather } from '../../types/weather';
 const VueApexCharts = defineAsyncComponent(() => import('vue3-apexcharts'));
 
 const isChartLoaded = ref(false);
-onMounted(async () => {
-  await import('vue3-apexcharts');
-  isChartLoaded.value = true;
-});
 
 const props = defineProps<{ hourly: OMHourlyWeather }>();
 const unit = useStore($unit);
@@ -117,6 +113,11 @@ const options = computed(() => ({
   responsive: [{ breakpoint: 640, options: { chart: { height: 200 }, yaxis: { labels: { show: false } } } }],
   theme: { mode: theme.value === 'dark' ? ('dark' as const) : ('light' as const) },
 }));
+
+onMounted(async () => {
+  await import('vue3-apexcharts');
+  isChartLoaded.value = true;
+});
 </script>
 
 <template>

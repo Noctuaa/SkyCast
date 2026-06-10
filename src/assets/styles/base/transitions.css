@@ -1,20 +1,39 @@
-::view-transition-group(root) {
+/* ── Page navigation — simple fade ── */
+::view-transition-old(root) {
+  animation: page-fade-out 0.25s ease forwards;
+  z-index: -1;
+}
+
+::view-transition-new(root) {
+  animation: page-fade-in 0.25s ease forwards;
+}
+
+@keyframes page-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+}
+
+/* ── Theme toggle — wipe diagonal ── */
+.theme-switching::view-transition-group(root) {
   animation-duration: 0.8s;
   animation-timing-function: var(--expo-out);
 }
 
-::view-transition-new(root) {
+.theme-switching::view-transition-new(root) {
   animation-name: reveal-light;
   animation-fill-mode: both;
+  z-index: 1;
 }
 
-::view-transition-old(root),
-[data-theme='dark']::view-transition-old(root) {
+.theme-switching::view-transition-old(root) {
   animation: none;
-  animation-fill-mode: both;
   z-index: -1;
 }
-[data-theme='dark']::view-transition-new(root) {
+
+[data-theme='dark'].theme-switching::view-transition-new(root) {
   animation-name: reveal-dark;
   animation-fill-mode: both;
 }

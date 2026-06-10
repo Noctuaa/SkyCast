@@ -63,7 +63,10 @@ const toggleTheme = () => {
     switchTheme();
     return;
   }
-  document.startViewTransition(switchTheme);
+  document.documentElement.classList.add('theme-switching');
+  document.startViewTransition(switchTheme).finished.then(() => {
+    document.documentElement.classList.remove('theme-switching');
+  });
 };
 
 onMounted(() => {
