@@ -46,6 +46,12 @@ a {
   text-decoration: none;
 }
 
+input {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
 button {
   cursor: pointer;
   background: none;

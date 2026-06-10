@@ -40,7 +40,7 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
 </script>
 
 <template>
-  <section class="cell-main glass flex flex-col jc-between gap-5">
+  <div class="flex flex-col jc-between gap-5">
     <div class="wm-top flex flex-col ai-center gap-3">
       <div class="wm-loc inline-flex ai-center gap-2 text-sm font-semibold ink-1">
         <!-- prettier-ignore -->
@@ -48,25 +48,23 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
         <h2 class="text-sm ink-1 font-semibold">{{ locationName }}</h2>
       </div>
       <time class="wm-date text-center text-sm ink-3 font-medium" :datetime="isoDate">
-        <b class="block t-capitalize text-base ink-1 font-semibold">{{ dayName }}</b>
+        <b class="block capitalize text-base ink-1 font-semibold">{{ dayName }}</b>
         <span>{{ fullDate }}</span>
       </time>
     </div>
 
     <div class="flex ai-center jc-center gap-4">
-      <div class="wm-icon flex-center flex-none">
-        <WeatherIcon :iconCode="wmo.icon" />
-      </div>
-      <div class="wm-temp">
-        <output class="wm-temp-num num">
+      <WeatherIcon :iconCode="wmo.icon" />
+      <div class="flex flex-col ai-center">
+        <output class="wm-temp num">
           {{ convertTemp(current.temperature_2m, unit) }}
-          <sup>°{{ unit }}</sup>
+          <sup class="relative font-medium ink-3">°{{ unit }}</sup>
         </output>
         <div class="wm-info">
-          <p class="wm-condi t-capitalize font-semibold ink-1">{{ wmo.description }}</p>
-          <p class="wm-sub text-sm ink-3">{{ locationState ? `${locationState}, ` : '' }}{{ country }}</p>
+          <p class="capitalize font-semibold ink-1">{{ wmo.description }}</p>
+          <p class="text-sm ink-3">{{ locationState ? `${locationState}, ` : '' }}{{ country }}</p>
           <div class="flex ai-center gap-2">
-            <span class="text-sm font-semibold ink-3">UV</span>
+            <span class="text-sm font-semibold ink-3">UV :</span>
             <output class="text-sm font-bold ink-1 num">{{ uvIndex }}</output>
           </div>
         </div>
@@ -74,9 +72,9 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
     </div>
 
     <div class="extras grid grid-cols-3 gap-2 text-center">
-      <StatTile :label="t.feelsLike" :value="convertTemp(current.apparent_temperature, unit)" unit="km/h" stacked />
+      <StatTile :label="t.feelsLike" :value="convertTemp(current.apparent_temperature, unit)" unit="°C" stacked />
       <StatTile :label="t.humidity" :value="current.relative_humidity_2m" unit="%" stacked />
       <StatTile :label="t.pressure" :value="Math.round(current.pressure_msl)" unit="hPa" stacked />
     </div>
-  </section>
+  </div>
 </template>

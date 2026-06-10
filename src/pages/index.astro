@@ -53,15 +53,31 @@ const unit = (prefs.unit ?? 'C') as 'C' | 'F';
 
 let forecast: OMResponse | null = null;
 let airQuality: OMAirQualityResponse | null = null;
+let forecastError = false;
 
 const [forecastRes, airRes] = await Promise.all([
   fetch(`${url.origin}/api/forecast?lat=${lat}&lon=${lon}`),
   fetch(`${url.origin}/api/air-quality?lat=${lat}&lon=${lon}`),
 ]);
+
 if (forecastRes.ok) forecast = await forecastRes.json();
+else forecastError = true;
 if (airRes.ok) airQuality = await airRes.json();
 
-const locationData = locationCookieParsed ?? { name: 'Paris', country: 'France', state: '' };
+const cookieMatchesCoords =
+  locationCookieParsed &&
+  Math.abs(locationCookieParsed.lat - Number(lat)) < 0.01 &&
+  Math.abs(locationCookieParsed.lon - Number(lon)) < 0.01;
+const locationData = cookieMatchesCoords
+  ? locationCookieParsed
+  : { name: 'Paris', country: 'France', state: '', lat: Number(lat), lon: Number(lon) };
+
+if (!cookieMatchesCoords) {
+  Astro.cookies.set('skycast_location', encodeURIComponent(JSON.stringify(locationData)), {
+    path: '/',
+    maxAge: 31536000,
+  });
+}
 
 // Convertit une ISO string locale Open-Meteo en Unix timestamp UTC
 const isoToUnix = (iso: string, utcOffset: number) => Math.floor(new Date(iso + 'Z').getTime() / 1000) - utcOffset;
@@ -79,24 +95,53 @@ const sunsetUnix = forecast ? isoToUnix(forecast.daily.sunset[0], forecast.utc_o
 
 <Layout>
   <main class="container">
-    <div class="bento">
-      {
-        forecast && (
-          <WeatherMain
-            client:load
-            current={forecast.current}
-            uvIndex={forecast.daily.uv_index_max[0]}
-            country={locationData.country}
-            locationName={locationData.name}
-            locationState={locationData.state ?? ''}
-            initialLang={lang}
-            initialUnit={unit}
-          />
-        )
-      }
+    {
+      forecastError && (
+        <div class="box flex ai-center jc-between w-full">
+          <div class="flex ai-start gap-3">
+            <span class="text-xl" aria-hidden="true">
+              ⚠
+            </span>
+            <div class="flex flex-col gap-2">
+              <p class="font-semibold text-base">{t.apiErrorTitle}</p>
+              <p class="text-sm ink-2">{t.apiErrorDesc}</p>
+            </div>
+          </div>
+          <button onclick="window.location.reload()" class="btn btn-glass p-3 text-xs ink-1 font-semibold">
+            {t.apiErrorRetry}
+          </button>
+        </div>
+      )
+    }
+    <div class:list={['bento', { hidden: forecastError }]}>
+      <section class="cell-main glass">
+        {
+          forecast && (
+            <WeatherMain
+              client:load
+              current={forecast.current}
+              uvIndex={forecast.daily.uv_index_max[0]}
+              country={locationData.country}
+              locationName={locationData.name}
+              locationState={locationData.state ?? ''}
+              initialLang={lang}
+              initialUnit={unit}
+            />
+          )
+        }
+      </section>
 
       <section class="cell-map glass">
-        {forecast && <MapCard client:load lat={forecast.latitude} lon={forecast.longitude} name={locationData.name} />}
+        {
+          forecast && (
+            <MapCard
+              client:media="(min-width: 768px)"
+              lat={forecast.latitude}
+              lon={forecast.longitude}
+              name={locationData.name}
+            />
+          )
+        }
       </section>
 
       <section class="cell-wind glass">
@@ -163,69 +208,3 @@ const sunsetUnix = forecast ? isoToUnix(forecast.daily.sunset[0], forecast.utc_o
     </div>
   </main>
 </Layout>
-
-<style>
-  .cell-wind,
-  .cell-sun,
-  .cell-air,
-  .cell-forecast,
-  .cell-chart {
-    grid-column: span 12;
-    grid-row: auto;
-  }
-
-  .cell-map {
-    grid-column: span 12;
-    grid-row: auto;
-    padding: 0;
-    min-height: 340px;
-  }
-
-  .cell-wind,
-  .cell-sun,
-  .cell-air,
-  .cell-forecast,
-  .cell-chart {
-    min-height: 200px;
-    padding: 16px;
-  }
-
-  @media (min-width: 768px) {
-    .cell-map {
-      grid-column: span 8;
-      grid-row: span 2;
-      min-height: unset;
-    }
-
-    .cell-wind {
-      grid-column: span 4;
-      min-height: 230px;
-      padding: 22px;
-    }
-
-    .cell-sun {
-      grid-column: span 4;
-      min-height: 230px;
-      padding: 22px;
-    }
-
-    .cell-air {
-      grid-column: span 4;
-      min-height: 230px;
-      padding: 22px;
-    }
-
-    .cell-forecast {
-      grid-column: span 6;
-      min-height: unset;
-      padding: 22px;
-      align-self: start;
-    }
-
-    .cell-chart {
-      grid-column: span 6;
-      min-height: 230px;
-      padding: 22px;
-    }
-  }
-</style>

@@ -1,74 +1,39 @@
 @layer reset, base, layout, utilities, components;
 
+/* === Reset === */
 @import './base/reset.css' layer(reset);
+
+/* === Base === */
 @import './base/typography.css' layer(base);
+@import './base/transitions.css' layer(base);
+
+/* === Layout === */
 @import './base/layout.css' layer(layout);
+@import './components/layout/toolbar.css' layer(components);
+@import './components/layout/footer.css' layer(components);
+
+/* === Utilities === */
 @import './utilities.css' layer(utilities);
-@import './components/search-input.css' layer(components);
-@import './components/weather-main.css' layer(components);
-@import './components/forecast-card.css' layer(components);
-@import './components/weather-icons.css' layer(components);
-@import './components/chart-card.css' layer(components);
-@import './components/map-card.css' layer(components);
-@import './components/toolbar.css' layer(components);
-@import './components/buttons.css' layer(components);
-@import './components/search-modal.css' layer(components);
-@import './base/transitions.css';
 
-/*Fichiers composants :
-  WeatherMain.vue     → la card principale
-  WindCard.vue        → vent
-  SunCard.vue         → lever/coucher (pas SunriseCard, trop long)
-  AirCard.vue         → qualité de l'air
-  ForecastCard.vue    → prévisions 
-  ChartCard.vue       → graphique
-  MapCard.vue         → carte
-  
-  Classes CSS des cellules bento dans index.astro — je quitterais le préfixe
-  weather- qui est redondant, et j'utiliserais cell- pour bien distinguer les
-  cellules de grille des composants :
-  .cell-main
-  .cell-map
-  .cell-wind
-  .cell-sun
-  .cell-air
-  .cell-forecast
-  .cell-chart
+/* === UI Components === */
+@import './components/ui/buttons.css' layer(components);
+@import './components/ui/search-input.css' layer(components);
+@import './components/ui/weather-icons.css' layer(components);
+@import './components/ui/tooltip.css' layer(components);
 
-  Fichiers CSS :
-  styles/
-    tokens.css      → variables CSS (couleurs, spacing, radii...)
-    base.css        → reset + body + typographie globale
-    utilities.css   → classes utilitaires (.glass, .tile, .eyebrow...)
-    layout.css      → bento grid + breakpoints
-    main.css        → importe tout dans l'ordre
-
-
-  ┌──────────────┬─────────┐
-  │  Composant   │ Préfixe │
-  ├──────────────┼─────────┤
-  │ WeatherMain  │ .wm-    │
-  ├──────────────┼─────────┤
-  │ WindCard     │ .wind-  │
-  ├──────────────┼─────────┤
-  │ SunCard      │ .sun-   │
-  ├──────────────┼─────────┤
-  │ AirCard      │ .air-   │
-  ├──────────────┼─────────┤
-  │ ForecastCard │ .fc-    │
-  ├──────────────┼─────────┤
-  │ ChartCard    │ .chart- │
-  ├──────────────┼─────────┤
-  │ MapCard      │ .map-   │
-  └──────────────┴─────────┘
-*/
+/* === Cards Components === */
+@import './components/cards/weather-main.css' layer(components);
+@import './components/cards/map-card.css' layer(components);
+@import './components/cards/wind-card.css' layer(components);
+@import './components/cards/sun-card.css' layer(components);
+@import './components/cards/air-card.css' layer(components);
+@import './components/cards/forecast-card.css' layer(components);
 
 :root {
   /* Colors - Light */
   --bg: rgb(240, 244, 255);
   --bg-card: #ffffff;
   --text: #1a2234;
-  --text-muted: rgb(88, 88, 88);
   --accent: rgb(96, 165, 250);
   --accent-2: rgb(192, 132, 252);
   --accent-soft: rgba(62, 111, 239, 0.1);
@@ -89,10 +54,10 @@
 
   /* Typography */
   --font-sans: 'Manrope Variable', system-ui, sans-serif;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.05em;
 
   /* Spacing */
-  --radius: 1rem;
-  --radius-sm: 0.5rem;
   --space: 0.25rem;
 
   /* Transitions */
@@ -101,14 +66,13 @@
 
   --r-card: 24px;
   --r-tile: 16px;
-  --r-pill: 999px;
 }
 
 [data-theme='dark'] {
   --bg: rgb(15, 23, 42);
   --bg-card: #1e293b;
   --text: rgb(242, 245, 252);
-  --text-muted: rgb(148, 163, 184);
+  --ink-3: rgb(148, 163, 184);
   --ink-2: oklch(0.82 0.02 270);
   --accent: #60a5fa;
   --accent-secondary: rgb(192, 132, 252);

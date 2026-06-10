@@ -7,11 +7,9 @@ const prefs = prefsCookie ? JSON.parse(decodeURIComponent(prefsCookie)) : {};
 const langParam = Astro.url.searchParams.get('lang');
 const acceptLang = Astro.request.headers.get('accept-language') ?? '';
 const browserLang = acceptLang.toLowerCase().startsWith('en') ? 'en' : 'fr';
-const lang = (
-  langParam !== null && ['fr', 'en'].includes(langParam)
-    ? langParam
-    : prefs.lang ?? browserLang
-) as 'fr' | 'en';
+const lang = (langParam !== null && ['fr', 'en'].includes(langParam) ? langParam : (prefs.lang ?? browserLang)) as
+  | 'fr'
+  | 'en';
 
 const t = translations[lang];
 ---
@@ -144,9 +142,15 @@ const t = translations[lang];
   }
 
   @keyframes drift {
-    0%   { transform: translateX(0px); }
-    50%  { transform: translateX(14px); }
-    100% { transform: translateX(0px); }
+    0% {
+      transform: translateX(0px);
+    }
+    50% {
+      transform: translateX(14px);
+    }
+    100% {
+      transform: translateX(0px);
+    }
   }
 
   /* ── Contenu ── */
@@ -171,7 +175,7 @@ const t = translations[lang];
 
   .nf-desc {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--ink-3);
     line-height: 1.7;
   }
 
@@ -187,7 +191,9 @@ const t = translations[lang];
     font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
   }
 
   .nf-btn:hover {

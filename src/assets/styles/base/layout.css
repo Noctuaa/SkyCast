@@ -1,4 +1,11 @@
+html,
 body {
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
   font-family: 'Manrope Variable', sans-serif;
   background-image: url('/background2.svg');
   background-size: cover;
@@ -15,7 +22,9 @@ body {
   z-index: -1;
   pointer-events: none;
 }
-main.container {
+
+main {
+  flex: 1;
   padding-block-start: calc(4rem + var(--space) * 6);
 }
 
@@ -23,7 +32,7 @@ main.container {
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: clamp(1rem, 4vw, 3rem);
 }
 
 .bento {
@@ -37,19 +46,6 @@ main.container {
   display: grid;
   grid-template-columns: 1fr;
   gap: calc(var(--space) * 6);
-}
-
-@media (min-width: 768px) {
-  .weather-grid {
-    grid-template-columns: 360px 1fr;
-  }
-
-  .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: calc(var(--space) * 6);
-    grid-area: 1 / 2 / 3 / 3;
-  }
 }
 
 /* ===== Background blobs ===== */
@@ -89,4 +85,91 @@ main.container {
 
 [data-theme='dark'] .bg-blob {
   opacity: 0.25;
+}
+
+/* ===== Cells ===== */
+
+.cell-main,
+.cell-wind,
+.cell-sun,
+.cell-air,
+.cell-forecast,
+.cell-chart {
+  grid-area: auto / span 12;
+  grid-row: auto;
+  min-height: 230px;
+  padding: clamp(calc(var(--space) * 4), 3vw, calc(var(--space) * 6));
+}
+
+.cell-map {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .cell-map {
+    display: block;
+    grid-area: auto / span 12;
+  }
+
+  .cell-wind,
+  .cell-sun {
+    grid-area: auto / span 6;
+  }
+
+  .cell-air {
+    grid-area: auto / span 12;
+  }
+  .cell-forecast {
+    grid-area: auto / span 12;
+  }
+  .cell-chart {
+    grid-area: auto / span 12;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cell-main {
+    grid-area: span 2 / span 6;
+  }
+  .cell-map {
+    grid-area: span 2 / span 6;
+  }
+  .cell-wind,
+  .cell-sun {
+    grid-area: auto / span 6;
+  }
+  .cell-air {
+    grid-area: 4 / 7 / 5 / 13;
+  }
+  .cell-forecast {
+    grid-area: auto / span 6;
+  }
+  .cell-chart {
+    grid-area: auto / span 12;
+  }
+}
+
+@media (min-width: 1280px) {
+  .weather-grid {
+    grid-template-columns: 360px 1fr;
+  }
+
+  .cell-main {
+    grid-area: span 2 / span 4;
+  }
+
+  .cell-map {
+    grid-area: span 2 / span 8;
+  }
+
+  .cell-wind,
+  .cell-sun,
+  .cell-air {
+    grid-area: auto / span 4;
+  }
+
+  .cell-forecast,
+  .cell-chart {
+    grid-area: auto / span 6;
+  }
 }

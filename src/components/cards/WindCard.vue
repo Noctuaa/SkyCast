@@ -32,9 +32,7 @@ const BEAUFORT = [
   { fr: 'Ouragan', en: 'Hurricane' },
 ] as const;
 
-const BFT_LIMITS = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7];
-
-const toKmh = (mps: number) => Math.round(mps * 3.6);
+const BFT_LIMITS = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
 
 const degToDir = computed(() => {
   const dirs =
@@ -87,19 +85,19 @@ const visibilityKm = computed(() => Math.round(props.visibility / 1000));
         </g>
       </svg>
 
-      <div class="wind-stats flex flex-col gap-2">
-        <output class="wind-speed num">
-          {{ toKmh(windSpeed) }}
+      <div class="w-full flex flex-col gap-2">
+        <output class="wind-speed num font-bold ink-1 tracking-tight">
+          {{ Math.round(windSpeed) }}
           <small>km/h</small>
         </output>
         <output class="wind-from text-sm ink-2 font-medium">{{ windFrom }}</output>
         <span v-if="windGust" class="wind-gust text-sm ink-3">
-          {{ t.windGust }}
-          <strong class="ink-2">{{ toKmh(windGust) }} km/h</strong>
+          {{ t.windGust }}:
+          <strong class="ink-2">{{ Math.round(windGust) }} km/h</strong>
         </span>
 
         <div class="beaufort flex ai-center gap-3">
-          <output class="bft-num num">{{ beaufort.force }}</output>
+          <output class="badge bft-badge text-base num">{{ beaufort.force }}</output>
           <div>
             <small class="text-xs uppercase font-bold ink-3">Beaufort</small>
             <p class="text-sm font-semibold ink-1">{{ beaufort.label }}</p>
@@ -114,64 +112,3 @@ const visibilityKm = computed(() => Math.round(props.visibility / 1000));
     </div>
   </div>
 </template>
-
-<style>
-.beaufort {
-  margin-top: 8px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: var(--accent-soft);
-  border: 1px solid var(--glass-border);
-}
-
-.wind-stats {
-  flex: 1;
-  min-width: 0;
-}
-
-.wind-compass {
-  width: 120px;
-  height: 120px;
-  flex-shrink: 0;
-}
-
-.wind-speed {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--ink-1);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.wind-speed small,
-.wind-val small {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-3);
-}
-
-.wind-val {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--ink-1);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-
-.bft-badge {
-  margin-top: 2px;
-}
-
-.bft-num {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--grad-accent);
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-</style>

@@ -3,77 +3,21 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="container footer-inner">
-    <a href="/" class="footer-brand">
+  <div class="container flex flex-col md:flex-row ai-center md:justify-between gap-2">
+    <a
+      href="https://nocdev.fr"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="footer-brand flex flex-col ai-center gap-1"
+    >
       <img src="/logo.svg" alt="Nocdev" class="footer-logo" />
+      <span class="footer-copy text-sm ink-3">© {year} Nocdev</span>
     </a>
-    <p class="footer-copy">© {year} Nocdev — Tous droits réservés</p>
-    <nav class="footer-nav">
-      <a href="mailto:contact@nocdev.fr" class="footer-link">contact@nocdev.fr</a>
-      <span class="footer-sep" aria-hidden="true">·</span>
-      <a href="/legal" class="footer-link">Mentions légales</a>
+
+    <nav class="flex ai-center gap-2">
+      <a href="mailto:contact@nocdev.fr" class="footer-link text-sm ink-3">contact@nocdev.fr</a>
+      <span class="footer-sep text-sm ink-3" aria-hidden="true">·</span>
+      <a href="/legal" class="footer-link text-sm ink-3">Mentions légales</a>
     </nav>
   </div>
 </footer>
-
-<style>
-  .footer {
-    margin-block-start: 3rem;
-    border-top: 1px solid var(--glass-edge);
-    padding-block: 2rem;
-  }
-
-  .footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    text-align: center;
-  }
-
-  .footer-logo {
-    height: 32px;
-    width: auto;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-  }
-
-  .footer-logo:hover {
-    opacity: 1;
-  }
-
-  .footer-copy {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
-
-  .footer-nav {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .footer-link {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover {
-    color: var(--accent);
-  }
-
-  .footer-sep {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-  }
-
-  @media (min-width: 768px) {
-    .footer-inner {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
-    }
-  }
-</style>

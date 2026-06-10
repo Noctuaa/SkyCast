@@ -41,7 +41,7 @@ const dashOffset = computed(() => PATH_LENGTH * (1 - progress.value));
 <template>
   <div class="sun-arc-wrap relative">
     <!-- prettier-ignore -->
-    <svg class="sun-arc-svg" viewBox="0 0 260 110" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="sun-arc-svg w-full" viewBox="0 0 260 110" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id="arc-g" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%"   stop-color="var(--accent-2)"       stop-opacity="0.2" />
@@ -69,16 +69,3 @@ const dashOffset = computed(() => PATH_LENGTH * (1 - progress.value));
     </div>
   </div>
 </template>
-
-<style>
-.sun-arc-svg {
-  width: 100%;
-  height: 110px;
-  display: block;
-}
-
-.sun-icon-wrap {
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-</style>

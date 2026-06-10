@@ -1,0 +1,17 @@
+.aqi-badge {
+  width: 48px;
+  height: 48px;
+}
+
+.aqi-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--glass-edge);
+  margin-top: var(--space);
+  overflow: hidden;
+}
+
+.aqi-bar-fill {
+  border-radius: 99px;
+  transition: width var(--transition);
+}

@@ -1,0 +1,52 @@
+/* ── Tooltip CSS pur via data-tooltip ── */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  white-space: nowrap;
+  padding: calc(var(--space) * 2) calc(var(--space) * 3);
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  border-radius: calc(var(--space) * 2);
+  border: 1px solid var(--glass-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-1);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+  z-index: 50;
+}
+
+[data-tooltip]:hover::before {
+  opacity: 1;
+}
+
+/* ── Left  ── */
+[data-tooltip]:not([data-tooltip-dir])::before,
+[data-tooltip][data-tooltip-dir='left']::before {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+}
+
+[data-tooltip]:not([data-tooltip-dir]):hover::before,
+[data-tooltip][data-tooltip-dir='left']:hover::before {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* ── Top ── */
+[data-tooltip][data-tooltip-dir='top']::before {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+
+[data-tooltip][data-tooltip-dir='top']:hover::before {
+  transform: translateX(-50%) translateY(0);
+}

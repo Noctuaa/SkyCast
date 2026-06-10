@@ -110,14 +110,14 @@ watch(
 </script>
 
 <template>
-  <div class="map-wrapper relative">
-    <div class="map-controls absolute z-100">
+  <div class="relative w-full h-full">
+    <div class="map-controls absolute z-100 flex flex-col gap-1 p-1">
       <button
         v-for="(config, key) in weatherLayers"
         :key="key"
-        class="layer-btn"
+        class="btn-icon"
         :class="{ active: activeLayer === key }"
-        :title="getLayerLabel(config.key)"
+        :data-tooltip="getLayerLabel(config.key)"
         @click="toggleLayer(key as string)"
       >
         <!-- prettier-ignore -->
@@ -130,6 +130,6 @@ watch(
         <svg v-else-if="key === 'wind'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
       </button>
     </div>
-    <div ref="mapContainer" class="map-container z-10"></div>
+    <div ref="mapContainer" class="map-container w-full h-full z-10"></div>
   </div>
 </template>

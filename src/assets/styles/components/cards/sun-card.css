@@ -1,0 +1,9 @@
+.sun-arc-svg {
+  height: 110px;
+  display: block;
+}
+
+.sun-icon-wrap {
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}

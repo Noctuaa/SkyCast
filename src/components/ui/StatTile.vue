@@ -23,30 +23,14 @@ const display = computed(() =>
 </script>
 
 <template>
-  <div class="tile p-3" :class="stacked ? 'flex flex-col' : 'flex jc-between ai-center'">
+  <div class="tile" :class="stacked ? 'flex flex-col' : 'flex jc-between ai-center'">
     <span class="eyebrow">
       {{ label }}
       <sub v-if="sub">{{ sub }}</sub>
     </span>
-    <output class="stat-tile-val num">
+    <output class="num text-lg font-bold ink-1 tracking-tight">
       {{ display }}
       <small v-if="unit">{{ unit }}</small>
     </output>
   </div>
 </template>
-
-<style>
-.stat-tile-val {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink-1);
-  letter-spacing: -0.02em;
-}
-
-.stat-tile-val small {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--ink-3);
-  margin-left: 1px;
-}
-</style>

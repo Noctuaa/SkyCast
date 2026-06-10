@@ -40,13 +40,18 @@ export const translations = {
 
     // ForecastCard
     forecast: 'Prévisions',
-    forecastPrev: 'Cliquer sur une journée pour prévisualiser',
+    forecastPrev: 'Cliquer pour prévisualiser',
 
     // ChartCard
-    chartTitle: 'Prévisions toutes les 3 heures',
+    chartTitle: 'Prévisions 24h',
     chartInterval: 'Intervalles de 3 heures',
     chartYAxis: 'Température',
     chartXAxis: 'Heure',
+
+    // Error banner
+    apiErrorTitle: 'Service météo indisponible',
+    apiErrorDesc: 'Les données météo sont temporairement inaccessibles. Réessayez dans quelques instants.',
+    apiErrorRetry: 'Réessayer',
 
     // 404
     notFoundTitle: 'Page perdue dans le brouillard',
@@ -98,10 +103,15 @@ export const translations = {
     forecastPrev: 'Tap a day to preview',
 
     // ChartCard
-    chartTitle: 'Forecast every 3 hours',
+    chartTitle: '24-hour outlook',
     chartInterval: '3-hour intervals',
     chartYAxis: 'Temperature',
     chartXAxis: 'Time',
+
+    // Error banner
+    apiErrorTitle: 'Weather service unavailable',
+    apiErrorDesc: 'Weather data is temporarily unavailable. Please try again in a few moments.',
+    apiErrorRetry: 'Retry',
 
     // 404
     notFoundTitle: 'Page lost in the fog',

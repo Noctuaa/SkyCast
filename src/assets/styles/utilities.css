@@ -46,6 +46,10 @@
 
 /* ===== Flexbox ===== */
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -80,6 +84,10 @@
 
 .jc-between {
   justify-content: space-between;
+}
+
+.pi-center {
+  place-items: center;
 }
 
 /* ===== Position ===== */
@@ -130,6 +138,10 @@
 
 .gap-6 {
   gap: calc(var(--space) * 6);
+}
+
+.p-1 {
+  padding: var(--space);
 }
 
 .p-2 {
@@ -184,6 +196,10 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .col-4,
 .col-6,
 .col-8 {
@@ -208,7 +224,7 @@
 /* ===== Box ===== */
 
 .box {
-  border-radius: var(--radius-sm);
+  border-radius: calc(var(--space) * 2);
   background: rgb(from var(--accent) r g b / 0.08);
   border: 1px solid rgb(from var(--accent) r g b / 0.18);
   padding: calc(var(--space) * 3);
@@ -224,18 +240,28 @@
 
 .text-xs {
   font-size: 0.75rem;
+  line-height: 1;
 }
 
 .text-sm {
   font-size: 0.875rem;
+  letter-spacing: 0em;
+  line-height: 1.2;
 }
 
 .text-base {
   font-size: 1rem;
+  line-height: 1.5;
 }
 
 .text-lg {
   font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75;
 }
 
 .text-center {
@@ -246,15 +272,19 @@
   text-align: right;
 }
 
-.text-muted {
-  color: var(--text-muted);
-}
-
 .text-accent {
   color: var(--accent);
 }
 
-.t-capitalize {
+.tracking-tight {
+  letter-spacing: var(--tracking-tight);
+}
+
+.tracking-wide {
+  letter-spacing: var(--tracking-wide);
+}
+
+.capitalize {
   text-transform: capitalize;
 }
 
@@ -264,6 +294,12 @@
 
 .nowrap {
   white-space: nowrap;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .font-medium {
@@ -296,6 +332,9 @@
 .ink-4 {
   color: var(--ink-4);
 }
+.accent {
+  color: var(--accent);
+}
 
 /* ===== Cursor ===== */
 
@@ -318,6 +357,7 @@
 /* ===== Components ===== */
 
 .tile {
+  padding: calc(var(--space) * 2);
   background: var(--glass-edge);
   border: 1px solid var(--glass-border);
   border-radius: var(--r-tile);
@@ -353,4 +393,24 @@
 .extras {
   padding-top: calc(var(--space) * 4);
   border-top: 1px solid var(--glass-border);
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  border-radius: calc(var(--space) * 2);
+  font-weight: 700;
+  color: var(--ink-1);
+}
+
+/* ===== Responsive ===== */
+
+@media (min-width: 768px) {
+  .md\:flex-row {
+    flex-direction: row;
+  }
+
+  .md\:justify-between {
+    justify-content: space-between;
+  }
 }

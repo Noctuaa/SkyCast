@@ -66,13 +66,13 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
 
 <template>
   <div class="flex flex-col gap-3">
-    <div class="air-main flex ai-center gap-3">
-      <div class="aqi-badge num" :style="{ background: level.color }">{{ aqi }}</div>
+    <div class="flex ai-center gap-3">
+      <div class="badge aqi-badge num text-xl" :style="{ background: level.color }">{{ aqi }}</div>
       <div class="flex flex-col gap-1">
-        <p class="aqi-label font-bold ink-1">{{ label }}</p>
-        <p class="aqi-desc text-sm ink-3">{{ desc }}</p>
-        <div class="aqi-bar">
-          <div class="aqi-bar-fill" :style="{ width: barWidth, background: level.color }"></div>
+        <span class="aqi-label text-lg font-bold ink-1">{{ label }}</span>
+        <p class="aqi-desc text-xs ink-3">{{ desc }}</p>
+        <div class="aqi-bar w-full">
+          <div class="aqi-bar-fill h-full" :style="{ width: barWidth, background: level.color }"></div>
         </div>
       </div>
     </div>
@@ -85,61 +85,3 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
     </div>
   </div>
 </template>
-
-<style>
-.air-location {
-  margin-top: -4px;
-}
-
-.aqi-badge {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px -4px oklch(0.3 0.1 142 / 0.4);
-}
-
-.aqi-label {
-  font-size: 18px;
-  letter-spacing: -0.02em;
-}
-
-.aqi-desc {
-  font-size: 12px;
-  line-height: 1.3;
-}
-
-.aqi-bar {
-  height: 4px;
-  border-radius: 99px;
-  background: var(--glass-edge);
-  width: 100%;
-  margin-top: 4px;
-  overflow: hidden;
-}
-
-.aqi-bar-fill {
-  height: 100%;
-  border-radius: 99px;
-  transition: width 0.6s ease;
-}
-
-.air-val {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-1);
-  letter-spacing: -0.01em;
-}
-
-.air-val small {
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--ink-3);
-  margin-left: 1px;
-}
-</style>

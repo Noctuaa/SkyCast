@@ -1,0 +1,25 @@
+.footer {
+  margin-block-start: calc(var(--space) * 12);
+  padding-block: calc(var(--space) * 6);
+  background: var(--bg);
+  border-top: 1px solid var(--glass-edge);
+}
+
+.footer-logo {
+  height: 32px;
+  width: auto;
+  opacity: 0.8;
+  transition: opacity var(--transition);
+}
+
+.footer-brand:hover .footer-logo {
+  opacity: 1;
+}
+
+.footer-link {
+  transition: color var(--transition);
+}
+
+.footer-link:hover {
+  color: var(--accent);
+}

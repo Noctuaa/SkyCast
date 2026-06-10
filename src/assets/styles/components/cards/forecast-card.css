@@ -1,0 +1,50 @@
+.cell-forecast {
+  position: relative;
+}
+
+.cell-forecast::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3rem;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--glass-bg));
+  pointer-events: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.forecast-wrap {
+  grid-template-columns: repeat(8, 100px);
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== Forecast Day ===== */
+
+.forecast-day {
+  scroll-snap-align: center;
+  border: 1px solid transparent;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.forecast-day.active {
+  background: rgb(from var(--accent) r g b / 0.15);
+  border-color: var(--accent);
+}
+
+@media (min-width: 768px) {
+  .cell-forecast::after {
+    display: none;
+  }
+
+  .forecast-wrap {
+    grid-template-columns: repeat(4, 1fr);
+    overflow-x: unset;
+  }
+}

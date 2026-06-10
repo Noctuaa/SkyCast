@@ -1,0 +1,135 @@
+/* === Base partagée === */
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  border-radius: calc(var(--space) * 2);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
+}
+
+/* === Variante glass (toolbar, actions) === */
+.btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  padding: calc(var(--space) * 3);
+}
+
+.btn-glass:hover {
+  background: rgb(from var(--accent) r g b / 0.12);
+  border-color: var(--accent);
+}
+
+.btn-glass:active {
+  transform: scale(0.96);
+}
+
+/* === Bouton icône carré (layers, tabs) === */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: calc(var(--space) * 2.5);
+  background: transparent;
+  color: var(--ink-2);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.btn-icon.active {
+  background: var(--grad-accent);
+  color: #fff;
+  box-shadow: 0 4px 12px -4px oklch(0.58 0.2 265 / 0.5);
+}
+
+/* === Bouton toolbar (icône + glass) === */
+.btn-tools {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: calc(var(--space) * 2);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.btn-tools:hover {
+  background: rgb(from var(--accent) r g b / 0.12);
+  border-color: var(--accent);
+}
+
+.btn-tools:active {
+  transform: scale(0.96);
+}
+
+.btn-tools svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+/* === Segmented control °C/°F === */
+.seg {
+  display: inline-flex;
+  flex-direction: column;
+  height: auto;
+  gap: 2px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: calc(var(--space) * 2);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.seg-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-3);
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: calc(calc(var(--space) * 2) - 2px);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.seg-btn.active {
+  background: var(--grad-accent);
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .seg {
+    flex-direction: row;
+  }
+
+  .btn-tools,
+  .seg-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}

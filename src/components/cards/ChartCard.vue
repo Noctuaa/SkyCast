@@ -4,6 +4,8 @@ import { useStore } from '@nanostores/vue';
 import { $unit, $theme } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
 import { convertTemp } from '../../utils/weather';
+import { icons } from '../../assets/icons';
+import { useI18n } from '../../i18n/useI18n';
 import type { OMHourlyWeather } from '../../types/weather';
 
 const VueApexCharts = defineAsyncComponent(() => import('vue3-apexcharts'));
@@ -12,17 +14,17 @@ const props = defineProps<{ hourly: OMHourlyWeather }>();
 const unit = useStore($unit);
 const theme = useStore($theme);
 const selectedIndex = useStore($selectedIndex);
+const { t } = useI18n();
 
-type Tab = 'temp' | 'feels' | 'humidity' | 'wind' | 'precip';
+type Tab = 'temp' | 'humidity' | 'wind' | 'precip';
 const activeTab = ref<Tab>('temp');
 
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'temp',     label: 'TEMP' },
-  { key: 'feels',    label: 'FEELS' },
-  { key: 'humidity', label: 'HUMIDITY' },
-  { key: 'wind',     label: 'WIND' },
-  { key: 'precip',   label: 'PRECIP' },
-];
+const tabs = computed(() => [
+  { key: 'temp' as Tab, label: t.value.temperature, icon: icons.temperature },
+  { key: 'humidity' as Tab, label: t.value.humidity, icon: icons.humidity },
+  { key: 'wind' as Tab, label: t.value.wind, icon: icons.wind },
+  { key: 'precip' as Tab, label: t.value.precipitation, icon: icons.precipitation },
+]);
 
 // 00h → 00h J+1, toutes les 3h (9 points) selon le jour sélectionné
 const indices = computed(() => {
@@ -36,8 +38,6 @@ const rawData = computed((): number[] => {
   switch (activeTab.value) {
     case 'temp':
       return indices.value.map((i) => convertTemp(Math.round(props.hourly.temperature_2m[i]), unit.value));
-    case 'feels':
-      return indices.value.map((i) => convertTemp(Math.round(props.hourly.apparent_temperature[i]), unit.value));
     case 'humidity':
       return indices.value.map((i) => props.hourly.relative_humidity_2m[i]);
     case 'wind':
@@ -47,18 +47,17 @@ const rawData = computed((): number[] => {
   }
 });
 
-const yLabel = computed(() => {
-  if (activeTab.value === 'temp' || activeTab.value === 'feels') return `°${unit.value}`;
-  if (activeTab.value === 'wind') return 'km/h';
-  return '%';
-});
-
-const dataLabelFmt = computed(() => {
-  if (activeTab.value === 'temp' || activeTab.value === 'feels')
-    return (val: number) => `${val}°`;
-  if (activeTab.value === 'wind')
-    return (val: number) => `${val}`;
-  return (val: number) => `${val}%`;
+const chartLabel = computed(() => {
+  switch (activeTab.value) {
+    case 'temp':
+      return `${t.value.temperature} : °${unit.value}`;
+    case 'humidity':
+      return `${t.value.humidity} : %`;
+    case 'wind':
+      return `${t.value.wind} : km/h`;
+    case 'precip':
+      return `${t.value.precipitation} : %`;
+  }
 });
 
 const series = computed(() => [{ name: activeTab.value, data: rawData.value }]);
@@ -79,10 +78,9 @@ const options = computed(() => ({
   },
   dataLabels: {
     enabled: true,
-    formatter: dataLabelFmt.value,
     style: {
       colors: [theme.value === 'dark' ? '#e2e8f0' : '#1e293b'],
-      fontSize: '11px',
+      fontSize: '0.8rem',
       fontWeight: 700,
     },
     background: { enabled: false },
@@ -109,65 +107,29 @@ const options = computed(() => ({
     padding: { top: 20, right: 16 },
   },
   tooltip: { enabled: false },
-  responsive: [{ breakpoint: 640, options: { chart: { height: 200 } } }],
+  responsive: [{ breakpoint: 640, options: { chart: { height: 200 }, yaxis: { labels: { show: false } } } }],
   theme: { mode: theme.value === 'dark' ? ('dark' as const) : ('light' as const) },
 }));
 </script>
 
 <template>
-  <div class="chart-card-inner">
-    <div class="chart-tabs flex gap-2">
+  <div class="contents">
+    <div class="flex flex-wrap ai-center gap-3">
       <button
         v-for="tab in tabs"
         :key="tab.key"
-        class="chart-tab"
+        class="btn-icon"
         :class="{ active: activeTab === tab.key }"
+        :data-tooltip="tab.label"
+        data-tooltip-dir="top"
         @click="activeTab = tab.key"
       >
-        {{ tab.label }}
+        <span v-html="tab.icon"></span>
       </button>
+      <span class="w-full text-xs ink-2 font-semibold">{{ chartLabel }}</span>
     </div>
-    <div class="chart-wrap relative">
-      <span class="chart-unit text-xs text-muted">{{ yLabel }}</span>
+    <div class="relative grid ai-center" style="height: 70%">
       <VueApexCharts type="line" :options="options" :series="series" height="280" width="100%" />
     </div>
   </div>
 </template>
-
-<style scoped>
-.chart-tabs {
-  flex-wrap: wrap;
-  margin-block-end: 4px;
-}
-
-.chart-wrap {
-  position: relative;
-}
-
-.chart-unit {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.chart-tab {
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--glass-edge);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.chart-tab.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-</style>

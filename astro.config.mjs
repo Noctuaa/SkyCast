@@ -12,16 +12,10 @@ export default defineConfig({
     mode: 'standalone',
   }),
   integrations: [vue()],
-vite: {
+  vite: {
     plugins: [wasm()],
     css: {
       transformer: 'lightningcss',
-    },
-    server: {
-      watch: {
-        usePolling: true,
-        interval: 300,
-      },
     },
     optimizeDeps: {
       exclude: ['@openmeteo/weather-map-layer'],

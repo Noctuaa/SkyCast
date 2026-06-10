@@ -51,7 +51,7 @@ const fetchForecast = async (lat: string, lon: string): Promise<OMResponse> => {
   url.searchParams.set('hourly', HOURLY);
   url.searchParams.set('daily', DAILY);
   url.searchParams.set('timezone', 'auto');
-  url.searchParams.set('forecast_days', '8');
+  url.searchParams.set('forecast_days', '9');
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`Open-Meteo error: ${res.status}`);
@@ -83,7 +83,8 @@ export const GET: APIRoute = async ({ url }) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch {
+  } catch (err) {
+    console.error('[forecast] erreur:', err);
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
