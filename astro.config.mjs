@@ -7,6 +7,7 @@ import wasm from 'vite-plugin-wasm';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://skycast.nocdev.fr',
   output: 'server',
   adapter: node({
     mode: 'standalone',

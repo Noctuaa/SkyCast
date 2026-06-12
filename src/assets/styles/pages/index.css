@@ -33,6 +33,7 @@
 
 .cell-map {
   display: none;
+  padding: 0;
 }
 
 @media (min-width: 768px) {

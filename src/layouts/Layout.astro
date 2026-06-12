@@ -2,20 +2,23 @@
 // @ts-expect-error — no types for fontsource CSS packages
 import '@fontsource-variable/manrope';
 import '../assets/styles/main.css';
+import Head from '../components/layout/Head.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>SkyCast</title>
+    <Head title={title} description={description} />
     <ClientRouter />
     <script is:inline>
       const applyConfig = () => {
@@ -29,7 +32,6 @@ import { ClientRouter } from 'astro:transitions';
     </script>
   </head>
   <body>
-    <!--<img src="/background.svg" class="bg-svg" alt="" aria-hidden="true" />-->
     <div class="bg-blob blob-1"></div>
     <div class="bg-blob blob-2"></div>
     <div class="bg-blob blob-3"></div>

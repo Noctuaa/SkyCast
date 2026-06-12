@@ -32,17 +32,18 @@
   --grad-accent: linear-gradient(135deg, #60a5fa, #c084fc);
   --border: #e2e8f0;
 
-  --ink-1: oklch(0.22 0.04 270);
-  --ink-2: oklch(0.4 0.04 270);
-  --ink-3: oklch(0.55 0.03 270);
-  --ink-4: oklch(0.7 0.02 270);
+  --ink-1: oklch(0.28 0.09 260);
+  --ink-2: oklch(0.45 0.08 260);
+  --ink-3: oklch(0.58 0.06 260);
+  --ink-4: oklch(0.72 0.04 260);
 
   /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --glass-bg-strong: oklch(1 0 0 / 0.72);
-  --glass-edge: oklch(0.3 0.05 270 / 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: oklch(0.65 0.08 270 / 0.22);
+  --glass-bg-strong: oklch(1 0 0 / 0.85);
+  --glass-edge: #96ace51a;
   --glass-blur: blur(28px);
+  --glass-shadow: 0 4px 24px oklch(0.4 0.08 270 / 0.08);
 
   /* Typography */
   --font-sans: 'Manrope Variable', system-ui, sans-serif;
@@ -80,4 +81,5 @@
   --glass-bg-strong: oklch(0.3 0.05 275 / 0.85);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-edge: oklch(1 0 0 / 0.04);
+  --glass-shadow: 0 4px 24px oklch(0 0 0 / 0.25);
 }

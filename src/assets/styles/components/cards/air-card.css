@@ -4,14 +4,14 @@
 }
 
 .aqi-bar {
-  height: 4px;
-  border-radius: 99px;
-  background: var(--glass-edge);
   margin-top: var(--space);
-  overflow: hidden;
+  width: 100%;
 }
 
-.aqi-bar-fill {
+.aqi-segment {
+  flex: 1;
+  height: 4px;
   border-radius: 99px;
-  transition: width var(--transition);
+  opacity: 0.85;
+  transition: background var(--transition);
 }

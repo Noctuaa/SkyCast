@@ -19,32 +19,27 @@ const AQI_DATA = [
   {
     fr: { label: 'Bon', desc: "Qualité de l'air excellente" },
     en: { label: 'Good', desc: 'Air quality is satisfactory' },
-    color: 'oklch(0.74 0.22 142)',
-    grad: 'linear-gradient(to top, oklch(0.55 0.22 142), oklch(0.78 0.22 128))',
+    color: 'oklch(0.72 0.20 145)',
   },
   {
     fr: { label: 'Acceptable', desc: 'Acceptable, risque mineur pour les groupes sensibles' },
     en: { label: 'Fair', desc: 'Acceptable; minor concern for sensitive groups' },
-    color: 'oklch(0.80 0.20 120)',
-    grad: 'linear-gradient(to top, oklch(0.62 0.22 128), oklch(0.84 0.20 112))',
+    color: 'oklch(0.82 0.18 115)',
   },
   {
     fr: { label: 'Modéré', desc: 'Risque pour les groupes sensibles' },
     en: { label: 'Moderate', desc: 'Unhealthy for sensitive groups' },
-    color: 'oklch(0.85 0.18 85)',
-    grad: 'linear-gradient(to top, oklch(0.68 0.20 75), oklch(0.88 0.18 90))',
+    color: 'oklch(0.83 0.18 80)',
   },
   {
     fr: { label: 'Mauvais', desc: 'Nocif pour tout le monde' },
     en: { label: 'Poor', desc: 'Unhealthy for everyone' },
-    color: 'oklch(0.74 0.18 50)',
-    grad: 'linear-gradient(to top, oklch(0.58 0.20 40), oklch(0.78 0.18 55))',
+    color: 'oklch(0.72 0.20 45)',
   },
   {
     fr: { label: 'Très mauvais', desc: 'Très nocif, urgence sanitaire' },
     en: { label: 'Very Poor', desc: 'Very unhealthy, health emergency' },
-    color: 'oklch(0.63 0.22 25)',
-    grad: 'linear-gradient(to top, oklch(0.48 0.22 20), oklch(0.68 0.22 30))',
+    color: 'oklch(0.60 0.22 25)',
   },
 ] as const;
 
@@ -68,11 +63,16 @@ const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
   <div class="flex flex-col gap-3">
     <div class="flex ai-center gap-3">
       <div class="badge aqi-badge num text-xl" :style="{ background: level.color }">{{ aqi }}</div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1 flex-1 min-w-0">
         <span class="aqi-label text-lg font-bold ink-1">{{ label }}</span>
         <p class="aqi-desc text-xs ink-3">{{ desc }}</p>
-        <div class="aqi-bar w-full">
-          <div class="aqi-bar-fill h-full" :style="{ width: barWidth, background: level.color }"></div>
+        <div class="aqi-bar flex gap-1">
+          <div
+            v-for="i in 5"
+            :key="i"
+            class="aqi-segment"
+            :style="{ background: i <= aqi ? AQI_DATA[i - 1].color : 'oklch(0.7 0.04 270 / 0.25)' }"
+          ></div>
         </div>
       </div>
     </div>
