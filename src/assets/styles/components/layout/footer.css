@@ -1,14 +1,15 @@
 .footer {
   padding-block: calc(var(--space) * 6);
   background: var(--bg);
-  border-top: 1px solid var(--glass-edge);
+  border-top: 1px solid var(--glass-border);
 }
 
 .footer-logo {
   height: 32px;
   width: auto;
   opacity: 0.8;
-  filter: brightness(0) saturate(100%) invert(35%) sepia(20%) saturate(500%) hue-rotate(200deg) drop-shadow(0 0 0.5px oklch(0.45 0.08 260));
+  filter: brightness(0) saturate(100%) invert(35%) sepia(20%) saturate(500%) hue-rotate(200deg)
+    drop-shadow(0 0 0.5px oklch(0.45 0.08 260));
   transition: opacity var(--transition);
 }
 

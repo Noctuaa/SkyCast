@@ -4,23 +4,12 @@ body {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
   font-family: 'Manrope Variable', sans-serif;
-  background-image: url('/background2.svg');
-  background-size: cover;
+  background-image: url('/back.svg');
+  background-size: 200%;
   background-position: center;
   background-attachment: fixed;
-}
-.bg-svg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  pointer-events: none;
+  background-repeat: no-repeat;
 }
 
 main {
@@ -42,39 +31,32 @@ section {
 
 /* ===== Background blobs ===== */
 
-.bg-blob {
+body::before {
+  content: '';
   position: fixed;
   border-radius: 50%;
   filter: blur(80px);
   z-index: -1;
-  opacity: 0.35;
   pointer-events: none;
+  opacity: 0.35;
 }
 
-.blob-1 {
+body::before {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #4f79c7, #3d5afe);
+  background: radial-gradient(circle, #60a5faff, #7b8fd4ff);
   top: -100px;
   left: -100px;
 }
 
-.blob-2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #7c4dff, #651fff);
-  top: 30%;
-  right: -80px;
-}
-
-.blob-3 {
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, #5c6bc0, #7c4dff);
-  bottom: -80px;
-  left: 30%;
-}
-
-[data-theme='dark'] .bg-blob {
+[data-theme='dark'] body::before {
   opacity: 0.25;
+}
+
+/* ==== Responsiveness ==== */
+
+@media (min-width: 768px) {
+  body {
+    background-size: cover;
+  }
 }
