@@ -39,6 +39,7 @@ const toggleLang = () => {
   $lang.set(next);
   lang.value = next;
   saveConfig();
+
   $navOpen.set(true);
   const params = new URL(window.location.href).searchParams;
   const lat = params.get('lat');
@@ -80,17 +81,18 @@ onMounted(() => {
     <button class="seg-btn" :class="{ active: unit === 'C' }" @click="setUnit('C')">°C</button>
     <button class="seg-btn" :class="{ active: unit === 'F' }" @click="setUnit('F')">°F</button>
   </div>
-  <button class="btn-tools lang-toggle" @click="toggleLang">{{ lang.toUpperCase() }}</button>
+  <button class="btn-tools lang-toggle" @click="toggleLang">
+    {{ lang === 'fr' ? 'EN' : 'FR' }}
+  </button>
   <button class="btn-tools" @click="toggleTheme" aria-label="Toggle theme">
-    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-      <path
-        d="M288-32c8.4 0 16.3 4.4 20.6 11.7L364.1 72.3 468.9 46c8.2-2 16.9 .4 22.8 6.3S500 67 498 75.1l-26.3 104.7 92.7 55.5c7.2 4.3 11.7 12.2 11.7 20.6s-4.4 16.3-11.7 20.6L471.7 332.1 498 436.8c2 8.2-.4 16.9-6.3 22.8S477 468 468.9 466l-104.7-26.3-55.5 92.7c-4.3 7.2-12.2 11.7-20.6 11.7s-16.3-4.4-20.6-11.7L211.9 439.7 107.2 466c-8.2 2-16.8-.4-22.8-6.3S76 445 78 436.8l26.2-104.7-92.6-55.5C4.4 272.2 0 264.4 0 256s4.4-16.3 11.7-20.6L104.3 179.9 78 75.1c-2-8.2 .3-16.8 6.3-22.8S99 44 107.2 46l104.7 26.2 55.5-92.6 1.8-2.6c4.5-5.7 11.4-9.1 18.8-9.1zm0 144a144 144 0 1 0 0 288 144 144 0 1 0 0-288zm0 240a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"
-      />
+    <!-- prettier-ignore -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-icon lucide-sun">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
     </svg>
-    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path
-        d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"
-      />
+
+    <!-- prettier-ignore -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon-icon lucide-moon">
+      <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>
     </svg>
   </button>
 </template>

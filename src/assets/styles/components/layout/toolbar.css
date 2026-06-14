@@ -70,13 +70,13 @@
   }
 }
 
-.icon-moon {
+.lucide-sun-icon {
   display: none;
 }
 
-[data-theme='dark'] .icon-sun {
-  display: none;
-}
-[data-theme='dark'] .icon-moon {
+[data-theme='dark'] .lucide-sun-icon {
   display: inline;
+}
+[data-theme='dark'] .lucide-moon-icon {
+  display: none;
 }
