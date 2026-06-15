@@ -37,10 +37,6 @@
   left: -8px;
 }
 
-.wm-info {
-  margin-left: calc(var(--space) * 2);
-}
-
 /* ===== Responsive ===== */
 
 @media (min-width: 768px) {
