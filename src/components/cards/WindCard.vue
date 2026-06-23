@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { useI18n } from '../../i18n/useI18n';
 import { $lang } from '../../stores/configStore';
+
 import StatTile from '../ui/StatTile.vue';
+
 const props = defineProps<{
   windSpeed: number;
   windDeg: number;
@@ -34,12 +37,14 @@ const BEAUFORT = [
 
 const BFT_LIMITS = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
 
+// Divides the compass into 8 directions of 45° each; % 8 wraps 360° back to N
 const degToDir = computed(() => {
   const dirs =
     lang.value === 'fr' ? ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'] : ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
   return dirs[Math.round(props.windDeg / 45) % 8];
 });
 
+// Counts how many Beaufort thresholds are exceeded — gives the force directly
 const beaufort = computed(() => {
   const force = BFT_LIMITS.filter((v) => props.windSpeed >= v).length;
   return { force, label: BEAUFORT[force][lang.value] };

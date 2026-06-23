@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
+
 import { $unit } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
-import { convertTemp } from '../../utils/weather';
 import { useI18n } from '../../i18n/useI18n';
 import { getWmoInfo } from '../../i18n/wmo';
+
+import { convertTemp } from '../../utils/weather';
+
 import WeatherIcon from '../ui/WeatherIcon.vue';
 import { icons } from '../../assets/icons';
+
 import type { OMDailyWeather } from '../../types/weather';
 
 const props = defineProps<{ daily: OMDailyWeather }>();

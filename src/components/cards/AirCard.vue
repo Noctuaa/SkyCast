@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { useI18n } from '../../i18n/useI18n';
 import { $lang } from '../../stores/configStore';
+
 import StatTile from '../ui/StatTile.vue';
+
 import type { OMAirQualityResponse } from '../../types/weather';
 
 const props = defineProps<{
@@ -43,7 +46,7 @@ const AQI_DATA = [
   },
 ] as const;
 
-// European AQI continu (0-100+) → niveau 1-5
+// Continuous European AQI (0-100+) → level 1-5
 const toLevel = (eaqi: number): number => {
   if (eaqi <= 20) return 1;
   if (eaqi <= 40) return 2;
@@ -56,7 +59,6 @@ const aqi = computed(() => toLevel(props.airQuality.european_aqi));
 const level = computed(() => AQI_DATA[aqi.value - 1]);
 const label = computed(() => level.value[lang.value].label);
 const desc = computed(() => level.value[lang.value].desc);
-const barWidth = computed(() => `${(aqi.value / 5) * 100}%`);
 </script>
 
 <template>

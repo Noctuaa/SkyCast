@@ -1,5 +1,6 @@
 .legal-page {
   max-width: 780px;
+  backdrop-filter: var(--glass-blur);
 }
 
 .legal-section {

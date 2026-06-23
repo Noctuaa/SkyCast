@@ -1,3 +1,4 @@
+// ===== Geocoding Nominatim OpenStreetMap =====
 export interface GeocodingResult {
   id: number;
   name: string;

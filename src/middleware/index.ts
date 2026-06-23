@@ -2,13 +2,8 @@ import { defineMiddleware } from 'astro:middleware';
 import { checkRateLimit } from '../utils/rateLimit';
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  // Prefs utilisateur — unité injectée dans locals pour les composants SSR
-  const raw = context.cookies.get('skycast_prefs')?.value;
-  const config = raw ? JSON.parse(decodeURIComponent(raw)) : {};
-  context.locals.unit = ['C', 'F'].includes(config.unit) ? config.unit : 'C';
-
-  // Rate limiting — 20 req/min par IP, routes API uniquement
-  // x-forwarded-for prioritaire pour récupérer l'IP réelle derrière un proxy
+  // Rate limiting — 20 req/min per IP, API routes only
+  // x-forwarded-for takes priority to get the real IP behind a proxy
   if (context.url.pathname.startsWith('/api/')) {
     const ip =
       context.request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
@@ -28,8 +23,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
-  // Security headers — appliqués à toutes les réponses
-  // wasm-unsafe-eval requis par MapLibre GL (WebAssembly), worker-src blob: pour ses Web Workers
+  // Security headers — applied to all responses
+  // wasm-unsafe-eval required by MapLibre GL (WebAssembly), worker-src blob: for its Web Workers
   const response = await next();
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');

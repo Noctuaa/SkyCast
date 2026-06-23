@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { OMCurrentWeather } from '../../types/weather';
+import { useStore } from '@nanostores/vue';
+
 import { useI18n } from '../../i18n/useI18n';
 import { $lang, $unit } from '../../stores/configStore';
-import { convertTemp } from '../../utils/weather';
-import { useStore } from '@nanostores/vue';
 import { getWmoInfo } from '../../i18n/wmo';
+
+import { convertTemp } from '../../utils/weather';
+
 import WeatherIcon from '../ui/WeatherIcon.vue';
 import StatTile from '../ui/StatTile.vue';
+
+import type { OMCurrentWeather } from '../../types/weather';
 
 const props = defineProps<{
   current: OMCurrentWeather;
@@ -60,13 +64,11 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
           {{ convertTemp(current.temperature_2m, unit) }}
           <sup class="relative font-medium ink-3">°{{ unit }}</sup>
         </output>
-        <div class="text-center">
-          <p class="capitalize font-semibold ink-1">{{ wmo.description }}</p>
-          <p class="text-sm ink-3">{{ locationState ? `${locationState}, ` : '' }}{{ country }}</p>
-          <div class="flex ai-center gap-2">
-            <span class="text-sm font-semibold ink-3">UV :</span>
-            <output class="text-sm font-bold ink-1 num">{{ uvIndex }}</output>
-          </div>
+        <p class="capitalize font-semibold ink-1">{{ wmo.description }}</p>
+        <p class="text-sm ink-3">{{ locationState ? `${locationState}, ` : '' }}{{ country }}</p>
+        <div class="flex ai-center gap-2">
+          <span class="text-sm font-semibold ink-3">UV :</span>
+          <output class="text-sm font-bold ink-1 num">{{ uvIndex }}</output>
         </div>
       </div>
     </div>

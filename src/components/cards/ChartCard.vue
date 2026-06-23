@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
 import { useStore } from '@nanostores/vue';
-import LoadingSpinner from '../ui/LoadingSpinner.vue';
+
 import { $unit, $theme } from '../../stores/configStore';
 import { $selectedIndex } from '../../stores/forecastStore';
-import { convertTemp } from '../../utils/weather';
-import { icons } from '../../assets/icons';
 import { useI18n } from '../../i18n/useI18n';
+
+import { convertTemp } from '../../utils/weather';
+
+import LoadingSpinner from '../ui/LoadingSpinner.vue';
+import { icons } from '../../assets/icons';
+
+// Types
 import type { OMHourlyWeather } from '../../types/weather';
 
 const VueApexCharts = defineAsyncComponent(() => import('vue3-apexcharts'));
@@ -29,7 +34,7 @@ const tabs = computed(() => [
   { key: 'precip' as Tab, label: t.value.precipitation, icon: icons.precipitation },
 ]);
 
-// 00h → 00h J+1, toutes les 3h (9 points) selon le jour sélectionné
+// 00h → 00h next day, every 3h (9 points) — hourly data has 24 entries per day so base = day * 24
 const indices = computed(() => {
   const base = selectedIndex.value * 24;
   return [0, 3, 6, 9, 12, 15, 18, 21, 24].map((h) => base + h);
@@ -37,6 +42,7 @@ const indices = computed(() => {
 
 const labels = computed(() => indices.value.map((i) => props.hourly.time[i].slice(-5)));
 
+// Returns the data array for the active tab
 const rawData = computed((): number[] => {
   switch (activeTab.value) {
     case 'temp':

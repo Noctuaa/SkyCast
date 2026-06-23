@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
+
 import { useI18n } from '../../i18n/useI18n';
+
 import LoadingSpinner from '../ui/LoadingSpinner.vue';
 
-// Démarre le chargement WASM dès que le module est évalué par le browser
+// Starts WASM loading as soon as the module is evaluated by the browser
 const omPromise = import('@openmeteo/weather-map-layer');
 
 const props = defineProps<{ lat: number; lon: number; name: string }>();

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from '../../i18n/useI18n.ts';
-import { $lang } from '../../stores/configStore.ts';
+
+import { useI18n } from '../../i18n/useI18n';
+import { $lang } from '../../stores/configStore';
+
 import SunArc from './SunArc.vue';
 import StatTile from '../ui/StatTile.vue';
 
@@ -16,6 +18,7 @@ $lang.set(props.initialLang);
 
 const { t } = useI18n();
 
+// Converts a UTC timestamp + timezone offset (seconds) to a local HH:MM string
 const fmt = (ts: number) => {
   const d = new Date((ts + props.timezone) * 1000);
   return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;

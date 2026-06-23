@@ -45,8 +45,9 @@ export const translations = {
     // ChartCard
     chartTitle: 'Prévisions 24h',
     chartInterval: 'Intervalles de 3 heures',
-    chartYAxis: 'Température',
-    chartXAxis: 'Heure',
+
+    // Footer
+    legal: 'Mentions légales',
 
     // Error banner
     apiErrorTitle: 'Service météo indisponible',
@@ -105,8 +106,9 @@ export const translations = {
     // ChartCard
     chartTitle: '24-hour outlook',
     chartInterval: '3-hour intervals',
-    chartYAxis: 'Temperature',
-    chartXAxis: 'Time',
+
+    // Footer
+    legal: 'Legal notice',
 
     // Error banner
     apiErrorTitle: 'Weather service unavailable',

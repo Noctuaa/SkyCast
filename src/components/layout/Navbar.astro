@@ -1,5 +1,6 @@
 ---
 import Toolbar from './Toolbar.vue';
+
 const prefs = Astro.cookies.get('skycast_prefs')?.json();
 const initialUnit = prefs?.unit ?? 'C';
 const url = new URL(Astro.request.url);
@@ -29,6 +30,7 @@ const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr
 
 <script>
   import { $navOpen } from '../../stores/uiStore';
+
   import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
   /**
@@ -36,7 +38,7 @@ const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr
    * Called on astro:before-swap so classes are applied without any visible transition.
    * $navOpen is set to true by Toolbar before any navigate() call.
    */
-  const renoveNavState = (event: TransitionBeforeSwapEvent) => {
+  const restoreNavState = (event: TransitionBeforeSwapEvent) => {
     if ($navOpen.get()) {
       const nav = event.newDocument.getElementById('toolbar-nav');
       const hamburger = event.newDocument.getElementById('hamburger-btn');
@@ -57,6 +59,6 @@ const initialLang = (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr
     });
   };
 
-  document.addEventListener('astro:before-swap', renoveNavState);
+  document.addEventListener('astro:before-swap', restoreNavState);
   document.addEventListener('astro:page-load', setupHamburger);
 </script>

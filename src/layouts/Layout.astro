@@ -10,9 +10,13 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title?: string;
   description?: string;
+  lang?: 'fr' | 'en';
 }
 
-const { title, description } = Astro.props;
+const { title, description, lang: langProp } = Astro.props;
+const prefs = Astro.cookies.get('skycast_prefs')?.json();
+const url = new URL(Astro.request.url);
+const lang = langProp ?? (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') as 'fr' | 'en';
 ---
 
 <!doctype html>
@@ -34,6 +38,6 @@ const { title, description } = Astro.props;
   <body>
     <Navbar />
     <slot />
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>

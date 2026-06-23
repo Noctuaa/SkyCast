@@ -79,7 +79,7 @@ const selectCity = (city: GeocodingResult) => {
 
 <template>
   <!-- Bouton loupe mobile (caché en desktop via CSS) -->
-  <button class="search-btn-mobile btn-tools flex" @click="openSearch" aria-label="Rechercher">
+  <button class="search-btn-mobile btn-tools flex" @click="openSearch" :aria-label="t.searchPlaceholder">
     <!-- prettier-ignore -->
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="11" cy="11" r="7" />
@@ -97,11 +97,13 @@ const selectCity = (city: GeocodingResult) => {
           <path d="m20 20-3.5-3.5" />
         </svg>
         <input
+          id="search-input"
+          name="search"
           ref="inputRef"
           v-model="query"
           type="text"
           :placeholder="t.searchPlaceholder"
-          aria-label="Search location"
+          :aria-label="t.searchPlaceholder"
           @input="onInput"
           @focus="showDrop = true"
           @blur="showDrop = false"

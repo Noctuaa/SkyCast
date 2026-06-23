@@ -1,5 +1,13 @@
 ---
+import { translations } from '../../i18n/translations';
+
+interface Props {
+  lang?: 'fr' | 'en';
+}
+
+const { lang = 'fr' } = Astro.props;
 const year = new Date().getFullYear();
+const t = translations[lang];
 ---
 
 <footer class="footer">
@@ -17,7 +25,7 @@ const year = new Date().getFullYear();
     <nav class="flex ai-center gap-2">
       <a href="mailto:contact@nocdev.fr" class="footer-link text-sm ink-3">contact@nocdev.fr</a>
       <span class="footer-sep text-sm ink-3" aria-hidden="true">·</span>
-      <a href="/legal" class="footer-link text-sm ink-3">Mentions légales</a>
+      <a href="/legal" class="footer-link text-sm ink-3">{t.legal}</a>
     </nav>
   </div>
 </footer>
