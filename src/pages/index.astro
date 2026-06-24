@@ -69,18 +69,25 @@ else forecastError = true;
 if (airRes.ok) airQuality = await airRes.json();
 
 // ── 5. Location name ──
-const cookieMatchesCoords =
-  locationCookieParsed &&
-  Math.abs(locationCookieParsed.lat - Number(lat)) < 0.01 &&
-  Math.abs(locationCookieParsed.lon - Number(lon)) < 0.01;
-const locationData = cookieMatchesCoords
-  ? locationCookieParsed
-  : { name: 'Paris', country: 'France', state: '', lat: Number(lat), lon: Number(lon) };
 
-if (!cookieMatchesCoords) {
+//prettier-ignore
+const cookieMatchesCoords = locationCookieParsed && Math.abs(locationCookieParsed.lat - Number(lat)) < 0.01 && Math.abs(locationCookieParsed.lon - Number(lon)) < 0.01;
+
+let locationData;
+
+if (cookieMatchesCoords) {
+  locationData = locationCookieParsed;
+} else {
+  const reverseRes = await fetch(`${url.origin}/api/reverse-geocoding?lat=${lat}&lon=${lon}&lang=${lang}`);
+  if (reverseRes.ok) {
+    const reversed = await reverseRes.json();
+    locationData = { ...reversed, lat: Number(lat), lon: Number(lon) };
+  } else {
+    locationData = { name: 'Paris', country: 'France', state: '', lat: Number(lat), lon: Number(lon) };
+  }
   Astro.cookies.set('skycast_location', encodeURIComponent(JSON.stringify(locationData)), {
     path: '/',
-    maxAge: 31536000, // 1 year in seconds
+    maxAge: 31536000,
   });
 }
 
