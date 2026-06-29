@@ -1,46 +1,42 @@
-# Astro Starter Kit: Basics
+# SkyCast
 
-```sh
-npm create astro@latest -- --template basics
-```
+A modern weather app built with Astro SSR, Vue 3, and the Open-Meteo API.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+**Live**: [skycast.nocdev.fr](https://skycast.nocdev.fr)
 
-## 🚀 Project Structure
+## Features
 
-Inside of your Astro project, you'll see the following folders and files:
+- 7-day forecast with weather icons
+- Hourly charts (temperature, humidity, wind, precipitation)
+- Air quality index (AQI)
+- Interactive weather map (MapLibre + Open-Meteo layers)
+- Wind card with Beaufort scale
+- Sunrise/sunset arc
+- Bilingual (FR / EN)
+- Dark / light theme
+- Server-side rendering with 10-minute cache
+- Rate limiting (20 req/min per IP)
+- Reverse geocoding via Nominatim
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Stack
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- [Astro](https://astro.build) — SSR framework
+- [Vue 3](https://vuejs.org) — interactive components
+- [ApexCharts](https://apexcharts.com) — hourly charts
+- [MapLibre GL](https://maplibre.org) — weather map
+- [Open-Meteo](https://open-meteo.com) — free weather API, no key required
+- [Nominatim](https://nominatim.org) — reverse geocoding
 
-## 🧞 Commands
+## Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command           | Action                          |
+| :---------------- | :------------------------------ |
+| `npm install`     | Install dependencies            |
+| `npm run dev`     | Start dev server at `localhost:4321` |
+| `npm run build`   | Build for production            |
+| `npm run preview` | Preview production build        |
+| `npm test`        | Run unit tests (Vitest)         |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## License
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+MIT — © [Noctua / nocdev.fr](https://nocdev.fr)
