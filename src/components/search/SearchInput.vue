@@ -102,6 +102,7 @@ const selectCity = (city: GeocodingResult) => {
           ref="inputRef"
           v-model="query"
           type="text"
+          autocomplete="off"
           :placeholder="t.searchPlaceholder"
           :aria-label="t.searchPlaceholder"
           @input="onInput"

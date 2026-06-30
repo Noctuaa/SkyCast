@@ -59,7 +59,7 @@ const wmo = computed(() => getWmoInfo(props.current.weather_code, props.current.
 
     <div class="flex ai-center jc-center gap-4">
       <WeatherIcon :iconCode="wmo.icon" />
-      <div class="flex flex-col ai-start">
+      <div class="flex flex-col ai-start gap-1">
         <output class="wm-temp num">
           {{ convertTemp(current.temperature_2m, unit) }}
           <sup class="relative font-medium ink-3">°{{ unit }}</sup>

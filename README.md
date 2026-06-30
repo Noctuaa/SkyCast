@@ -29,14 +29,14 @@ A modern weather app built with Astro SSR, Vue 3, and the Open-Meteo API.
 
 ## Commands
 
-| Command           | Action                          |
-| :---------------- | :------------------------------ |
-| `npm install`     | Install dependencies            |
+| Command           | Action                               |
+| :---------------- | :----------------------------------- |
+| `npm install`     | Install dependencies                 |
 | `npm run dev`     | Start dev server at `localhost:4321` |
-| `npm run build`   | Build for production            |
-| `npm run preview` | Preview production build        |
-| `npm test`        | Run unit tests (Vitest)         |
+| `npm run build`   | Build for production                 |
+| `npm run preview` | Preview production build             |
+| `npm test`        | Run unit tests (Vitest)              |
 
 ## License
 
-MIT — © [Noctua / nocdev.fr](https://nocdev.fr)
+MIT — © [nocdev.fr](https://nocdev.fr)
