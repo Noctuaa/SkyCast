@@ -20,7 +20,7 @@ const lang = langProp ?? (url.searchParams.get('lang') ?? prefs?.lang ?? 'fr') a
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang={lang}>
   <head>
     <Head title={title} description={description} />
     <ClientRouter />
