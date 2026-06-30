@@ -141,6 +141,7 @@ onMounted(async () => {
         :class="{ active: activeTab === tab.key }"
         :data-tooltip="tab.label"
         data-tooltip-dir="top"
+        :aria-label="tab.label"
         @click="activeTab = tab.key"
       >
         <span v-html="tab.icon"></span>

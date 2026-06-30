@@ -130,6 +130,7 @@ watch(
         class="btn-icon"
         :class="{ active: activeLayer === key }"
         :data-tooltip="getLayerLabel(config.key)"
+        :aria-label="getLayerLabel(config.key)"
         @click="toggleLayer(key as string)"
       >
         <!-- prettier-ignore -->

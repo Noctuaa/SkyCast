@@ -38,7 +38,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       "worker-src blob:",
       "img-src 'self' data: blob: https://*.openstreetmap.org https://*.maptiler.com https://*.openfreemap.org",
       "connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://geocoding-api.open-meteo.com https://*.openfreemap.org https://*.maptiler.com https://map-tiles.open-meteo.com",
-      "font-src 'self'",
+      "font-src 'self' data:",
       "frame-ancestors 'none'",
     ].join('; ')
   );
