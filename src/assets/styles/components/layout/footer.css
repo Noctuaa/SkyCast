@@ -5,20 +5,11 @@
 }
 
 .footer-logo {
-  height: 32px;
-  width: auto;
-  opacity: 0.8;
-  filter: brightness(0) saturate(100%) invert(35%) sepia(20%) saturate(500%) hue-rotate(200deg)
-    drop-shadow(0 0 0.5px oklch(0.45 0.08 260));
-  transition: opacity var(--transition);
+  filter: brightness(0) saturate(100%) invert(35%) sepia(20%) saturate(500%) hue-rotate(200deg) drop-shadow(0 0 0.5px oklch(0.45 0.08 260));
 }
 
 [data-theme='dark'] .footer-logo {
   filter: none;
-}
-
-.footer-brand:hover .footer-logo {
-  opacity: 1;
 }
 
 .footer-link {

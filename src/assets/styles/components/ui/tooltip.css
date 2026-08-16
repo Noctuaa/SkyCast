@@ -1,6 +1,7 @@
 /* ── Tooltip CSS pur via data-tooltip ── */
 [data-tooltip] {
   position: relative;
+  z-index: 100;
 }
 
 [data-tooltip]::before {
@@ -20,7 +21,7 @@
   transition:
     opacity var(--transition),
     transform var(--transition);
-  z-index: 50;
+  z-index: 999;
 }
 
 [data-tooltip]:hover::before {
@@ -41,12 +42,14 @@
 }
 
 /* ── Top ── */
+/* Anchored to the left edge (not centered) so it doesn't get clipped by an
+   ancestor's overflow: hidden when the element sits near a card's left edge. */
 [data-tooltip][data-tooltip-dir='top']::before {
   bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  left: 0;
+  transform: translateY(4px);
 }
 
 [data-tooltip][data-tooltip-dir='top']:hover::before {
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }

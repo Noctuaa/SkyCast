@@ -2,30 +2,25 @@
 import { translations } from '../../i18n/translations';
 
 interface Props {
-  lang?: 'fr' | 'en';
+  lang?:  keyof typeof translations;
 }
 
-const { lang = 'fr' } = Astro.props;
+const { lang = 'fr' } = Astro.props as Props;
 const year = new Date().getFullYear();
 const t = translations[lang];
 ---
 
 <footer class="footer">
-  <div class="container flex flex-col md:flex-row ai-center md:justify-between gap-2">
-    <a
-      href="https://nocdev.fr"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="footer-brand flex flex-col ai-center gap-1"
-    >
-      <img src="/logo.svg" alt="Nocdev" class="footer-logo" />
-      <span class="footer-copy text-sm ink-3">© {year} Nocdev</span>
-    </a>
+  <div class="container">
+    <div class="relative flex-center">
+      <a href="https://nocdev.fr" target="_blank" rel="noopener noreferrer">
+        <img src="/logo.svg" alt="Nocdev logo" class="footer-logo" width="60" height="60" />
+      </a>
+    </div>
 
-    <nav class="flex ai-center gap-2">
-      <a href="mailto:contact@nocdev.fr" class="footer-link text-sm ink-3">contact@nocdev.fr</a>
-      <span class="footer-sep text-sm ink-3" aria-hidden="true">·</span>
-      <a href="/legal" class="footer-link text-sm ink-3">{t.legal}</a>
-    </nav>
+    <div class="flex ai-center jc-between gap-4 text-sm">
+      <a href="/legal" class="footer-link text-sm ink-1">{t.legal}</a>
+      <p class="footer-copy text-sm font-bold uppercase ink-1">© {year} Nocdev</p>
+    </div>
   </div>
 </footer>

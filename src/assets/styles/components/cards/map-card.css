@@ -8,6 +8,10 @@
 
 .map-container {
   min-height: 340px;
+  /* Firefox doesn't reliably clip a WebGL canvas via a parent that also has
+     backdrop-filter + overflow: hidden — clip on this element directly too. */
+  border-radius: var(--r-card);
+  overflow: hidden;
 }
 
 /* ===== Marker ===== */
