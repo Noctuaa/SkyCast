@@ -12,6 +12,7 @@ import ChartCard from '../components/cards/ChartCard.vue';
 import { translations } from '../i18n/translations';
 
 import { isValidCoords } from '../utils/coords';
+import { getForecast, getAirQuality, getReverseGeocoding } from '../utils/weatherApi';
 
 import type { OMResponse, OMAirQualityResponse } from '../types/weather';
 
@@ -59,14 +60,11 @@ let forecast: OMResponse | null = null;
 let airQuality: OMAirQualityResponse | null = null;
 let forecastError = false;
 
-const [forecastRes, airRes] = await Promise.all([
-  fetch(`${url.origin}/api/forecast?lat=${lat}&lon=${lon}`),
-  fetch(`${url.origin}/api/air-quality?lat=${lat}&lon=${lon}`),
-]);
+const [forecastResult, airResult] = await Promise.allSettled([getForecast(lat, lon), getAirQuality(lat, lon)]);
 
-if (forecastRes.ok) forecast = await forecastRes.json();
+if (forecastResult.status === 'fulfilled') forecast = forecastResult.value;
 else forecastError = true;
-if (airRes.ok) airQuality = await airRes.json();
+if (airResult.status === 'fulfilled') airQuality = airResult.value;
 
 // ── 5. Location name ──
 
@@ -78,11 +76,10 @@ let locationData;
 if (cookieMatchesCoords) {
   locationData = locationCookieParsed;
 } else {
-  const reverseRes = await fetch(`${url.origin}/api/reverse-geocoding?lat=${lat}&lon=${lon}&lang=${lang}`);
-  if (reverseRes.ok) {
-    const reversed = await reverseRes.json();
+  try {
+    const reversed = await getReverseGeocoding(lat, lon, lang);
     locationData = { ...reversed, lat: Number(lat), lon: Number(lon) };
-  } else {
+  } catch {
     locationData = { name: 'Paris', country: 'France', state: '', lat: Number(lat), lon: Number(lon) };
   }
   Astro.cookies.set('skycast_location', encodeURIComponent(JSON.stringify(locationData)), {
