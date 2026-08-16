@@ -4,6 +4,8 @@ body {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: 'Manrope Variable', sans-serif;
   background-image: url('/back.svg');
   background-size: 200%;
