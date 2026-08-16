@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import node from '@astrojs/node';
+import cloudflare from '@astrojs/cloudflare';
 import vue from '@astrojs/vue';
 import wasm from 'vite-plugin-wasm';
 
@@ -9,9 +9,7 @@ import wasm from 'vite-plugin-wasm';
 export default defineConfig({
   site: 'https://skycast.nocdev.fr',
   output: 'server',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  adapter: cloudflare(),
   integrations: [vue()],
   vite: {
     plugins: [wasm()],
