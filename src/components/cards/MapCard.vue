@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 
+import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { useI18n } from '../../i18n/useI18n';
 
 import LoadingSpinner from '../ui/LoadingSpinner.vue';
@@ -68,10 +70,7 @@ const toggleLayer = (key: string) => {
 };
 
 const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
-  const [maplibregl] = await Promise.all([
-    import('maplibre-gl').then((m) => m.default),
-    import('maplibre-gl/dist/maplibre-gl.css'),
-  ]);
+  const maplibregl = await import('maplibre-gl').then((m) => m.default);
   const { omProtocol } = await omPromise;
   maplibregl.addProtocol('om', omProtocol);
 
