@@ -90,7 +90,9 @@ const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
     .addTo(map)
     .togglePopup();
 
-  map.on('load', () => {
+  // style.load fires before base tiles finish fetching, so the weather layer's
+  // (slow) range requests start in parallel with them instead of after
+  map.on('style.load', () => {
     addWeatherLayer(map, 'clouds');
   });
 
