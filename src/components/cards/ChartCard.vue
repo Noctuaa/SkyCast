@@ -48,11 +48,11 @@ const rawData = computed((): number[] => {
     case 'temp':
       return indices.value.map((i) => convertTemp(Math.round(props.hourly.temperature_2m[i]), unit.value));
     case 'humidity':
-      return indices.value.map((i) => props.hourly.relative_humidity_2m[i]);
+      return indices.value.map((i) => Math.round(props.hourly.relative_humidity_2m[i]));
     case 'wind':
       return indices.value.map((i) => Math.round(props.hourly.wind_speed_10m[i]));
     case 'precip':
-      return indices.value.map((i) => props.hourly.precipitation_probability[i]);
+      return indices.value.map((i) => Math.round(props.hourly.precipitation_probability[i]));
   }
 });
 
@@ -108,8 +108,10 @@ const options = computed(() => ({
     labels: { style: { fontSize: '11px' } },
   },
   yaxis: {
-    min: Math.floor(Math.min(...rawData.value)) - 2,
-    max: Math.ceil(Math.max(...rawData.value)) + 2,
+    min: Math.floor(Math.min(...rawData.value)),
+    max: Math.ceil(Math.max(...rawData.value)),
+    forceNiceScale: true,
+    tickAmount: 4,
     labels: {
       style: { fontSize: '11px' },
       formatter: (val: number) => Math.round(val).toString(),

@@ -2,10 +2,10 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { navigate } from 'astro:transitions/client';
 import { useI18n } from '../../i18n/useI18n';
+import LoadingSpinner from '../ui/LoadingSpinner.vue';
 import type { GeocodingResult } from '../../types/weather';
 
 const query = ref('');
-const inputRef = ref<HTMLInputElement | null>(null);
 const isMobile = ref(false);
 const suggestions = ref<GeocodingResult[]>([]);
 const loading = ref(false);
@@ -13,8 +13,11 @@ const showDrop = ref(false);
 const mobileOpen = ref(false);
 const hasFetched = ref(false);
 let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+let currentController: AbortController | undefined;
 const { t } = useI18n();
 
+// 0x1f1a5 : décalage vers les "regional indicator symbols" Unicode — deux lettres
+// consécutives (ex: FR) donnent ainsi l'emoji drapeau correspondant
 const toFlag = (code: string) =>
   code
     .toUpperCase()
@@ -27,9 +30,22 @@ const fetchSuggestions = async () => {
     suggestions.value = [];
     return;
   }
-  loading.value = true;
+
+  // Annule la requête précédente : sans ça, si elle répond après celle-ci,
+  // elle écrase l'état avec des résultats obsolètes (effet de flash/re-ouverture)
+  currentController?.abort();
+  const controller = new AbortController();
+  currentController = controller;
+
+  // N'affiche le loader que si la requête dépasse 200ms, pour éviter un flash
+  // visuel sur les réponses rapides
+  const loadingTimer = setTimeout(() => {
+    loading.value = true;
+  }, 200);
   try {
-    const res = await fetch(`/api/geocoding?q=${encodeURIComponent(query.value)}`);
+    const res = await fetch(`/api/geocoding?q=${encodeURIComponent(query.value)}`, {
+      signal: controller.signal,
+    });
     const data: GeocodingResult[] = await res.json();
     const seen = new Set<string>();
     suggestions.value = data.filter((city) => {
@@ -38,11 +54,15 @@ const fetchSuggestions = async () => {
       seen.add(key);
       return true;
     });
-  } catch {
+  } catch (err) {
+    if ((err as Error).name === 'AbortError') return;
     suggestions.value = [];
   } finally {
-    loading.value = false;
-    hasFetched.value = true;
+    clearTimeout(loadingTimer);
+    if (!controller.signal.aborted) {
+      loading.value = false;
+      hasFetched.value = true;
+    }
   }
 };
 
@@ -58,15 +78,6 @@ const openSearch = () => {
   document.getElementById('hamburger-btn')?.classList.remove('active');
 };
 
-onMounted(() => {
-  isMobile.value = window.innerWidth < 768;
-  const onResize = () => {
-    isMobile.value = window.innerWidth < 768;
-  };
-  window.addEventListener('resize', onResize);
-  onUnmounted(() => window.removeEventListener('resize', onResize));
-});
-
 const selectCity = (city: GeocodingResult) => {
   document.cookie = `skycast_location=${encodeURIComponent(JSON.stringify({ name: city.name, country: city.country, state: city.state ?? '', lat: city.lat, lon: city.lon }))}; path=/; max-age=31536000`;
   const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
@@ -75,6 +86,15 @@ const selectCity = (city: GeocodingResult) => {
   mobileOpen.value = false;
   navigate(`/?lang=${lang}&lat=${city.lat}&lon=${city.lon}`);
 };
+
+onMounted(() => {
+  isMobile.value = window.innerWidth < 768;
+  const onResize = () => {
+    isMobile.value = window.innerWidth < 768;
+  };
+  window.addEventListener('resize', onResize);
+  onUnmounted(() => window.removeEventListener('resize', onResize));
+});
 </script>
 
 <template>
@@ -99,7 +119,6 @@ const selectCity = (city: GeocodingResult) => {
         <input
           id="search-input"
           name="search"
-          ref="inputRef"
           v-model="query"
           type="text"
           autocomplete="off"
@@ -123,16 +142,19 @@ const selectCity = (city: GeocodingResult) => {
             class="sd-item flex ai-center py-3 px-4 gap-3 c-pointer"
             @mousedown.prevent="selectCity(city)"
           >
+            <!-- mousedown.prevent plutôt que click : sans ça, le blur de l'input
+            se déclenche avant le clic et ferme le menu avant la sélection -->
             <span class="grid pi-center">{{ toFlag(city.country_code) }}</span>
             <div class="flex flex-col gap-1">
               <span class="text-sm font-semibold ink-1 text-ellipsis">{{ city.name }}</span>
-              <span class="text-xs ink-2 text-ellipsis">
-                {{ city.state ? city.state + ' · ' : '' }}{{ city.country }}
-              </span>
+              <span class="text-xs ink-2 text-ellipsis">{{ city.state ? city.state + ' · ' : '' }}{{ city.country }}</span>
             </div>
           </li>
         </ul>
-        <div v-else-if="hasFetched && !loading" class="sd-empty flex flex-col p-4 gap-1 text-sm text-center">
+        <div v-else-if="loading" class="sd-loading flex-center p-4">
+          <LoadingSpinner size="sm" />
+        </div>
+        <div v-else-if="hasFetched" class="sd-empty flex flex-col p-4 gap-1 text-sm text-center">
           <span class="text-sm font-semibold ink-1">{{ t.searchNoMatch }} "{{ query }}"</span>
           <span class="ink-2">{{ t.searchTryAgain }}</span>
         </div>
