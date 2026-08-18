@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, shallowRef, markRaw, onMounted, onUnmounted, watch } from 'vue';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -14,12 +14,14 @@ const props = defineProps<{ lat: number; lon: number; name: string }>();
 
 const { t } = useI18n();
 const mapContainer = ref<HTMLElement | null>(null);
-const mapInstance = ref<any>(null);
+// shallowRef + markRaw (à l'assignation) : évite que Vue rende l'instance MapLibre
+// réactive en profondeur, ce qui casse ses structures internes (WebGL, couleurs...)
+const mapInstance = shallowRef<any>(null);
 const activeLayer = ref<string>('clouds');
 const isLoading = ref(true);
 
 const OM_MODEL = 'dwd_icon';
-const OM_BASE = `https://map-tiles.open-meteo.com/data_spatial/${OM_MODEL}/latest.json?time_step=current_time_1H`;
+const OM_BASE = `https://openmeteo-data-spatial.b-cdn.net/${OM_MODEL}/latest.json?time_step=current_time_1H`;
 
 const weatherLayers: Record<string, { variable: string; key: string; opacity: number }> = {
   clouds: { variable: 'cloud_cover', key: 'clouds', opacity: 0.55 },
@@ -49,21 +51,21 @@ const addWeatherLayer = (map: any, key: string) => {
       paint: { 'raster-opacity': config.opacity },
     });
   }
-
-  Object.keys(weatherLayers).forEach((k) => {
-    const id = `weather-${k}-layer`;
-    if (map.getLayer(id)) {
-      map.setLayoutProperty(id, 'visibility', k === key ? 'visible' : 'none');
-    }
-  });
-
-  activeLayer.value = key;
 };
 
 const toggleLayer = (key: string) => {
   if (!mapInstance.value || activeLayer.value === key) return;
   isLoading.value = true;
   addWeatherLayer(mapInstance.value, key);
+
+  Object.keys(weatherLayers).forEach((k) => {
+    const id = `weather-${k}-layer`;
+    if (mapInstance.value.getLayer(id)) {
+      mapInstance.value.setLayoutProperty(id, 'visibility', k === key ? 'visible' : 'none');
+    }
+  });
+
+  activeLayer.value = key;
   mapInstance.value.once('idle', () => {
     isLoading.value = false;
   });
@@ -100,7 +102,7 @@ const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
     isLoading.value = false;
   });
 
-  mapInstance.value = map;
+  mapInstance.value = markRaw(map);
 };
 
 onMounted(async () => {
@@ -113,6 +115,8 @@ onUnmounted(() => {
   mapInstance.value?.remove();
 });
 
+// La carte est un objet impératif créé une seule fois dans onMounted — Vue ne la
+// déplace pas tout seul quand lat/lon changent, il faut appeler flyTo() nous-même
 watch(
   () => [props.lat, props.lon] as [number, number],
   ([lat, lon]) => {
