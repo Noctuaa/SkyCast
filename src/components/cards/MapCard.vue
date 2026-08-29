@@ -21,7 +21,7 @@ const activeLayer = ref<string>('clouds');
 const isLoading = ref(true);
 
 const OM_MODEL = 'dwd_icon';
-const OM_BASE = `https://openmeteo-data-spatial.b-cdn.net/${OM_MODEL}/latest.json?time_step=current_time_1H`;
+const OM_BASE = `https://openmeteo.s3.amazonaws.com/data_spatial/${OM_MODEL}/latest.json?time_step=current_time_1H`;
 
 const weatherLayers: Record<string, { variable: string; key: string; opacity: number }> = {
   clouds: { variable: 'cloud_cover', key: 'clouds', opacity: 0.55 },
