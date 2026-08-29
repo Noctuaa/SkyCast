@@ -55,31 +55,34 @@ if (!urlCoordsValid) {
 const t = translations[lang];
 const unit = (['C', 'F'].includes(prefs.unit) ? prefs.unit : 'C') as 'C' | 'F';
 
-// ── 4. Fetch weather data ──
+// ── 4. Fetch weather data + location name in parallel (geocoding doesn't
+// depend on the weather data, no reason to wait for it before starting) ──
 let forecast: OMResponse | null = null;
 let airQuality: OMAirQualityResponse | null = null;
 let forecastError = false;
 
-const [forecastResult, airResult] = await Promise.allSettled([getForecast(lat, lon), getAirQuality(lat, lon)]);
+//prettier-ignore
+const cookieMatchesCoords = locationCookieParsed && Math.abs(locationCookieParsed.lat - Number(lat)) < 0.01 && Math.abs(locationCookieParsed.lon - Number(lon)) < 0.01;
+
+const [forecastResult, airResult, geocodingResult] = await Promise.allSettled([
+  getForecast(lat, lon),
+  getAirQuality(lat, lon),
+  cookieMatchesCoords ? Promise.resolve(null) : getReverseGeocoding(lat, lon, lang),
+]);
 
 if (forecastResult.status === 'fulfilled') forecast = forecastResult.value;
 else forecastError = true;
 if (airResult.status === 'fulfilled') airQuality = airResult.value;
 
 // ── 5. Location name ──
-
-//prettier-ignore
-const cookieMatchesCoords = locationCookieParsed && Math.abs(locationCookieParsed.lat - Number(lat)) < 0.01 && Math.abs(locationCookieParsed.lon - Number(lon)) < 0.01;
-
 let locationData;
 
 if (cookieMatchesCoords) {
   locationData = locationCookieParsed;
 } else {
-  try {
-    const reversed = await getReverseGeocoding(lat, lon, lang);
-    locationData = { ...reversed, lat: Number(lat), lon: Number(lon) };
-  } catch {
+  if (geocodingResult.status === 'fulfilled' && geocodingResult.value) {
+    locationData = { ...geocodingResult.value, lat: Number(lat), lon: Number(lon) };
+  } else {
     locationData = { name: 'Paris', country: 'France', state: '', lat: Number(lat), lon: Number(lon) };
   }
   Astro.cookies.set('skycast_location', encodeURIComponent(JSON.stringify(locationData)), {

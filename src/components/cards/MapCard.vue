@@ -24,15 +24,15 @@ const OM_MODEL = 'dwd_icon';
 const OM_BASE = `https://openmeteo.s3.amazonaws.com/data_spatial/${OM_MODEL}/latest.json?time_step=current_time_1H`;
 
 const weatherLayers: Record<string, { variable: string; key: string; opacity: number }> = {
-  clouds: { variable: 'cloud_cover', key: 'clouds', opacity: 0.55 },
-  precipitation: { variable: 'precipitation', key: 'precipitation', opacity: 0.65 },
+  clouds: { variable: 'cloud_cover', key: 'clouds', opacity: 0.45 },
+  precipitation: { variable: 'precipitation', key: 'precipitation', opacity: 0.45 },
   temperature: { variable: 'temperature_2m', key: 'temperature', opacity: 0.25 },
-  wind: { variable: 'wind_u_component_10m', key: 'wind', opacity: 0.6 },
+  wind: { variable: 'wind_u_component_10m', key: 'wind', opacity: 0.35 },
 };
 
 const getLayerLabel = (key: string) => (t.value[key as keyof typeof t.value] as string) ?? key;
 
-const addWeatherLayer = (map: any, key: string) => {
+const addWeatherLayer = (map: any, key: string, visible = true) => {
   const config = weatherLayers[key];
   const sourceId = `weather-${key}`;
   const layerId = `weather-${key}-layer`;
@@ -49,8 +49,17 @@ const addWeatherLayer = (map: any, key: string) => {
       type: 'raster',
       source: sourceId,
       paint: { 'raster-opacity': config.opacity },
+      layout: { visibility: visible ? 'visible' : 'none' },
     });
   }
+};
+
+// Précharge les autres couches en arrière-plan, cachées, une fois la première
+// bien installée — pour qu'elles soient déjà prêtes quand l'utilisateur clique dessus
+const prefetchOtherLayers = (map: any, activeKey: string) => {
+  Object.keys(weatherLayers)
+    .filter((key) => key !== activeKey)
+    .forEach((key) => addWeatherLayer(map, key, false));
 };
 
 const toggleLayer = (key: string) => {
@@ -100,6 +109,7 @@ const initMap = async (lat: number, lon: number, omPromise: Promise<any>) => {
 
   map.once('idle', () => {
     isLoading.value = false;
+    prefetchOtherLayers(map, 'clouds');
   });
 
   mapInstance.value = markRaw(map);
